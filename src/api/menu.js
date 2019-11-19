@@ -1,53 +1,46 @@
 const Menu = [
   {
     title: "Dashboard",
-    icon: "dashboard",
+    icon: "filter_vintage",
     name: "Dashboard",
     key: "key-Dashboard"
   },
   {
-    title: "Daily Input - Weight",
-    icon: "calendar_today",
-    name: "Daily Data - Weight",
-    key: "key-Daily Data - Weight"
+    title: "Symptom Checklist",
+    icon: "check_box",
+    name: "Symptom Checklist",
+    key: "key-SymptomChecklist"
+  },
+
+  {
+    title: "Stress Recovery Diagnostic",
+    icon: "healing",
+    name: "Symptom Checklist",
+    key: "key-SymptomChecklist"
+  },
+
+
+  {
+    title: "Energy Health Decision Profile",
+    icon: "favorite",
+    name: "Symptom Checklist",
+    key: "key-SymptomChecklist"
+  },
+
+
+  {
+    title: "Terms & Conditions",
+    icon: "menu_book",
+    name: "TermsConditions",
+    key: "key-TermsConditions"
   },
   {
-    title: "Daily Input - Temp & Pulse",
-    icon: "favorite_border",
-    name: "Daily Data - Temp & Pulse",
-    key: "key-Daily Data - Temp & Pulse"
+    title: "Privacy Policy",
+    icon: "security",       
+    name: "PrivacyPolicy",
+    key: "key-PrivacyPolicy"
   },
-  {
-    title: "Weekly Input",
-    icon: "show_chart",
-    name: "Weekly Data",
-    key: "key-Weekly Data"
-  },
-  {
-    title: "Diet History",
-    icon: "bar_chart",
-    name: "Diet History",
-    key: "key-Diet History"
-  },
-  {
-    title: "Food Tracker",
-    icon: "track_changes",
-    name: "Food Tracker",
-    key: "key-Food Tracker"
-  },
-  {
-    title: "Coaching Feedback",
-    icon: "chat",
-    name: "Coaching Feedback",
-    badgeType: "UnreadReceivedMessages",
-    key: "key-Coaching Feedback"
-  },
-  {
-    title: "Recipe Builder",
-    icon: "restaurant",
-    name: "Recipe Builder",
-    key: "key-Recipe Builder"
-  },
+
   {
     title: "Energy Health",
     icon: "shopping_basket",

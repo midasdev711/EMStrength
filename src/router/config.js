@@ -52,11 +52,6 @@ export const publicRoute = [
         component: () => import("@/views/admin/Dashboard.vue")
       },
       {
-        path: "messages",
-        name: "CoachingFeedbackAdmin",
-        component: () => import("@/views/admin/CoachingFeedback.vue")
-      },
-      {
         path: "account",
         name: "UserAccount",
         component: () => import("@/views/admin/UserAccount.vue")
@@ -76,18 +71,6 @@ export const publicRoute = [
         name: "ManageUsers",
         meta: { title: "Manage Users & Groups", requiresAuth: true },
         component: () => import("@/views/admin/Users.vue")
-      },
-      {
-        path: "terms-and-conditions",
-        name: "TermsConditions",
-        meta: { title: "Terms & Conditions", requiresAuth: true },
-        component: () => import("@/views/admin/TermsConditions.vue")
-      },
-      {
-        path: "privacy-policy",
-        name: "PrivacyPolicy",
-        meta: { title: "Privacy Policy", requiresAuth: true },
-        component: () => import("@/views/admin/PrivacyPolicy.vue")
       },
       {
         path: "account",
@@ -143,52 +126,10 @@ export const protectedRoute = [
       },
 
       {
-        path: "/daily_data_weight",
-        name: "Daily Data - Weight",
-        component: () => import(`@/views/DailyDataWeight.vue`),
-        meta: { title: "Daily Input - Weight", icon: "calendar_today", requiresAuth: true }
-      },
-
-      {
-        path: "/daily_data_temp_pulse",
-        name: "Daily Data - Temp & Pulse",
-        component: () => import(`@/views/DailyDataTempPulse.vue`),
-        meta: { title: "Daily Input - Temp & Pulse", icon: "favorite", requiresAuth: true }
-      },
-
-      {
-        path: "/weekly_data",
-        name: "Weekly Data",
-        component: () => import(`@/views/WeeklyData.vue`),
-        meta: { title: "Weekly Input", icon: "show_chart", requiresAuth: true }
-      },
-
-      {
         path: "/recipe_builder",
-        name: "Recipe Builder",
+        name: "Symptom Checklist",
         component: () => import(`@/views/RecipeBuilder.vue`),
-        meta: { title: "Recipe Builder", icon: "restaurant", requiresAuth: true }
-      },
-
-      {
-        path: "/diet_history",
-        name: "Diet History",
-        component: () => import(`@/views/DietHistory.vue`),
-        meta: { title: "Diet History", icon: "bar_chart", requiresAuth: true }
-      },
-
-      {
-        path: "/food_tracker",
-        name: "Food Tracker",
-        component: () => import(`@/views/FoodTracker.vue`),
-        meta: { title: "Food Tracker", icon: "track_changes", requiresAuth: true }
-      },
-
-      {
-        path: "/coaching_feedback",
-        name: "Coaching Feedback",
-        component: () => import(`@/views/CoachingFeedback.vue`),
-        meta: { title: "Coaching Feedback", icon: "chat", requiresAuth: true }
+        meta: { title: "Symptom Checklist", icon: "checklist", requiresAuth: true }
       },
         
       {
@@ -197,6 +138,19 @@ export const protectedRoute = [
         component: () => import(`@/views/Account.vue`),
         meta: { title: "Account", requiresAuth: true }
       },      
+
+      {
+        path: "terms-and-conditions",
+        name: "TermsConditions",
+        meta: { title: "Terms & Conditions", requiresAuth: true },
+        component: () => import("@/views/TermsConditions.vue")
+      },
+      {
+        path: "privacy-policy",
+        name: "PrivacyPolicy",
+        meta: { title: "Privacy Policy", requiresAuth: true },
+        component: () => import("@/views/PrivacyPolicy.vue")
+      },
     ]
   }
     

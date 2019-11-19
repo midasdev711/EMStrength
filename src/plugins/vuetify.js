@@ -3,13 +3,13 @@ import Vuetify from "vuetify/lib"
 import "../theme/default.styl"
 Vue.use(Vuetify, {
   theme: {
-    primary: "#2196f3",
-    secondary: "#3f51b5",
-    accent: "#e91e63",
+    primary: "#1c4698",
+    secondary: "#47bbe9",
+    accent: "#48cba2",
     error: "#f44336",
-    warning: "#00bcd4",
-    info: "#4caf50",
-    success: "#009688"
+    warning: "#213060",
+    info: "#00a38a",
+    success: "#48cba2"
   },
   customProperties: true
 })
