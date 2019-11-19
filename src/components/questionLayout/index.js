@@ -1,0 +1,7 @@
+export { default as SectionHeading } from './SectionHeading.vue'
+export { default as SectionPart } from './SectionPart.vue'
+export { default as Instruction } from './Instruction.vue'
+export { default as Bool } from './Bool.vue'
+export { default as TextField } from './TextField.vue'
+export { default as TextArea } from './TextArea.vue'
+export { default as Scale } from './Scale.vue'
