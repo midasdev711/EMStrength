@@ -5,6 +5,21 @@ const Menu = [
     name: "Dashboard",
     key: "key-Dashboard"
   },
+
+  {
+    title: "Recovery",
+    icon: "filter_vintage",
+    name: "Recovery",
+    key: "key-Recovery"
+  },
+
+  {
+    title: "Diagnostic",
+    icon: "healing",
+    name: "Diagnostic",
+    key: "key-Diagnostic"
+  },
+
   {
     title: "Symptom Checklist",
     icon: "check_box",

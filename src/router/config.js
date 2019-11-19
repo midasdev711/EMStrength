@@ -126,6 +126,20 @@ export const protectedRoute = [
       },
 
       {
+        path: "/recovery",
+        name: "Recovery",
+        component: () => import(`@/views/Recovery.vue`),
+        meta: { title: "Recovery", icon: "filter_vintage", requiresAuth: true }
+      },
+
+      {
+        path: "/diagnostic",
+        name: "Diagnostic",
+        component: () => import(`@/views/Diagnostic.vue`),
+        meta: { title: "Diagnostic", icon: "healing", requiresAuth: true }
+      },
+
+      {
         path: "/recipe_builder",
         name: "Symptom Checklist",
         component: () => import(`@/views/RecipeBuilder.vue`),
