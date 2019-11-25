@@ -12,9 +12,13 @@
 </template>
 
 <script>
+
+//import * as components from './components/questionLayout'
+
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  name: "App",
   data() {
     return {
       rightDrawer: false,

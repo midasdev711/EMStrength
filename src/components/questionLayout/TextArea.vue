@@ -4,7 +4,7 @@
         v-bind:name="id"
         v-bind:label="title"
         v-bind:placeholder="title"
-        v-model="value"
+        v-model="text"
     ></v-textarea>
 </v-flex>
 </template>
@@ -16,7 +16,7 @@ export default {
     title: String,
     id: String,
     disabled: Boolean,
-    value: String
+    text: String
     //items:
     //length: ,
   }

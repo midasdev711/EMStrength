@@ -10,7 +10,7 @@
       thumb-label="always"
 
       :tick-labels="items"
-        :max="3"
+        :max="items.length"
         step="1"
         ticks="always"
         tick-size="4"
@@ -25,8 +25,8 @@ export default {
     title: String,
     id: String,
     disabled: Boolean,
-    value: String,
-    items: []
+    value: Number,
+    items: Array,
     //length:,
     
   },

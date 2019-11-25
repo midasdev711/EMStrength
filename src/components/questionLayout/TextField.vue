@@ -4,7 +4,7 @@
         v-bind:name="id"
         v-bind:label="title"
         v-bind:placeholder="title"
-        v-model="value"
+        v-model="text"
         :rules="rules"
         counter
         v-bind:maxLength="length"
@@ -19,7 +19,7 @@ export default {
     title: String,
     id: String,
     disabled: Boolean,
-    value: String,
+    text: String,
     //items:
     length: Number,
   },

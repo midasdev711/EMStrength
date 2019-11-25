@@ -5,6 +5,9 @@ import APIService from '@/apiService/apiService.js';
 const API = new APIService();
 
 const state = {
+  questions: [],
+  answersData: [],
+// EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
   showDrawer: null,
@@ -19,6 +22,9 @@ const state = {
 }
 
 const initialState = {
+  questions: [],
+  answersData: [],
+// EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
   showDrawer: null,
@@ -34,6 +40,11 @@ const initialState = {
 
 // getters
 const getters = {
+  getQuestions: state => state.questions,
+  getAnswersData: state => state.answersData,
+
+
+  // EXAMPLES
   getCheckoutStatus: state => state.checkoutStatus,
   getDataWeight: state => state.dataWeight,
   getWeightofWeek: state => state.weightofWeek,
@@ -53,6 +64,40 @@ const actions = {
   resetState: ({ commit }) => {
     commit("resetState");
   },
+
+  getQuestions: ({ commit }) => {
+    return API.get(`api/questions?Article=Diagnostic`)
+      .then(result => {
+        commit("setQuestions", result['data']);
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
+
+  getAnswersData: ({ commit }) => {
+    return API.get(`api/user/answers?Article=Diagnostic`)
+      .then(result => {
+        commit("setAnswers", result['data']);
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
+
+  saveAnswers: ({ commit }, data) => {
+    var headers = { 'Content-Type': 'application/json-patch+json' };
+    return API.post('api/user/answers', data, headers).then(result => {
+      commit("setAnswers", data);
+    }).catch(err => {
+      throw err;
+    });
+  },
+
+//EXAMPLE CALLS
+
   getCheckinData: ({ commit }) => {
     var headers = { 'Accept': 'application/json' };
     return API.get('api/user/checkin/20', headers).then(result => {
@@ -316,6 +361,10 @@ const mutations = {
   resetState: (state) => {
     state = Object.assign({}, initialState);
   },
+
+  setQuestions: set("questions"),
+  setAnswers: set("answersData"),
+  // EXAMPLES
   setDrawer: set("showDrawer"),
   setImage: set("image"),
   setColor: set("color"),

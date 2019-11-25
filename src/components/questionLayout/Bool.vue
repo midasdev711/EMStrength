@@ -13,7 +13,7 @@ export default {
     disabled: Boolean,
     //items:
     //length: ,
-    value: Boolean
+    value: Boolean,
   }
 }
 </script>

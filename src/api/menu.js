@@ -30,16 +30,16 @@ const Menu = [
   {
     title: "Stress Recovery Diagnostic",
     icon: "healing",
-    name: "Symptom Checklist",
-    key: "key-SymptomChecklist"
+    name: "Recovery Diagnostic",
+    key: "key-RecoveryDiagnostic"
   },
 
 
   {
     title: "Energy Health Decision Profile",
     icon: "favorite",
-    name: "Symptom Checklist",
-    key: "key-SymptomChecklist"
+    name: "Decision Profile",
+    key: "key-DecisionProfile"
   },
 
 
