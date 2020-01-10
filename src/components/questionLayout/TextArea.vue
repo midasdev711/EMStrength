@@ -1,15 +1,19 @@
 <template>
- <v-flex xs12>
+  <v-flex xs12>
     <v-textarea
-        v-bind:name="id"
-        v-bind:label="title"
-        v-bind:placeholder="title"
-        v-model="text"
+      v-bind:name="id"
+      v-bind:label="title"
+      v-bind:placeholder="title"
+      v-model="textValue"
+      @input="updateValue"
     ></v-textarea>
-</v-flex>
+  </v-flex>
 </template>
 
 <script>
+
+import debounce from "debounce"
+
 export default {
   name: "TextArea",
   props: {
@@ -17,8 +21,18 @@ export default {
     id: String,
     disabled: Boolean,
     text: String
-    //items:
-    //length: ,
+  },
+  data () {
+    return {
+      textValue: this.text ? this.text : ""
+    }
+  },
+  methods: {
+    updateValue: debounce(function (e) {
+      console.log(e);
+      this.textValue = e;
+      this.$emit('updateValue', this.textValue, this.id)
+    }, 500),
   }
 }
 </script>

@@ -4,8 +4,8 @@ import router from '@/router';
 import azureBlob from '../store/modules/azureBlob';
 import { IncomingMessage } from 'http';
 
-//const API_URL = 'https://em-api.azurewebsites.net/';
-const API_URL = 'http://localhost:5005/';
+const API_URL = 'https://em-api.azurewebsites.net/';
+// const API_URL = 'http://localhost:5005/';
 
 const blob_uri = 'https://ctmdevblobstore.blob.core.windows.net';
 const blob_sas = '?sv=2019-02-02&ss=b&srt=sco&sp=rwdlac&se=2021-12-31T11:55:12Z&st=2019-10-26T03:55:12Z&spr=https,http&sig=LYa8MJsyVDcfba4dX1fJyEQMThjXH028GFTjsl3fmIU%3D'; 

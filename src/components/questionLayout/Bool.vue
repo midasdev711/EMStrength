@@ -1,6 +1,6 @@
 <template>
  <v-flex xs12>
-      <v-switch v-model="value" v-bind:label="title"></v-switch>
+    <v-switch v-model="switchValue" v-bind:label="title" :change="$emit('updateValue', switchValue, this.id)"></v-switch>
 </v-flex>
 </template>
 
@@ -11,9 +11,14 @@ export default {
     title: String,
     id: String,
     disabled: Boolean,
-    //items:
-    //length: ,
     value: Boolean,
+  },
+  data () {
+    return {
+      switchValue: this.value ? this.value : false
+    }
+  },
+  mounted() {
   }
 }
 </script>

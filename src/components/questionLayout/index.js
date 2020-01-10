@@ -1,7 +1,19 @@
-export { default as SectionHeading } from './SectionHeading.vue'
-export { default as SectionPart } from './SectionPart.vue'
-export { default as Instruction } from './Instruction.vue'
-export { default as Bool } from './Bool.vue'
-export { default as TextField } from './TextField.vue'
-export { default as TextArea } from './TextArea.vue'
-export { default as Scale } from './Scale.vue'
+import SectionHeading from './SectionHeading.vue'
+import SectionPart from './SectionPart.vue'
+import Instruction from './Instruction.vue'
+import Bool from './Bool.vue'
+import TextField from './TextField.vue'
+import TextArea from './TextArea.vue'
+import Scale from './Scale.vue'
+
+const components = {
+    SectionHeading,
+    SectionPart,
+    Instruction,
+    Bool,
+    TextField,
+    TextArea,
+    Scale
+}
+
+export default components;
