@@ -17,10 +17,12 @@
               <v-stepper-content v-bind:step="stepl.id" :name="nameId('stepci', stepp.id, stepl.id)">
                 <v-card class="mb-5" height="600px">
                   Hi there {{stepl.title}}
-                  <div class="row" v-for="a in getAnswersData" :key="a.id" :name="nameId('col', stepl.id, a.id)">
-                    <components v-if="a.question.useText" v-model="a.text" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
-                    <components v-else v-model="a.value" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
-                  </div>
+                  <v-form v-model="form1Valid" >
+                    <div class="row" v-for="a in getAnswersData" :key="a.id" :name="nameId('col', stepl.id, a.id)">
+                      <components v-if="a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
+                      <components v-else :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
+                    </div>
+                  </v-form>
                 </v-card>
               </v-stepper-content>
               <v-stepper-content step="2" :name="nameId('stepca', stepp.id, stepl.id)" > 
@@ -66,6 +68,7 @@ export default {
   data: () => ({
     hStepper: 0,
     vStepper: 1,
+    form1Valid: false,
 
     steppers: [
       {title: "Step1", id: 1},
@@ -99,12 +102,16 @@ export default {
     ],*/
 
     answers: [],
+
     loading: false,
     saved: false,
   }),
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getAnswersData"
+    }),
+    ...mapGetters("auth", {
+      getDataUserProfile: "getDataUserProfile"
     })
   },
   methods: {
@@ -119,56 +126,59 @@ export default {
     {
       return "comp"+type+id;
     },
+
     nameId(type, row, col)
     {
       return `${type}_${row}x${col}`;
     },
+
     nextStep(step)
     {
-        this.saveAnswers();
-        //this.hStepper = step + 1;
+      this.saveAnswers();
+      //this.hStepper = step + 1;
 
     },
-    updateComponentValue(value, id) {
-      console.log("question id", id, "value", value);
+
+    updateComponentValue(value, questionId, answerId, useText) {
+      for (let i = 0; i < this.answers.length; i ++) {
+        if (this.answers[i].questionId == questionId) {
+          if (useText) {
+            this.answers[i].text = value;
+          } else {
+            this.answers[i].value = value;
+          }
+          return;
+        }
+      }
+      let tmp = {
+        answerId: answerId,
+        questionId: questionId,
+        value: useText ? null : value,
+        text: useText ? value : ""
+      }
+
+      this.answers.push(tmp);
     },
+
     saveAnswers()
     {
-      console.log("SAVING ANSWERS:");
-      // Validate before submit
-      this.$validator.validate().then((result) => {
+      this.$validator.validateAll().then((result) => {
         if (result) {
           this.loading = true;
+          console.log(this.answers);
 
-          /*this.questions.forEach(q => {
-            let ans = {
-              answerId: null,
-              questionId: q.id,
-              value: q.value,
-              text: q.text,
-            };
-            console.log(ans);
-            this.answers.push(ans);
-          } );*/
-          
           const formData = {
-            "userId": null, 
-            "answers": this.answers,
+            userId: this.getDataUserProfile.id, 
+            answers: this.answers,
           };
           console.log(formData);
           this._saveAnswers(formData).then(res => {
-            this.$toast.success('Successfully saved', {
-              // override the global option
-              // position: 'top-right'
-            });
+            this.$toast.success('Successfully saved');
             this.saved = true;
             this.loading = false;
 
           }).catch(err => {
-            this.$toast.error(err, {
-              // override the global option
-              // position: 'top-right'
-            });
+            this.$toast.error(err);
           })
           
         }
@@ -176,17 +186,11 @@ export default {
         console.error(error);
       });
     }
-
-
   },
   mounted() {
     //this.questions = this._getQuestionsAnswers().then(data => this.questions = data);
     this._getQuestionsAnswers()
-      .then(data => this.answers = data);
-    
-    //console.log(this.getQuestions);
-    console.log("QUESITONS:");
-    console.log(this.answers);
+      .then(data => console.log(data));
     
   } 
 }

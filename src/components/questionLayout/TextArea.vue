@@ -5,6 +5,7 @@
       v-bind:label="title"
       v-bind:placeholder="title"
       v-model="textValue"
+      v-validate="'required'"
       @input="updateValue"
     ></v-textarea>
   </v-flex>
@@ -20,7 +21,10 @@ export default {
     title: String,
     id: String,
     disabled: Boolean,
-    text: String
+    text: String,
+    questionId: String,
+    answerId: String,
+    useText: Boolean
   },
   data () {
     return {
@@ -31,7 +35,7 @@ export default {
     updateValue: debounce(function (e) {
       console.log(e);
       this.textValue = e;
-      this.$emit('updateValue', this.textValue, this.id)
+      this.$emit('updateValue', this.textValue, this.questionId, this.answerId, this.useText)
     }, 500),
   }
 }

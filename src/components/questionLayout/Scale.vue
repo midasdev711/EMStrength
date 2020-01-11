@@ -12,6 +12,7 @@
       step="1"
       ticks="always"
       tick-size="7"
+      :change="$emit('updateValue', sliderValue, questionId, answerId, useText)"
     >
       <template v-slot:thumb-label="props">
         <span>
@@ -39,6 +40,9 @@ export default {
         "value":2,"title":"Medium"
       }]
     },
+    questionId: String,
+    answerId: String,
+    useText: Boolean
   },
   data () {
     return {

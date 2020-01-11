@@ -1,16 +1,16 @@
 <template>
- <v-flex xs12>
+  <v-flex xs12>
     <v-text-field
-        v-bind:name="id"
-        v-bind:label="title"
-        v-bind:placeholder="title"
-        v-model="textValue"
-        :rules="rules"
-        counter
-        v-bind:maxLength="length"
-        @input="updateValue"
+      v-bind:name="id"
+      v-bind:label="title"
+      v-bind:placeholder="title"
+      v-model="textValue"
+      v-validate="'required|max:' + length"
+      counter
+      v-bind:maxLength="length"
+      @input="updateValue"
     ></v-text-field>
-</v-flex>
+  </v-flex>
 </template>
 
 <script>
@@ -30,6 +30,9 @@ export default {
       type: Number,
       default: 10
     },
+    questionId: String,
+    answerId: String,
+    useText: Boolean
   },
   data () {
     return {
@@ -40,7 +43,7 @@ export default {
     updateValue: debounce(function (e) {
       console.log(e);
       this.textValue = e;
-      this.$emit('updateValue', this.textValue, this.id)
+      this.$emit('updateValue', this.textValue, this.questionId, this.answerId, this.useText)
     }, 500),
   },
   computed: {
