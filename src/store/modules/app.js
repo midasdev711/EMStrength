@@ -7,6 +7,8 @@ const API = new APIService();
 const state = {
   questions: [],
   answersData: [],
+  recoveryData: [],
+  recoveryCheck: false,
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -42,7 +44,8 @@ const initialState = {
 const getters = {
   getQuestions: state => state.questions,
   getAnswersData: state => state.answersData,
-
+  getRecoveryCheck: state => state.recoveryCheck,
+  getRecoveryData: state => state.recoveryData,
 
   // EXAMPLES
   getCheckoutStatus: state => state.checkoutStatus,
@@ -65,6 +68,10 @@ const actions = {
     commit("resetState");
   },
 
+  setRecoveryCheck: ({commit}) => {
+    commit("setRecoveryCheck");
+  },
+
   getQuestions: ({ commit }) => {
     return API.get(`api/questions?Article=Diagnostic`)
       .then(result => {
@@ -79,7 +86,9 @@ const actions = {
   getAnswersData: ({ commit }) => {
     return API.get(`api/user/answers?Article=Diagnostic`)
       .then(result => {
-        commit("setAnswers", result['data']);
+
+        // commit("setAnswers", result['data']);
+        console.log(result)
         return result['data'];
       })
       .catch(err => {
@@ -94,6 +103,28 @@ const actions = {
     }).catch(err => {
       throw err;
     });
+  },
+
+  getAllRecovery: ({commit}) => {
+    return API.get(`api/user/recovery`)
+      .then(result => {
+        commit("setRecovery", result['data']);
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
+
+  saveRecovery: ({commit, data}) => {
+    return API.put(`api/user/recovery`, data)
+      .then(result => {
+        commit("saveRecovery", data);
+        return data;
+      })
+      .catch(err => {
+        throw err;
+      });
   },
 
 //EXAMPLE CALLS
@@ -364,6 +395,14 @@ const mutations = {
 
   setQuestions: set("questions"),
   setAnswers: set("answersData"),
+  setRecoveryCheck: (state) => {
+    state.recoveryCheck = !state.recoveryCheck;
+  },
+  setRecovery: set('recoveryData'),
+  saveRecovery: (state, data) => {
+    console.log("mutation saveRecovery called");
+  },
+
   // EXAMPLES
   setDrawer: set("showDrawer"),
   setImage: set("image"),

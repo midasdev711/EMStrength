@@ -68,6 +68,26 @@ export default class APIService {
       });
   }
 
+  put(sub_url, content, headers = {}) {
+    let token = localStorage.getItem("token");
+
+    let url = `${API_URL}` + sub_url;
+    return axios.put(url, content, {
+        headers: {
+          ...headers,
+          Authorization: "bearer " + token,
+        }
+      })
+      .then(response => {
+        // this.posts = response.data
+        return response.data;
+      })
+      .catch(e => {
+        // this.errors.push(e)
+        throw e;
+      });
+  }
+
   patch(sub_url, content, headers = {}) {
     let token = localStorage.getItem("token");
 

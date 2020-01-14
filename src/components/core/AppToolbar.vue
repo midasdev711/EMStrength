@@ -5,6 +5,7 @@
     </v-toolbar-title>
     <div v-if="$vuetify.breakpoint.xsOnly && $route.meta.title" class="title-mobile">{{ $route.meta.title }}</div>
     <v-spacer></v-spacer>
+    <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck"></v-checkbox>
     <v-toolbar-items>
       <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
         <v-btn icon flat slot="activator" @click="navigateToFeedback()">
@@ -56,6 +57,7 @@ export default {
   },
   data() {
     return {
+      recoveryCheck: false,
       user: {
         id: "",
         name: "",
@@ -86,13 +88,17 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),
+    ...mapGetters("app", {
+      getRecoveryCheck: "getRecoveryCheck"
+    }),
     toolbarColor() {
       return this.$vuetify.options.extra.mainNav
     }
   },
   methods: {
     ...mapActions("app", {
-      resetState: "resetState"
+      resetState: "resetState",
+      setRecoveryCheck: "setRecoveryCheck"
     }),
     ...mapMutations("app", ["setDrawer", "toggleDrawer"]),
     handleDrawerToggle() {
@@ -113,6 +119,13 @@ export default {
       this.$router.push(`/coaching_feedback`);
     }
   },
+  watch: {
+    recoveryCheck: function(newParam, oldParam) {
+      if (newParam != oldParam) {
+        this.setRecoveryCheck();
+      }
+    }
+  },
   mounted() {
     /*if (this.getDataUserProfile.length > 0) {
       this.loading = false;
@@ -121,7 +134,13 @@ export default {
       this.user['unreadMessages'] = 2;
       this.displayData();
     }*/
+    console.log(this.$route.name)
     this.windowWidth = window.innerWidth;
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+>>>.recoveryCheck
+  padding-top 25px
+</style>

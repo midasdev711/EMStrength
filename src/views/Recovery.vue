@@ -1,5 +1,5 @@
 <template>
-<v-layout justify-center>
+<v-layout justify-center class="pa-2">
   <v-flex xs12 sm6>
     <v-card color="" class="black--text" v-if="topNotification">
       <v-card-title primary-title>
@@ -17,7 +17,7 @@
         <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
       </v-card-title>  
       <v-container fluid>
-        <v-checkbox v-model="question.value" :label="question.questionText" v-for="question in questions.questions"></v-checkbox>
+        <v-checkbox v-model="question.value" v-if="question.value | !getRecoveryCheck" :label="question.questionText" v-for="question in questions.questions"></v-checkbox>
       </v-container>
       <v-dialog
         v-model="dialog"
@@ -35,7 +35,7 @@
             <v-btn
               color="green darken-1"
               flat="flat"
-              @click="dialog = false"
+              @click="dialog = false; commenceQuestionnaire();"
             >
               RE-RUN
             </v-btn>
@@ -57,57 +57,84 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        dialog: false,
-        topNotification: true,
-        color: "#47bbe9",
-        questionLists: [{
-          title: "Physical",
-          questions: [{
-              id: "n-a",
-              questionText: "Waking 5 mins stretching",
-              value: false
-            }, {
-              id: "n-a",
-              questionText: "morning 10 - 15 mins walking",
-              value: false
-            }, {
-              id: "n-a",
-              questionText: "fruit & vegetables breakfast smoothly",
-              value: false
-            }, {
-              id: "n-a",
-              questionText: "glass of water (before coffee)",
-              value: false
-            }]
+import { mapActions, mapGetters } from "vuex";
+export default {
+  data () {
+    return {
+      dialog: false,
+      topNotification: true,
+      color: "#c3e2ef",
+      questionLists: [{
+        title: "Physical",
+        questions: [{
+            id: "n-a",
+            questionText: "Waking 5 mins stretching",
+            value: false
           }, {
-            title: "Mental & Emotional",
-            questions:[{
-              id: "n-a",
-              questionText: "10 mins meditation after walking",
-              value: false
-            }, {
-              id: "n-a",
-              questionText: "review positives in your life",
-              value: false
-            }, {
-              id: "n-a",
-              questionText: "fruit & vegetables breakfast smoothly",
-              value: false
-            }, {
-              id: "n-a",
-              questionText: "glass of water (before coffee)",
-              value: false
-            }]}
-        ],
-        checkbox1: true,
-        checkbox2: false,
-        hidden: false
-      }
+            id: "n-a",
+            questionText: "morning 10 - 15 mins walking",
+            value: false
+          }, {
+            id: "n-a",
+            questionText: "fruit & vegetables breakfast smoothly",
+            value: false
+          }, {
+            id: "n-a",
+            questionText: "glass of water (before coffee)",
+            value: false
+          }]
+        }, {
+          title: "Mental & Emotional",
+          questions:[{
+            id: "n-a",
+            questionText: "10 mins meditation after walking",
+            value: false
+          }, {
+            id: "n-a",
+            questionText: "review positives in your life",
+            value: false
+          }, {
+            id: "n-a",
+            questionText: "fruit & vegetables breakfast smoothly",
+            value: false
+          }, {
+            id: "n-a",
+            questionText: "glass of water (before coffee)",
+            value: false
+          }]}
+      ],
+      checkbox1: true,
+      checkbox2: false,
+      hidden: false
     }
+  },
+  computed: {
+    ...mapGetters("auth", {
+      getDataUserProfile: "getDataUserProfile"
+    }),
+    ...mapGetters("app", {
+      getRecoveryCheck: "getRecoveryCheck",
+      getRecoveryData: "getRecoveryData"
+    }),
+    toolbarColor() {
+      return this.$vuetify.options.extra.mainNav
+    }
+  },
+  methods: {
+    ...mapActions("app", {
+      resetState: "resetState",
+      setRecoveryCheck: "setRecoveryCheck",
+      getAllRecovery: "getAllRecovery"
+    }),
+    commenceQuestionnaire() {
+      
+    }
+  },
+  mounted() {
+    this.getAllRecovery();
+    console.log(this.getRecoveryData);
   }
+}
 </script>
 
 <style lang="stylus" scoped>

@@ -145,7 +145,7 @@ export default {
           if (useText) {
             this.answers[i].text = value;
           } else {
-            this.answers[i].value = value;
+            this.answers[i].value = value == true ? 1 : (value == false ? 0 : value);
           }
           return;
         }
@@ -153,7 +153,7 @@ export default {
       let tmp = {
         answerId: answerId,
         questionId: questionId,
-        value: useText ? null : value,
+        value: useText ? null : value == true ? 1 : (value == false ? 0 : value),
         text: useText ? value : ""
       }
 
