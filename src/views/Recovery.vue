@@ -1,7 +1,7 @@
 <template>
 <v-layout justify-center class="pa-2">
   <v-flex xs12 sm6>
-    <v-card color="" class="black--text" v-if="topNotification">
+    <v-card color="" class="black--text" v-if="topNotification & questionLists.length > 0">
       <v-card-title primary-title>
         <div>
           <h3>Adopt one of these activities each week. When you have mastered it ... Lorem ipsum dolor sit amet</h3>
@@ -11,7 +11,7 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card :color="color" v-for="questions in questionLists" class="question-box mb-2 mt-2">
+    <v-card :color="color" v-for="questions in questionLists" v-if="questionLists.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
         <span class="title">{{questions.title}}</span>
         <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
@@ -51,6 +51,17 @@
         </v-card>
       </v-dialog>
     </v-card>
+    <v-card v-if="questionLists.length == 0">
+      <v-card-title>
+        <h2>Your recovery Do list is empty</h2>
+        <img src="/img/Eden-2.png" width="100%"/>
+      </v-card-title>  
+      <v-container fluid align-center text-center>
+        <h3 class="text-justified">To identify imbalances in your life and the ways to recover we will guide you though questions.</h3>
+        <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
+        <h3>allow up to 15 mins to complete</h3>
+      </v-container>
+    </v-card>
     
   </v-flex>
 </v-layout>
@@ -64,45 +75,46 @@ export default {
       dialog: false,
       topNotification: true,
       color: "#c3e2ef",
-      questionLists: [{
-        title: "Physical",
-        questions: [{
-            id: "n-a",
-            questionText: "Waking 5 mins stretching",
-            value: false
-          }, {
-            id: "n-a",
-            questionText: "morning 10 - 15 mins walking",
-            value: false
-          }, {
-            id: "n-a",
-            questionText: "fruit & vegetables breakfast smoothly",
-            value: false
-          }, {
-            id: "n-a",
-            questionText: "glass of water (before coffee)",
-            value: false
-          }]
-        }, {
-          title: "Mental & Emotional",
-          questions:[{
-            id: "n-a",
-            questionText: "10 mins meditation after walking",
-            value: false
-          }, {
-            id: "n-a",
-            questionText: "review positives in your life",
-            value: false
-          }, {
-            id: "n-a",
-            questionText: "fruit & vegetables breakfast smoothly",
-            value: false
-          }, {
-            id: "n-a",
-            questionText: "glass of water (before coffee)",
-            value: false
-          }]}
-      ],
+      questionLists: [],
+      // questionLists: [{
+      //   title: "Physical",
+      //   questions: [{
+      //       id: "n-a",
+      //       questionText: "Waking 5 mins stretching",
+      //       value: false
+      //     }, {
+      //       id: "n-a",
+      //       questionText: "morning 10 - 15 mins walking",
+      //       value: false
+      //     }, {
+      //       id: "n-a",
+      //       questionText: "fruit & vegetables breakfast smoothly",
+      //       value: false
+      //     }, {
+      //       id: "n-a",
+      //       questionText: "glass of water (before coffee)",
+      //       value: false
+      //     }]
+      //   }, {
+      //     title: "Mental & Emotional",
+      //     questions:[{
+      //       id: "n-a",
+      //       questionText: "10 mins meditation after walking",
+      //       value: false
+      //     }, {
+      //       id: "n-a",
+      //       questionText: "review positives in your life",
+      //       value: false
+      //     }, {
+      //       id: "n-a",
+      //       questionText: "fruit & vegetables breakfast smoothly",
+      //       value: false
+      //     }, {
+      //       id: "n-a",
+      //       questionText: "glass of water (before coffee)",
+      //       value: false
+      //     }]}
+      // ],
       checkbox1: true,
       checkbox2: false,
       hidden: false
@@ -140,4 +152,8 @@ export default {
 <style lang="stylus" scoped>
 .v-card__actions
   justify-content flex-end
+.text-justified
+  text-align justify
+.text-center
+  text-align center
 </style>

@@ -140,9 +140,9 @@ export const protectedRoute = [
       },
 
       {
-        path: "/recipe_builder",
+        path: "/symptom_checklist",
         name: "Symptom Checklist",
-        component: () => import(`@/views/RecipeBuilder.vue`),
+        component: () => import(`@/views/SymptomChecklist.vue`),
         meta: { title: "Symptom Checklist", icon: "checklist", requiresAuth: true }
       },
         

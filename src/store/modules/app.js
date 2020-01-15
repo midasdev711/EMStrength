@@ -87,8 +87,8 @@ const actions = {
     return API.get(`api/user/answers?Article=Diagnostic`)
       .then(result => {
 
-        // commit("setAnswers", result['data']);
-        console.log(result)
+        commit("setAnswers", result['data']);
+        // console.log(result)
         return result['data'];
       })
       .catch(err => {

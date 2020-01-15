@@ -195,3 +195,8 @@ export default {
   } 
 }
 </script>
+
+<style lang="stylus" scoped>
+>>>.v-stepper__content
+  padding 0
+</style>

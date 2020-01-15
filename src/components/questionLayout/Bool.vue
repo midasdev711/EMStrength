@@ -22,6 +22,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.title);
   }
 }
 </script>
