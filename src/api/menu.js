@@ -30,7 +30,7 @@ const Menu = [
   {
     title: "Stress Recovery Diagnostic",
     icon: "healing",
-    name: "Recovery Diagnostic",
+    name: "StressRecovery",
     key: "key-RecoveryDiagnostic"
   },
 

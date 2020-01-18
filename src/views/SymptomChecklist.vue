@@ -14,11 +14,13 @@
           <v-card
             class="mb-5"
             color="lighten-1"
-            height="200px"
           >
             <v-card-title>
               <h2>Energy</h2>
             </v-card-title>
+
+            <v-card-actions>
+            </v-card-actions>
           </v-card>
 
           <v-btn
@@ -78,19 +80,19 @@
 </template>
 
 <script>
+
 import { mapActions, mapGetters } from "vuex";
 import debounce from "debounce";
-import DateField from "@/components/helper/DateField"
+import components from '../components/questionLayout'
 
 export default {
   name: "SymptomChecklist",
-  components: {
-    DateField
-  },
+  components,
   data() {
     return {
       isMobile: false,
       e1: 1,
+      e6: 1
     }
   },
   filters: {

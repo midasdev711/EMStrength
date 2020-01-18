@@ -145,6 +145,13 @@ export const protectedRoute = [
         component: () => import(`@/views/SymptomChecklist.vue`),
         meta: { title: "Symptom Checklist", icon: "checklist", requiresAuth: true }
       },
+
+      {
+        path: "/stress_recovery",
+        name: "StressRecovery",
+        component: () => import(`@/views/StressRecovery.vue`),
+        meta: { title: "Stress Recovery Diagnostic", icon: "checklist", requiresAuth: true }
+      },
         
       {
         path: "/account",

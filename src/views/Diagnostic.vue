@@ -62,9 +62,6 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Diagnostic",
   components,
-  props: {
-    componentName: { type: String, required: false }
-  },
   data: () => ({
     hStepper: 0,
     vStepper: 1,
