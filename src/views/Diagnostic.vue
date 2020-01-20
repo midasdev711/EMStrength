@@ -18,7 +18,7 @@
                 <v-card class="mb-5" height="600px">
                   Hi there {{stepl.title}}
                   <v-form v-model="form1Valid" >
-                    <div class="row" v-for="a in getAnswersData" :key="a.id" :name="nameId('col', stepl.id, a.id)">
+                    <div class="row" v-for="a in questions" :key="a.id" :name="nameId('col', stepl.id, a.id)">
                       <components v-if="a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
                       <components v-else :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
                     </div>
@@ -80,24 +80,6 @@ export default {
     ],
 
     questions: [],
-    /*    {id: 1, value: null, type: "SectionHeading", title: "Mental Energy Demands", length: null, items: []},
-        {id: 2, value: null, type: "SectionPart", title: "A, Applicable statements", length: null, items: []},
-          {id: 6, value: 2,  type: "Scale", title: "Rate your current energy level", length: null, items: 
-            [
-            'Alfa',
-            'BMW',
-            'Toyota',
-            'Apple',
-            ]
-        },
-                
-        {id: 3, value: null, type: "Instruction", title: "Still tick even if only SOMETIMES and only SOMEWHAT applicable:", length: null, items: []},
-        {id: 4, value: null, type: "Bool", title: "I feel pressure from the world around me to keep my struggle to myself", length: null, items: []},
-        {id: 7, value: null, type: "TextArea", title: "Give a long answer here", length: 800, items: []},  
-        {id: 5, value: null, type: "TextField", title: "What other factors may affect your Energy wellbeing?", length: 120, items: []},
-
-    ],*/
-
     answers: [],
 
     loading: false,
@@ -105,11 +87,16 @@ export default {
   }),
   computed: {
     ...mapGetters("app", {
-      getAnswersData: "getAnswersData"
+      getAnswersData: "getDiagnosticAnswersData"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     })
+  },
+  watch: {
+    getAnswersData(newProps, oldProps) {
+      console.log("123123", newProps);
+    }
   },
   methods: {
     ...mapActions("app", {
@@ -185,10 +172,12 @@ export default {
     }
   },
   mounted() {
-    //this.questions = this._getQuestionsAnswers().then(data => this.questions = data);
-    this._getQuestionsAnswers()
-      .then(data => console.log(data));
-    
+    let data = {
+      params: "?Article=Diagnostic",
+      article: "Diagnostic"
+    }
+    this._getQuestionsAnswers(data)
+      .then(data => this.questions = data);
   } 
 }
 </script>

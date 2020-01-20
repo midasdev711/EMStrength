@@ -92,7 +92,8 @@ export default {
     return {
       isMobile: false,
       e1: 1,
-      e6: 1
+      e6: 1,
+      questions: []
     }
   },
   filters: {
@@ -103,16 +104,30 @@ export default {
     }  
   },
   computed: {
+    ...mapGetters("app", {
+      getAnswersData: "getSymptomAnswersData"
+    }),
   },
   methods: {
     ...mapActions("app", {
+      _getQuestionsAnswers: "getAnswersData",
     }),
   },
   watch: {
+    getAnswersData(newprops, oldprops) {
+      console.log(2123123123123);
+    }
   },
   mounted() {
     if (window.innerWidth < 500 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
+    let params = {
+      params: '?Article=Symptom',
+      article: "symptom"
+    }
+
+    this._getQuestionsAnswers(params)
+      .then(data => this.questions = data);
   }
 
   

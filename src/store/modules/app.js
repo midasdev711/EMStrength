@@ -25,7 +25,8 @@ const state = {
 
 const initialState = {
   questions: [],
-  answersData: [],
+  diagnosticAnswers: [],
+  symptomAnswers: [],
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -43,7 +44,8 @@ const initialState = {
 // getters
 const getters = {
   getQuestions: state => state.questions,
-  getAnswersData: state => state.answersData,
+  getDiagnosticAnswersData: state => state.diagnosticAnswers,
+  getSymptomAnswersData: state => state.symptomAnswers,
   getRecoveryCheck: state => state.recoveryCheck,
   getRecoveryData: state => state.recoveryData,
 
@@ -83,12 +85,19 @@ const actions = {
       });
   },
 
-  getAnswersData: ({ commit }) => {
-    return API.get(`api/user/answers?Article=Diagnostic`)
+  getAnswersData: ({ commit }, data) => {
+    return API.get(`api/user/answers${data.params}`)
       .then(result => {
-
-        commit("setAnswers", result['data']);
-        // console.log(result)
+        switch (data.article) {
+          case "Diagnostic":
+            commit("setDiagnosticAnswers", result['data']);
+            break;
+          case "Symptom":
+            commit("setSymptomAnswers", result['data']);
+            break;
+          default:
+            break;
+        }
         return result['data'];
       })
       .catch(err => {
@@ -394,7 +403,11 @@ const mutations = {
   },
 
   setQuestions: set("questions"),
-  setAnswers: set("answersData"),
+  setDiagnosticAnswers: (state, data) => {
+    // state.diagnosticAnswers = Object.assign([], data);
+    state.diagnosticAnswers = Object.assign([], JSON.parse(JSON.stringify(data)));
+  },
+  setSymptomAnswers: set("symptomAnswers"),
   setRecoveryCheck: (state) => {
     state.recoveryCheck = !state.recoveryCheck;
   },
