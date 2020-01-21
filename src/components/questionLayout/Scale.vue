@@ -62,3 +62,12 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+>>>.v-input--slider 
+  margin-top 3em
+>>>.v-slider__thumb-label
+  height 50px!important
+  width 50px!important
+  border-radius 60% 27% 0
+</style>
