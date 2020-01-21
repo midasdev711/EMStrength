@@ -54,7 +54,144 @@ export default {
     vStepper: 1,
     form1Valid: false,
 
-    questions: [],
+    questions: {
+      "article": "Diagnostic",
+      "horizontal": [
+        {
+          "articleSubheading": null,
+          "sectionNo": null,
+          "subsectionNo": null,
+          "vertical": [
+            {
+              "sectionNo": 0,
+              "subsectionNo": null,
+              "items": [
+                {
+                  "answerId": "92c42cb0-2fde-402b-aecd-a981c06ec06f",
+                  "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                  "value": 0,
+                  "text": null,
+                  "question": {
+                    "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                    "article": "Diagnostic",
+                    "articleSubheading": null,
+                    "sectionNo": 0,
+                    "sequence": 4,
+                    "subsectionNo": null,
+                    "type": "Bool",
+                    "useText": false,
+                    "title": "I identify with messages like 'nothing comes without hard work'",
+                    "condition": null,
+                    "length": null,
+                    "items": []
+                  }
+                },
+                {
+                  "answerId": "6136a4fa-51ea-4017-8218-483cc28604e3",
+                  "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                  "value": 0,
+                  "text": null,
+                  "question": {
+                    "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                    "article": "Diagnostic",
+                    "articleSubheading": null,
+                    "sectionNo": 0,
+                    "sequence": 4,
+                    "subsectionNo": null,
+                    "type": "Bool",
+                    "useText": false,
+                    "title": "I identify with messages like 'nothing comes without hard work'",
+                    "condition": null,
+                    "length": null,
+                    "items": []
+                  }
+                },
+                {
+                  "answerId": "0366b743-05be-45b0-8ceb-df9d3027d96c",
+                  "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                  "value": 0,
+                  "text": "",
+                  "question": {
+                    "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                    "article": "Diagnostic",
+                    "articleSubheading": null,
+                    "sectionNo": 0,
+                    "sequence": 4,
+                    "subsectionNo": null,
+                    "type": "Bool",
+                    "useText": false,
+                    "title": "I identify with messages like 'nothing comes without hard work'",
+                    "condition": null,
+                    "length": null,
+                    "items": []
+                  }
+                },
+                {
+                  "answerId": "61d58878-e6d3-43ac-8efa-7acb7876a5af",
+                  "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                  "value": 23,
+                  "text": "",
+                  "question": {
+                    "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                    "article": "Diagnostic",
+                    "articleSubheading": null,
+                    "sectionNo": 0,
+                    "sequence": 4,
+                    "subsectionNo": null,
+                    "type": "Bool",
+                    "useText": false,
+                    "title": "I identify with messages like 'nothing comes without hard work'",
+                    "condition": null,
+                    "length": null,
+                    "items": []
+                  }
+                },
+                {
+                  "answerId": "6f088de0-c33c-4442-959f-45923ebb19bf",
+                  "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                  "value": 1,
+                  "text": "",
+                  "question": {
+                    "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                    "article": "Diagnostic",
+                    "articleSubheading": null,
+                    "sectionNo": 0,
+                    "sequence": 4,
+                    "subsectionNo": null,
+                    "type": "Bool",
+                    "useText": false,
+                    "title": "I identify with messages like 'nothing comes without hard work'",
+                    "condition": null,
+                    "length": null,
+                    "items": []
+                  }
+                },
+                {
+                  "answerId": "22f0f145-8847-4840-87d5-efc3c2ca91df",
+                  "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                  "value": 1,
+                  "text": "",
+                  "question": {
+                    "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
+                    "article": "Diagnostic",
+                    "articleSubheading": null,
+                    "sectionNo": 0,
+                    "sequence": 4,
+                    "subsectionNo": null,
+                    "type": "Bool",
+                    "useText": false,
+                    "title": "I identify with messages like 'nothing comes without hard work'",
+                    "condition": null,
+                    "length": null,
+                    "items": []
+                  }
+                }
+              ]
+            }
+          ],
+          "items": []
+      }
+    ],
     answers: [],
 
     loading: false,
