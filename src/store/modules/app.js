@@ -86,7 +86,7 @@ const actions = {
   },
 
   getAnswersData: ({ commit }, data) => {
-    return API.get(`api/user/answers${data.params}`)
+    return API.get(`api/user/answers/layout${data.params}`)
       .then(result => {
         switch (data.article) {
           case "Diagnostic":
