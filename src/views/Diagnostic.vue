@@ -1,42 +1,29 @@
 <template>
   <v-stepper v-model="hStepper">
     <v-stepper-header>
-      <v-stepper-step v-for="step in steppers" :key="step.title" :complete="hStepper > step.id" v-bind:step="step.id">{{step.title}}
+      <v-stepper-step v-for="step in questions" :key="step.sectionNo" :complete="hStepper > step.sectionNo" v-bind:step="step.sectionNo">{{step.articleSubheading}}
       </v-stepper-step>
     </v-stepper-header>
 
-    <v-stepper-items v-for="stepp in steppers" :key="stepp.title">
-      <v-stepper-content v-bind:step="stepp.id" :name="nameId('stepco', stepp.id, 0)">
+    <v-stepper-items v-for="stepp in questions" :key="stepp.sectionNo + 'stepper-item'">
+      <v-stepper-content v-bind:step="stepp.sectionNo">
         <v-card>
           <v-stepper vertical v-model="vStepper">
-            <div v-for="stepl in vSteppers" :key="stepl.title" :name="nameId('divco', stepp.id, stepl.id)" >
-              <v-stepper-step editable :complete="vStepper > stepl.id" v-bind:step="stepl.id">
-                {{stepl.title}}
+            <div v-for="stepl in stepp.vertical" :key="stepl.sectionNo" >
+              <v-stepper-step editable :complete="vStepper > stepl.sectionNo" v-bind:step="stepl.sectionNo">
+                {{stepl.subsectionNo}}
               </v-stepper-step>
 
-              <v-stepper-content v-bind:step="stepl.id" :name="nameId('stepci', stepp.id, stepl.id)">
+              <v-stepper-content v-bind:step="stepl.sectionNo">
                 <v-card class="mb-5" height="600px">
-                  Hi there {{stepl.title}}
+                  Hi there {{stepl.subsectionNo}}
                   <v-form v-model="form1Valid" >
-                    <div class="row" v-for="a in questions" :key="a.id" :name="nameId('col', stepl.id, a.id)">
+                    <div class="row" v-for="a in stepl.items" :key="a.id" :name="nameId('col', stepl.id, a.id)">
                       <components v-if="a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
                       <components v-else :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
                     </div>
                   </v-form>
                 </v-card>
-              </v-stepper-content>
-              <v-stepper-content step="2" :name="nameId('stepca', stepp.id, stepl.id)" > 
-                <!--v-card>
-                  ANSWERS
-                  <v-container>
-                  <v-row :name="nameId('ans-row', stepl.id, 0)">
-                  <v-col cols="12" v-for="q in questions" :key="q.id" :name="nameId('ans-col', stepl.id, q.id)">
-                      <p> {{q.title}} => {{q.value}}
-                      </p>
-                  </v-col>
-                  </v-row>
-                  </v-container>
-                </v-card-->
               </v-stepper-content>
             </div>
           </v-stepper>
@@ -66,18 +53,6 @@ export default {
     hStepper: 0,
     vStepper: 1,
     form1Valid: false,
-
-    steppers: [
-      {title: "Step1", id: 1},
-      //{title: "Step2", id: 2},
-      //{title: "Step3", id: 3}
-    ],
-
-    vSteppers: [
-      {title: "VStep1", id: 1},
-      //{title: "VStep2", id: 2},
-      //{title: "VStep3", id: 3}
-    ],
 
     questions: [],
     answers: [],
@@ -177,7 +152,10 @@ export default {
       article: "Diagnostic"
     }
     this._getQuestionsAnswers(data)
-      .then(data => this.questions = data);
+      .then(data => {
+        this.questions = data;
+        console.log(this.questions.horizontal)
+      });
   } 
 }
 </script>
