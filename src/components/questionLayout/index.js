@@ -5,15 +5,22 @@ import Bool from './Bool.vue'
 import TextField from './TextField.vue'
 import TextArea from './TextArea.vue'
 import Scale from './Scale.vue'
+import Selection from './Selection.vue'
+import SectionInstruction from './SectionInstruction.vue'
+import ArticleGeneralInstruction from './ArticleGeneralInstruction.vue'
+
 
 const components = {
     SectionHeading,
     SectionPart,
     Instruction,
+    SectionInstruction,
+    ArticleGeneralInstruction,
     Bool,
     TextField,
     TextArea,
-    Scale
+    Scale,
+    Selection
 }
 
 export default components;
