@@ -4592,7 +4592,7 @@ export default {
 
     this._getQuestionsAnswers(params)
       .then(data => {
-        // this.questions = data;
+        //this.questions = data;
         console.log(this.questions);
       });
   }

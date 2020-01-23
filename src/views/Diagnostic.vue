@@ -287,7 +287,7 @@ export default {
     }
     this._getQuestionsAnswers(data)
       .then(data => {
-        // this.questions = data;
+        //this.questions = data;
         console.log(this.questions.horizontal)
       });
   } 
