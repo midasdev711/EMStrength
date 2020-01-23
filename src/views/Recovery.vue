@@ -1,7 +1,7 @@
 <template>
 <v-layout justify-center class="pa-2">
   <v-flex xs12 sm6>
-    <v-card color="" class="black--text" v-if="topNotification & recoveryData.length > 0">
+    <v-card color="" class="black--text" v-if="topNotification & getRecoveryData.length > 0">
       <v-card-title primary-title>
         <div>
           <h3>Adopt one of these activities each week. When you have mastered it ... Lorem ipsum dolor sit amet</h3>
@@ -11,13 +11,13 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card :color="color" v-for="questions in recoveryData" v-if="recoveryData.length > 0" class="question-box mb-2 mt-2">
+    <v-card :color="color" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
-        <span class="title">{{questions.title}}</span>
+        <span class="title">{{questions.category}}</span>
         <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
       </v-card-title>  
       <v-container fluid>
-        <v-checkbox v-model="question.done" v-if="question.done | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.questions"></v-checkbox>
+        <v-checkbox :key="question.recoveryId" v-model="question.done" v-if="question.done | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.items"></v-checkbox>
       </v-container>
       <v-dialog
         v-model="dialog"
@@ -51,7 +51,7 @@
         </v-card>
       </v-dialog>
     </v-card>
-    <v-card v-if="recoveryData.length == 0">
+    <v-card v-if="getRecoveryData.length == 0">
       <v-card-title>
         <h2>Your recovery Do list is empty</h2>
         <img src="/img/Eden-2.png" width="100%"/>
@@ -91,29 +91,6 @@ export default {
     }),
     toolbarColor() {
       return this.$vuetify.options.extra.mainNav
-    },
-    recoveryData() {
-      let result = [];
-      let categories = [];
-      for (let i = 0;i < this.getRecoveryData.length;i ++) {
-        let category = this.getRecoveryData[i].category;
-        // if it's a new category, add new questions Object to questionList
-        if (categories.indexOf(category) < 0) {
-          categories.push(category);
-          result.push({
-            title: category,
-            questions: [this.getRecoveryData[i]]
-          });
-        } else {
-          // if it's an existing category
-          for (let j = 0; j < result.length; j ++) {
-            if (result[j].title == category) {
-              result[j].questions.push(this.getRecoveryData[i]);
-            }
-          }
-        }
-      }
-      return result;
     }
   },
   methods: {

@@ -31,7 +31,6 @@ export default {
 
       return pre[0];
     },
-
   }
 }
 </script>

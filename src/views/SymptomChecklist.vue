@@ -11,12 +11,12 @@
           <v-card>
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.sectionNo" >
-                <v-stepper-step editable :complete="vStepper > stepl.sectionNo" v-bind:step="stepl.sectionNo">
+                <v-stepper-step editable v-bind:step="stepl.sectionNo">
                   {{stepl.subsectionNo}}
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.sectionNo">
-                  <v-card class="mb-5" min-height="600px">
+                  <v-card class="mb-5">
                     Hi there {{stepl.subsectionNo}}
                     <v-form v-model="form1Valid" >
                       <div class="row" v-for="a in stepl.items" :key="a.id">
@@ -26,11 +26,11 @@
                     </v-form>
                     <v-btn
                       color="primary"
-                      @click="nextStep(stepl.sectionNo + 1)"
+                      @click="nextVerticalStep(stepl.sectionNo, stepp.sectionNo, stepp.vertical.length, questions.horizontal.length)"
                     >
                       Continue
                     </v-btn>
-                    <v-btn flat>Cancel</v-btn>
+                    <v-btn flat v-if="stepl.sectionNo > 1" @click="prevVerticalStep">Back</v-btn>
                   </v-card>
                 </v-stepper-content>
               </div>
@@ -39,11 +39,11 @@
 
           <v-btn
             color="primary"
-            @click="nextStep(stepp.id)"
+            @click="nextHorizontalStep"
           >
             Continue
           </v-btn>
-          <v-btn flat>Cancel</v-btn>
+          <v-btn flat v-if="stepp.sectionNo > 1" @click="prevHorizontalStep">Back</v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -4556,6 +4556,27 @@ export default {
 
       this.answers.push(tmp);
     },
+    nextVerticalStep(verticalNo, horizontalNo, verticalMaxSteps, horizontalMaxSteps) {
+      if (this.vStepper < verticalMaxSteps) {
+        this.vStepper ++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper ++;
+        }
+        this.vStepper = 1;
+      }
+    },
+    nextHorizontalStep() {
+      this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
+      this.vStepper = 1;
+    },
+    prevVerticalStep() {
+      this.vStepper = this.vStepper > 1 ? this.vStepper - 1 : this.vStepper;
+    },
+    prevHorizontalStep() {
+      this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
+      this.vStepper = 1;
+    }
   },
   watch: {
     getAnswersData(newprops, oldprops) {
