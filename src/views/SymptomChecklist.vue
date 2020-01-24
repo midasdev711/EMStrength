@@ -1,15 +1,15 @@
 <template>
   <v-container grid-list-xl>
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular :value="20"></v-progress-circular>
+      <v-progress-circular></v-progress-circular>
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
         <template v-for="step in getSymptomHorizontalData">
           <v-stepper-step
             :key="`${step.sectionNo}-step`"
-            :complete="hStepper > step.sectionNo"
-            :step="step.sectionNo"
+            :complete="hStepper > (step.sectionNo + 1)"
+            :step="step.sectionNo + 1"
             editable
           >
             {{step.section}} (Section)
@@ -21,16 +21,16 @@
         <v-stepper-content
           v-for="stepp in getSymptomHorizontalData"
           :key="`${stepp.sectionNo}-content`"
-          :step="stepp.sectionNo"
+          :step="stepp.sectionNo + 1"
         >
           <v-card>
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
-                <v-stepper-step editable v-bind:step="stepl.subsectionNo">
+                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1">
                   Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})
                 </v-stepper-step>
 
-                <v-stepper-content v-bind:step="stepl.sectionNo">
+                <v-stepper-content v-bind:step="stepl.sectionNo + 1">
                   <v-card class="mb-5">
                     P {{stepl.subsectionNo}} (SS No)
                     <v-form v-model="form1Valid" >
@@ -41,7 +41,7 @@
                     </v-form>
                     <v-btn
                       color="primary"
-                      @click="nextVerticalStep(stepl.sectionNo, stepp.sectionNo, stepp.vertical.length, questions.horizontal.length)"
+                      @click="nextVerticalStep(stepp.vertical.length, getSymptomHorizontalData.length)"
                     >
                       Continue
                     </v-btn>
@@ -77,8 +77,8 @@ export default {
   data() {
     return {
       isMobile: false,
-      hStepper: 0,
-      vStepper: 0,
+      hStepper: 1,
+      vStepper: 1,
       form1Valid: false,
       questions: [],
       answers: [],
@@ -96,13 +96,7 @@ export default {
     ...mapGetters("app", {
       getAnswersData: "getSymptomAnswersData",
       getSymptomHorizontalData: "getSymptomHorizontalData"
-    }),
-    getVerticalData() {
-      if (Array.isArray(this.getSymptomHorizontalData)) {
-        return this.getSymptomHorizontalData.map(data => data.vertical);
-      }
-      return [];
-    }
+    })
   },
   methods: {
     ...mapActions("app", {
@@ -131,7 +125,7 @@ export default {
 
       this.answers.push(tmp);
     },
-    nextVerticalStep(verticalNo, horizontalNo, verticalMaxSteps, horizontalMaxSteps) {
+    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       if (this.vStepper < verticalMaxSteps) {
         this.vStepper ++;
       } else {

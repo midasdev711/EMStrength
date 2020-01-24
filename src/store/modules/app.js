@@ -58,7 +58,7 @@ const initialState = {
 // getters
 const getters = {
   getQuestions: state => state.questions,
-  getDiagnosticAnswersData: state => state.diagnosticAnswers,
+  getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
   getSymptomAnswersData: state => state.symptomAnswers,
   getSymptomHorizontalData: state => state.symptomAnswers && state.symptomAnswers.horizontal ? state.symptomAnswers.horizontal : [],
   getRecoveryCheck: state => state.recoveryCheck,
@@ -232,8 +232,7 @@ const mutations = {
 
   setQuestions: set("questions"),
   setDiagnosticAnswers: (state, data) => {
-    // state.diagnosticAnswers = Object.assign([], data);
-    state.diagnosticAnswers = Object.assign([], JSON.parse(JSON.stringify(data)));
+    state.diagnosticAnswers = Object.assign({}, data);
   },
   setSymptomAnswers: (state, data) => {
     // state.diagnosticAnswers = Object.assign([], data);

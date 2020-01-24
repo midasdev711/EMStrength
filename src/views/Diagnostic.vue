@@ -1,44 +1,68 @@
 <template>
-  <v-stepper v-model="hStepper">
-    <v-stepper-header>
-      <v-stepper-step v-for="step in questions.horizontal" :key="step.sectionNo" :complete="hStepper > step.sectionNo" :step="step.sectionNo">{{step.articleSubheading}}
-      </v-stepper-step>
-    </v-stepper-header>
+  <v-container grid-list-xl>
+    <div class="text-xs-center" v-if="isLoading">
+      <v-progress-circular></v-progress-circular>
+    </div>
+    <v-stepper v-model="hStepper" v-else>
+      <v-stepper-header>
+        <template v-for="step in getAnswersData">
+          <v-stepper-step
+            :key="`${step.sectionNo}-step`"
+            :complete="hStepper > (step.sectionNo + 1)"
+            :step="step.sectionNo + 1"
+            editable
+          >
+            {{step.section}} (Section)
+          </v-stepper-step>
+        </template>
+      </v-stepper-header>
 
-    <v-stepper-items v-for="stepp in questions.horizontal" :key="stepp.sectionNo + 'stepper-item'">
-      <v-stepper-content v-bind:step="stepp.sectionNo">
-        <v-card>
-          <v-stepper vertical v-model="vStepper">
-            <div v-for="stepl in stepp.vertical" :key="stepl.sectionNo" >
-              <v-stepper-step editable :complete="vStepper > stepl.sectionNo" v-bind:step="stepl.sectionNo">
-                {{stepl.subsectionNo}}
-              </v-stepper-step>
-
-              <v-stepper-content v-bind:step="stepl.sectionNo">
-                <v-card class="mb-5" height="600px">
-                  Hi there {{stepl.subsectionNo}}
-                  <v-form v-model="form1Valid" >
-                    <div class="row" v-for="a in stepl.items" :key="a.id" :name="nameId('col', stepl.id, a.id)">
-                      <components v-if="a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
-                      <components v-else :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
-                    </div>
-                  </v-form>
-                </v-card>
-              </v-stepper-content>
-            </div>
-          </v-stepper>
-        </v-card>
-
-        <v-btn
-          color="primary"
-          @click="nextStep(stepp.id)"
+      <v-stepper-items>
+        <v-stepper-content
+          v-for="stepp in getAnswersData"
+          :key="`${stepp.sectionNo}-content`"
+          :step="stepp.sectionNo + 1"
         >
-          Continue
-        </v-btn>
-        <v-btn flat>Cancel</v-btn>
-      </v-stepper-content>
-    </v-stepper-items>
-  </v-stepper>
+          <v-card>
+            <v-stepper vertical v-model="vStepper">
+              <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
+                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1">
+                  Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})
+                </v-stepper-step>
+
+                <v-stepper-content v-bind:step="stepl.sectionNo + 1">
+                  <v-card class="mb-5">
+                    P {{stepl.subsectionNo}} (SS No)
+                    <v-form v-model="form1Valid" >
+                      <div class="row" v-for="a in stepl.items" :key="a.id">
+                        <components v-if="a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
+                        <components v-else :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
+                      </div>
+                    </v-form>
+                    <v-btn
+                      color="primary"
+                      @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
+                    >
+                      Continue
+                    </v-btn>
+                    <v-btn flat v-if="stepl.sectionNo > 1" @click="prevVerticalStep">Back</v-btn>
+                  </v-card>
+                </v-stepper-content>
+              </div>
+            </v-stepper>
+          </v-card>
+
+          <v-btn
+            color="primary"
+            @click="nextHorizontalStep"
+          >
+            Continue
+          </v-btn>
+          <v-btn flat v-if="stepp.sectionNo > 1" @click="prevHorizontalStep">Back</v-btn>
+        </v-stepper-content>
+      </v-stepper-items>
+    </v-stepper>
+  </v-container>
 </template>
 
 <script>
@@ -50,148 +74,14 @@ export default {
   name: "Diagnostic",
   components,
   data: () => ({
-    hStepper: 0,
+    hStepper: 1,
     vStepper: 1,
     form1Valid: false,
 
-    questions: {
-      "article": "Diagnostic",
-      "horizontal": [{
-        "articleSubheading": "first",
-        "sectionNo": 1,
-        "subsectionNo": 1,
-        "vertical": [{
-          "sectionNo": 1,
-          "subsectionNo": 1,
-          "items": [
-            {
-              "answerId": "92c42cb0-2fde-402b-aecd-a981c06ec06f",
-              "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-              "value": 0,
-              "text": null,
-              "question": {
-                "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-                "article": "Diagnostic",
-                "articleSubheading": null,
-                "sectionNo": 0,
-                "sequence": 4,
-                "subsectionNo": null,
-                "type": "Bool",
-                "useText": false,
-                "title": "I identify with messages like 'nothing comes without hard work'",
-                "condition": null,
-                "length": null,
-                "items": []
-              }
-            },
-            {
-              "answerId": "6136a4fa-51ea-4017-8218-483cc28604e3",
-              "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-              "value": 0,
-              "text": null,
-              "question": {
-                "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-                "article": "Diagnostic",
-                "articleSubheading": null,
-                "sectionNo": 0,
-                "sequence": 4,
-                "subsectionNo": null,
-                "type": "Bool",
-                "useText": false,
-                "title": "I identify with messages like 'nothing comes without hard work'",
-                "condition": null,
-                "length": null,
-                "items": []
-              }
-            },
-            {
-              "answerId": "0366b743-05be-45b0-8ceb-df9d3027d96c",
-              "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-              "value": 0,
-              "text": "",
-              "question": {
-                "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-                "article": "Diagnostic",
-                "articleSubheading": null,
-                "sectionNo": 0,
-                "sequence": 4,
-                "subsectionNo": null,
-                "type": "Bool",
-                "useText": false,
-                "title": "I identify with messages like 'nothing comes without hard work'",
-                "condition": null,
-                "length": null,
-                "items": []
-              }
-            },
-            {
-              "answerId": "61d58878-e6d3-43ac-8efa-7acb7876a5af",
-              "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-              "value": 23,
-              "text": "",
-              "question": {
-                "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-                "article": "Diagnostic",
-                "articleSubheading": null,
-                "sectionNo": 0,
-                "sequence": 4,
-                "subsectionNo": null,
-                "type": "Bool",
-                "useText": false,
-                "title": "I identify with messages like 'nothing comes without hard work'",
-                "condition": null,
-                "length": null,
-                "items": []
-              }
-            },
-            {
-              "answerId": "6f088de0-c33c-4442-959f-45923ebb19bf",
-              "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-              "value": 1,
-              "text": "",
-              "question": {
-                "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-                "article": "Diagnostic",
-                "articleSubheading": null,
-                "sectionNo": 0,
-                "sequence": 4,
-                "subsectionNo": null,
-                "type": "Bool",
-                "useText": false,
-                "title": "I identify with messages like 'nothing comes without hard work'",
-                "condition": null,
-                "length": null,
-                "items": []
-              }
-            },
-            {
-              "answerId": "22f0f145-8847-4840-87d5-efc3c2ca91df",
-              "questionId": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-              "value": 1,
-              "text": "",
-              "question": {
-                "id": "871e7133-6cae-45fb-9e2e-44f5914bdda4",
-                "article": "Diagnostic",
-                "articleSubheading": null,
-                "sectionNo": 0,
-                "sequence": 4,
-                "subsectionNo": null,
-                "type": "Bool",
-                "useText": false,
-                "title": "I identify with messages like 'nothing comes without hard work'",
-                "condition": null,
-                "length": null,
-                "items": []
-              }
-            }
-          ]}
-        ],
-        "items": []
-      }]
-    },
+    questions: [],
     answers: [],
 
-    loading: false,
+    isLoading: true,
     saved: false,
   }),
   computed: {
@@ -201,11 +91,6 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     })
-  },
-  watch: {
-    getAnswersData(newProps, oldProps) {
-      console.log("123123", newProps);
-    }
   },
   methods: {
     ...mapActions("app", {
@@ -253,8 +138,7 @@ export default {
       this.answers.push(tmp);
     },
 
-    saveAnswers()
-    {
+    saveAnswers() {
       this.$validator.validateAll().then((result) => {
         if (result) {
           this.loading = true;
@@ -278,6 +162,27 @@ export default {
       }).catch((error) => {
         console.error(error);
       });
+    },
+    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
+      if (this.vStepper < verticalMaxSteps) {
+        this.vStepper ++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper ++;
+        }
+        this.vStepper = 1;
+      }
+    },
+    nextHorizontalStep() {
+      this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
+      this.vStepper = 1;
+    },
+    prevVerticalStep() {
+      this.vStepper = this.vStepper > 1 ? this.vStepper - 1 : this.vStepper;
+    },
+    prevHorizontalStep() {
+      this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
+      this.vStepper = 1;
     }
   },
   mounted() {
@@ -287,8 +192,9 @@ export default {
     }
     this._getQuestionsAnswers(data)
       .then(data => {
+        this.isLoading = false;
         //this.questions = data;
-        console.log(this.questions.horizontal)
+        console.log(data)
       });
   } 
 }
