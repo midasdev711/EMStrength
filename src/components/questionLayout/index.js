@@ -8,9 +8,10 @@ import Scale from './Scale.vue'
 import Selection from './Selection.vue'
 import SectionInstruction from './SectionInstruction.vue'
 import ArticleGeneralInstruction from './ArticleGeneralInstruction.vue'
-
+import ArticleSubheading from './ArticleSubheading.vue'
 
 const components = {
+    ArticleSubheading,
     SectionHeading,
     SectionPart,
     Instruction,

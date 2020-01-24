@@ -2,7 +2,7 @@
   <v-container grid-list-xl>
     <v-stepper v-model="hStepper">
       <v-stepper-header>
-        <v-stepper-step v-for="step in questions.horizontal" :key="step.sectionNo" :complete="hStepper > step.sectionNo" :step="step.sectionNo">{{step.articleSubheading}}
+        <v-stepper-step v-for="step in questions.horizontal" :key="step.sectionNo" :complete="hStepper > step.sectionNo" :step="step.sectionNo">{{step.section}}
         </v-stepper-step>
       </v-stepper-header>
 
@@ -12,12 +12,12 @@
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.sectionNo" >
                 <v-stepper-step editable v-bind:step="stepl.sectionNo">
-                  {{stepl.subsectionNo}}
+                  Part {{stepl.subsectionNo}}  (SS No)
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.sectionNo">
                   <v-card class="mb-5">
-                    Hi there {{stepl.subsectionNo}}
+                    P {{stepl.subsectionNo}} (SS No)
                     <v-form v-model="form1Valid" >
                       <div class="row" v-for="a in stepl.items" :key="a.id">
                         <components v-if="a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
@@ -1657,7 +1657,7 @@ export default {
 
     this._getQuestionsAnswers(params)
       .then(data => {
-        //this.questions = data;
+        this.questions = data;
         console.log(this.questions);
       });
   }
