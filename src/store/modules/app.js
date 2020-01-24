@@ -9,6 +9,18 @@ const state = {
   answersData: [],
   recoveryData: [],
   recoveryCheck: false,
+  diagnosticAnswers: [],
+  symptomAnswers: {
+    horizontal: [{
+      sectionNo: 0,
+      vertical: [{
+        items: [],
+        sectionNo: 0,
+        subsectionNo: 0
+      }]
+    }],
+    
+  },
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -26,7 +38,9 @@ const state = {
 const initialState = {
   questions: [],
   diagnosticAnswers: [],
-  symptomAnswers: [],
+  symptomAnswers: {
+    horizontal: []
+  },
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -46,6 +60,7 @@ const getters = {
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers,
   getSymptomAnswersData: state => state.symptomAnswers,
+  getSymptomHorizontalData: state => state.symptomAnswers && state.symptomAnswers.horizontal ? state.symptomAnswers.horizontal : [],
   getRecoveryCheck: state => state.recoveryCheck,
   getRecoveryData: state => state.recoveryData,
 
@@ -220,7 +235,10 @@ const mutations = {
     // state.diagnosticAnswers = Object.assign([], data);
     state.diagnosticAnswers = Object.assign([], JSON.parse(JSON.stringify(data)));
   },
-  setSymptomAnswers: set("symptomAnswers"),
+  setSymptomAnswers: (state, data) => {
+    // state.diagnosticAnswers = Object.assign([], data);
+    state.symptomAnswers = Object.assign({}, data);
+  },
   setRecoveryCheck: (state) => {
     state.recoveryCheck = !state.recoveryCheck;
   },
