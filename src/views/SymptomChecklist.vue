@@ -2,7 +2,7 @@
   <v-container grid-list-xl>
     <v-stepper v-model="hStepper">
       <v-stepper-header>
-        <v-stepper-step v-for="step in questions.horizontal" :key="step.sectionNo" :complete="hStepper > step.sectionNo" :step="step.sectionNo">{{step.section}}
+        <v-stepper-step v-for="step in questions.horizontal" :key="step.sectionNo" :complete="hStepper > step.sectionNo" :step="step.sectionNo">{{step.section}} (Section)
         </v-stepper-step>
       </v-stepper-header>
 
@@ -12,7 +12,7 @@
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.sectionNo" >
                 <v-stepper-step editable v-bind:step="stepl.sectionNo">
-                  Part {{stepl.subsectionNo}}  (SS No)
+                  Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.sectionNo">
@@ -62,8 +62,8 @@ export default {
   data() {
     return {
       isMobile: false,
-      hStepper: 1,
-      vStepper: 1,
+      hStepper: 0,
+      vStepper: 0,
       form1Valid: false,
       questions: {
         "article": "Symptom",
@@ -1652,7 +1652,7 @@ export default {
     else this.isMobile = false;
     let params = {
       params: '?Article=Symptom',
-      article: "symptom"
+      article: "Symptom"
     }
 
     this._getQuestionsAnswers(params)

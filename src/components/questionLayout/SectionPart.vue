@@ -20,12 +20,12 @@ export default {
   methods: {
     prefix(title)
     {
-      let pre = title.split(',');
+      let pre = title.split('.');
       return pre[0];
     },
     heading(title)
     {
-      let pre = title.split(',');
+      let pre = title.split('.');
       if (pre.length > 1)
         return pre[1];
 

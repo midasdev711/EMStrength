@@ -74,8 +74,8 @@ const actions = {
     commit("setRecoveryCheck");
   },
 
-  getQuestions: ({ commit }) => {
-    return API.get(`api/questions?Article=Diagnostic`)
+  getQuestions: ({ commit }, data) => {
+    return API.get(`api/questions?Article=${data.article}`)
       .then(result => {
         commit("setQuestions", result['data']);
         return result['data'];
