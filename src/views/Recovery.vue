@@ -17,7 +17,7 @@
         <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
       </v-card-title>  
       <v-container fluid>
-        <v-checkbox :key="question.recoveryId" v-model="question.done" v-if="question.done | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.items"></v-checkbox>
+        <v-checkbox :key="question.recoveryId" v-model="question.done" v-if="question.done | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.items" @change="updateComponentValue(question.recoveryId, question.done)"></v-checkbox>
       </v-container>
       <v-dialog
         v-model="dialog"
@@ -103,9 +103,23 @@ export default {
     commenceQuestionnaire() {
       
     },
-    postAnswer() {
-
-    }
+    updateComponentValue(id, done) {
+      if (done == false) {
+        return;
+      }
+      console.log(id, done);
+      let currentTime = new Date().toISOString();
+      let data = {
+        itemId: id,
+        done: currentTime
+      }
+      console.log(data);
+      return this.saveRecovery(data).then(res => {
+        console.log(res);
+      }).catch(err => {
+        throw err;
+      })
+    },
   },
   mounted() {
     this.getAllRecovery();

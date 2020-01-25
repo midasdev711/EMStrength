@@ -75,7 +75,7 @@ export default class APIService {
     return axios.put(url, content, {
         headers: {
           ...headers,
-          Authorization: "bearer " + token,
+          Authorization: "Bearer " + token,
         }
       })
       .then(response => {

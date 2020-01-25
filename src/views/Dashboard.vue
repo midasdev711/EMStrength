@@ -93,7 +93,6 @@ export default {
   methods: {
     ...mapActions("app", {
       getWeeklySummary: "getWeeklySummary",
-      getDiets: "getDiets"
     }),
     rangeUpdate(range) {
       this.proteinData.values = [];

@@ -67,6 +67,7 @@
 
 <script>
 
+import moment from 'moment';
 import { mapActions, mapGetters } from "vuex";
 import debounce from "debounce";
 import components from '../components/questionLayout'
@@ -96,11 +97,15 @@ export default {
     ...mapGetters("app", {
       getAnswersData: "getSymptomAnswersData",
       getSymptomHorizontalData: "getSymptomHorizontalData"
+    }),
+    ...mapGetters("auth", {
+      getDataUserProfile: "getDataUserProfile"
     })
   },
   methods: {
     ...mapActions("app", {
       _getQuestionsAnswers: "getAnswersData",
+      _saveAnswers: "saveAnswers"
     }),
     compId(type, id) {
       return "comp"+type+id;
@@ -126,14 +131,18 @@ export default {
       this.answers.push(tmp);
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper < verticalMaxSteps) {
-        this.vStepper ++;
-      } else {
-        if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper ++;
+      return this.saveAnswers().then(res => {
+        if (this.vStepper < verticalMaxSteps) {
+          this.vStepper ++;
+        } else {
+          if (this.hStepper < horizontalMaxSteps) {
+            this.hStepper ++;
+          }
+          this.vStepper = 1;
         }
-        this.vStepper = 1;
-      }
+      }).catch(err => {
+        console.log(err);
+      });
     },
     nextHorizontalStep() {
       this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
@@ -145,6 +154,24 @@ export default {
     prevHorizontalStep() {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
       this.vStepper = 1;
+    },
+    saveAnswers() {
+      let currentTime = new Date().toISOString();
+      console.log(currentTime);
+      let answerData = {
+        userId: this.getDataUserProfile.id,
+        answers: this.answers,
+        complete: currentTime,
+        article: "Symptom"
+      }
+
+      return this._saveAnswers(answerData)
+        .then(res => {
+          console.log(res);
+          return res;
+        }).catch(err => {
+          throw err;
+        })
     }
   },
   mounted() {
@@ -159,11 +186,6 @@ export default {
       .then(data => {
         this.isLoading = false;
         this.questions = data;
-        console.log(this.questions);
-        setTimeout(() => {
-          this.$forceUpdate();
-        }, 1000)
-        
       });
   }
 

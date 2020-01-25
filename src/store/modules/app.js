@@ -123,7 +123,7 @@ const actions = {
   saveAnswers: ({ commit }, data) => {
     var headers = { 'Content-Type': 'application/json-patch+json' };
     return API.post('api/user/answers', data, headers).then(result => {
-      commit("setAnswers", data);
+      // commit("setAnswers", data);
     }).catch(err => {
       throw err;
     });
@@ -140,8 +140,16 @@ const actions = {
       });
   },
 
-  saveRecovery: ({commit, data}) => {
-    return API.put(`api/user/recovery`, data)
+  saveRecovery: ({commit}, data) => {
+    let headers = {
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json; charset=utf-8',
+    };
+
+
+
+    return API.put(`api/user/recovery`, data, headers)
       .then(result => {
         commit("saveRecovery", data);
         return data;
