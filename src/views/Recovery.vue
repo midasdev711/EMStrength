@@ -1,6 +1,14 @@
 <template>
 <v-layout justify-center class="pa-2">
-  <v-flex xs12 sm6>
+  <v-flex xs12 sm6 v-if="isLoading" justify-center>
+    <v-progress-circular
+      :size="70"
+      :width="7"
+      color="orange"
+      indeterminate
+    ></v-progress-circular>
+  </v-flex>
+  <v-flex xs12 sm6 v-else>
     <v-card color="" class="black--text" v-if="topNotification & getRecoveryData.length > 0">
       <v-card-title primary-title>
         <div>
@@ -17,7 +25,7 @@
         <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
       </v-card-title>  
       <v-container fluid>
-        <v-checkbox :key="question.recoveryId" v-model="question.done" v-if="question.done | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.items" @change="updateComponentValue(question.recoveryId, question.done)"></v-checkbox>
+        <v-checkbox :key="question.recoveryId" v-model="question.done" v-if="(question.done ? true : false) | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.items" @change="updateComponentValue(question.recoveryId, question.done)"></v-checkbox>
       </v-container>
       <v-dialog
         v-model="dialog"
@@ -78,7 +86,8 @@ export default {
       questionLists: [],
       checkbox1: true,
       checkbox2: false,
-      hidden: false
+      hidden: false,
+      isLoading: true,
     }
   },
   computed: {
@@ -122,7 +131,9 @@ export default {
     },
   },
   mounted() {
-    this.getAllRecovery();
+    this.getAllRecovery().then(res => {
+      this.isLoading = false;
+    });
   }
 }
 </script>

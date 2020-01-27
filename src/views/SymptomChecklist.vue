@@ -1,7 +1,12 @@
 <template>
   <v-container grid-list-xl>
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular></v-progress-circular>
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="orange"
+        indeterminate
+      ></v-progress-circular>
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
@@ -140,6 +145,8 @@ export default {
           }
           this.vStepper = 1;
         }
+      }).then(_ => {
+        vm.$forceUpdate();
       }).catch(err => {
         console.log(err);
       });
