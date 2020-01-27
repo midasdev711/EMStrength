@@ -186,6 +186,8 @@ export default {
       .then(data => {
         this.isLoading = false;
         this.questions = data;
+        console.log("QuestionAnswer:");
+        console.log(data)
       });
   }
 

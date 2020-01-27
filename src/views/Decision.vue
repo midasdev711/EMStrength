@@ -5,7 +5,7 @@
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
-        <template v-for="step in getAnswersData">
+        <template v-for="step in getSymptomHorizontalData">
           <v-stepper-step
             :key="`${step.sectionNo}-step`"
             :complete="hStepper > (step.sectionNo + 1)"
@@ -19,7 +19,7 @@
 
       <v-stepper-items>
         <v-stepper-content
-          v-for="stepp in getAnswersData"
+          v-for="stepp in getSymptomHorizontalData"
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
@@ -41,7 +41,7 @@
                     </v-form>
                     <v-btn
                       color="primary"
-                      @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
+                      @click="nextVerticalStep(stepp.vertical.length, getSymptomHorizontalData.length)"
                     >
                       Continue
                     </v-btn>
@@ -67,26 +67,36 @@
 
 <script>
 
-import components from '../components/questionLayout'
+import moment from 'moment';
 import { mapActions, mapGetters } from "vuex";
+import debounce from "debounce";
+import components from '../components/questionLayout'
 
 export default {
-  name: "Diagnostic",
+  name: "DecisionProfile",
   components,
-  data: () => ({
-    hStepper: 1,
-    vStepper: 1,
-    form1Valid: false,
-
-    questions: [],
-    answers: [],
-
-    isLoading: true,
-    saved: false,
-  }),
+  data() {
+    return {
+      isMobile: false,
+      hStepper: 1,
+      vStepper: 1,
+      form1Valid: false,
+      questions: [],
+      answers: [],
+      isLoading: true
+    }
+  },
+  filters: {
+    decNum(amount) {
+      const amt = Number(amount)
+      return amt && amt.toFixed(2) || '0.00';
+      //return amt && amt.toLocaleString(undefined, {maximumFractionDigits:3}) || '0'
+    }  
+  },
   computed: {
     ...mapGetters("app", {
-      getAnswersData: "getDiagnosticAnswersData"
+      getAnswersData: "getDecisionAnswersData",
+      getSymptomHorizontalData: "getDecisionHorizontalData"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -94,29 +104,12 @@ export default {
   },
   methods: {
     ...mapActions("app", {
-      //_getUser: "getUser",
-      _getQuestions: "getQuestions",
-      _getQuestionsAnswers: "getAnswersData",  //getAnswersData ? make dynmaic
-      _saveAnswers: "saveAnswers",
+      _getQuestionsAnswers: "getAnswersData",
+      _saveAnswers: "saveAnswers"
     }),
-
-    compId(type, id)
-    {
+    compId(type, id) {
       return "comp"+type+id;
     },
-
-    nameId(type, row, col)
-    {
-      return `${type}_${row}x${col}`;
-    },
-
-    nextStep(step)
-    {
-      this.saveAnswers();
-      //this.hStepper = step + 1;
-
-    },
-
     updateComponentValue(value, questionId, answerId, useText) {
       for (let i = 0; i < this.answers.length; i ++) {
         if (this.answers[i].questionId == questionId) {
@@ -137,41 +130,19 @@ export default {
 
       this.answers.push(tmp);
     },
-
-    saveAnswers() {
-      this.$validator.validateAll().then((result) => {
-        if (result) {
-          this.loading = true;
-          console.log(this.answers);
-
-          const formData = {
-            userId: this.getDataUserProfile.id, 
-            answers: this.answers,
-          };
-          console.log(formData);
-          this._saveAnswers(formData).then(res => {
-            this.$toast.success('Successfully saved');
-            this.saved = true;
-            this.loading = false;
-
-          }).catch(err => {
-            this.$toast.error(err);
-          })
-          
-        }
-      }).catch((error) => {
-        console.error(error);
-      });
-    },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper < verticalMaxSteps) {
-        this.vStepper ++;
-      } else {
-        if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper ++;
+      return this.saveAnswers().then(res => {
+        if (this.vStepper < verticalMaxSteps) {
+          this.vStepper ++;
+        } else {
+          if (this.hStepper < horizontalMaxSteps) {
+            this.hStepper ++;
+          }
+          this.vStepper = 1;
         }
-        this.vStepper = 1;
-      }
+      }).catch(err => {
+        console.log(err);
+      });
     },
     nextHorizontalStep() {
       this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
@@ -183,24 +154,49 @@ export default {
     prevHorizontalStep() {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
       this.vStepper = 1;
+    },
+    saveAnswers() {
+      let currentTime = new Date().toISOString();
+      console.log(currentTime);
+      let answerData = {
+        userId: this.getDataUserProfile.id,
+        answers: this.answers,
+        complete: currentTime,
+        article: "Symptom"
+      }
+
+      return this._saveAnswers(answerData)
+        .then(res => {
+          console.log(res);
+          return res;
+        }).catch(err => {
+          throw err;
+        })
     }
   },
   mounted() {
-    let data = {
-      params: "?Article=Diagnostic",
-      article: "Diagnostic"
+    if (window.innerWidth < 500 && window.innerWidth > 0) this.isMobile = true;
+    else this.isMobile = false;
+    let params = {
+      params: '?Article=Decision',
+      article: "Decision"
     }
-    this._getQuestionsAnswers(data)
+
+    this._getQuestionsAnswers(params)
       .then(data => {
         this.isLoading = false;
         this.questions = data;
+        console.log("Decision QA data:");
         console.log(data)
       });
-  } 
+  }
+
+  
 }
 </script>
 
 <style lang="stylus" scoped>
 >>>.v-stepper__content
   padding 0
+  margin-right 0
 </style>

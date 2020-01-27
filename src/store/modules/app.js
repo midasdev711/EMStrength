@@ -10,6 +10,16 @@ const state = {
   recoveryData: [],
   recoveryCheck: false,
   diagnosticAnswers: [],
+  decisionAnswers: {
+    horizontal: [{
+      sectionNo: 0,
+      vertical: [{
+        items: [],
+        sectionNo: 0,
+        subsectionNo: 0
+      }]
+    }],
+  },
   symptomAnswers: {
     horizontal: [{
       sectionNo: 0,
@@ -38,6 +48,9 @@ const state = {
 const initialState = {
   questions: [],
   diagnosticAnswers: [],
+  decisionAnswers: {
+    horizontal: []
+  },
   symptomAnswers: {
     horizontal: []
   },
@@ -59,6 +72,8 @@ const initialState = {
 const getters = {
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
+  getDecisionAnswersData: state => state.decisionAnswers,
+  getDecisionHorizontalData: state => state.decisionAnswers.horizontal ? state.decisionAnswers.horizontal : [],
   getSymptomAnswersData: state => state.symptomAnswers,
   getSymptomHorizontalData: state => state.symptomAnswers && state.symptomAnswers.horizontal ? state.symptomAnswers.horizontal : [],
   getRecoveryCheck: state => state.recoveryCheck,
@@ -109,6 +124,9 @@ const actions = {
             break;
           case "Symptom":
             commit("setSymptomAnswers", result['data']);
+            break;
+          case "Decision":
+            commit("setDecisionAnswers", result['data']);
             break;
           default:
             break;
@@ -241,6 +259,9 @@ const mutations = {
   setQuestions: set("questions"),
   setDiagnosticAnswers: (state, data) => {
     state.diagnosticAnswers = Object.assign({}, data);
+  },
+  setDecisionAnswers: (state, data) => {
+    state.decisionAnswers = Object.assign({}, data);
   },
   setSymptomAnswers: (state, data) => {
     // state.diagnosticAnswers = Object.assign([], data);
