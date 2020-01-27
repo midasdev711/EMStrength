@@ -150,52 +150,12 @@ export default {
         questionText: "any other socio cultural factors not listed",
         value: false
       }],
-      // questionLists: [{
-      //   title: "Physical",
-      //   questions: [{
-      //       id: "n-a",
-      //       questionText: "Waking 5 mins stretching",
-      //       value: false
-      //     }, {
-      //       id: "n-a",
-      //       questionText: "morning 10 - 15 mins walking",
-      //       value: false
-      //     }, {
-      //       id: "n-a",
-      //       questionText: "fruit & vegetables breakfast smoothly",
-      //       value: false
-      //     }, {
-      //       id: "n-a",
-      //       questionText: "glass of water (before coffee)",
-      //       value: false
-      //     }]
-      //   }, {
-      //     title: "Mental & Emotional",
-      //     questions:[{
-      //       id: "n-a",
-      //       questionText: "10 mins meditation after walking",
-      //       value: false
-      //     }, {
-      //       id: "n-a",
-      //       questionText: "review positives in your life",
-      //       value: false
-      //     }, {
-      //       id: "n-a",
-      //       questionText: "fruit & vegetables breakfast smoothly",
-      //       value: false
-      //     }, {
-      //       id: "n-a",
-      //       questionText: "glass of water (before coffee)",
-      //       value: false
-      //     }]}
-      // ],
     }
   },
   filters: {
     decNum(amount) {
       const amt = Number(amount)
       return amt && amt.toFixed(2) || '0.00';
-      //return amt && amt.toLocaleString(undefined, {maximumFractionDigits:3}) || '0'
     }  
   },
   computed: {
