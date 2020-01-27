@@ -1,11 +1,16 @@
 <template>
   <v-container grid-list-xl>
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular></v-progress-circular>
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="orange"
+        indeterminate
+      ></v-progress-circular>
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
-        <template v-for="step in getSymptomHorizontalData">
+        <template v-for="step in getDecisionHorizontalData">
           <v-stepper-step
             :key="`${step.sectionNo}-step`"
             :complete="hStepper > (step.sectionNo + 1)"
@@ -19,18 +24,18 @@
 
       <v-stepper-items>
         <v-stepper-content
-          v-for="stepp in getSymptomHorizontalData"
+          v-for="stepp in getDecisionHorizontalData"
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
           <v-card>
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
-                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1">
+                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1" :key="stepl.subsectionNo + '-sub-step'">
                   Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})
                 </v-stepper-step>
 
-                <v-stepper-content v-bind:step="stepl.sectionNo + 1">
+                <v-stepper-content v-bind:step="stepl.subsectionNo + 1" :key="stepl.subsectionNo + '-sub-content'">
                   <v-card class="mb-5">
                     P {{stepl.subsectionNo}} (SS No)
                     <v-form v-model="form1Valid" >
@@ -41,7 +46,7 @@
                     </v-form>
                     <v-btn
                       color="primary"
-                      @click="nextVerticalStep(stepp.vertical.length, getSymptomHorizontalData.length)"
+                      @click="nextVerticalStep(stepp.vertical.length, getDecisionHorizontalData.length)"
                     >
                       Continue
                     </v-btn>
@@ -96,7 +101,7 @@ export default {
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getDecisionAnswersData",
-      getSymptomHorizontalData: "getDecisionHorizontalData"
+      getDecisionHorizontalData: "getDecisionHorizontalData"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -131,6 +136,7 @@ export default {
       this.answers.push(tmp);
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
+      this.isLoading = true;
       return this.saveAnswers().then(res => {
         if (this.vStepper < verticalMaxSteps) {
           this.vStepper ++;
@@ -140,6 +146,9 @@ export default {
           }
           this.vStepper = 1;
         }
+      }).then(_ => {
+        this.isLoading = false;
+        this.$forceUpdate();
       }).catch(err => {
         console.log(err);
       });

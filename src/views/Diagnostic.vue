@@ -35,7 +35,7 @@
                   Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})
                 </v-stepper-step>
 
-                <v-stepper-content v-bind:step="stepl.sectionNo + 1">
+                <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
                   <v-card class="mb-5">
                     P {{stepl.subsectionNo}} (SS No)
                     <v-form v-model="form1Valid" >
