@@ -147,6 +147,13 @@ export const protectedRoute = [
       },
 
       {
+        path: "/decision_profile",
+        name: "Decision Profile",
+        component: () => import(`@/views/Decision.vue`),
+        meta: { title: "Decision Profile", icon: "favourite", requiresAuth: true }
+      },
+
+      {
         path: "/stress_recovery",
         name: "StressRecovery",
         component: () => import(`@/views/StressRecovery.vue`),

@@ -198,7 +198,7 @@ export default {
     this._getQuestionsAnswers(data)
       .then(data => {
         this.isLoading = false;
-        //this.questions = data;
+        this.questions = data;
         console.log(data)
       });
   } 

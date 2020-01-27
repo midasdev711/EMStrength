@@ -10,6 +10,16 @@ const state = {
   recoveryData: [],
   recoveryCheck: false,
   diagnosticAnswers: [],
+  decisionAnswers: {
+    horizontal: [{
+      sectionNo: 0,
+      vertical: [{
+        items: [],
+        sectionNo: 0,
+        subsectionNo: 0
+      }]
+    }],
+  },
   symptomAnswers: {
     horizontal: [{
       sectionNo: 0,
@@ -21,6 +31,12 @@ const state = {
     }],
     
   },
+  userSummaryData: {
+    articles: [],  // Horiz 1
+    sections: [],  // Horiz 2 (filter 1)
+    items: [],  // all data with Tuple key of article, section, date
+  },
+
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -38,9 +54,14 @@ const state = {
 const initialState = {
   questions: [],
   diagnosticAnswers: [],
+  decisionAnswers: {
+    horizontal: []
+  },
   symptomAnswers: {
     horizontal: []
   },
+  userSummaryData: [],
+
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -59,10 +80,13 @@ const initialState = {
 const getters = {
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
+  getDecisionAnswersData: state => state.decisionAnswers,
+  getDecisionHorizontalData: state => state.decisionAnswers.horizontal ? state.decisionAnswers.horizontal : [],
   getSymptomAnswersData: state => state.symptomAnswers,
   getSymptomHorizontalData: state => state.symptomAnswers && state.symptomAnswers.horizontal ? state.symptomAnswers.horizontal : [],
   getRecoveryCheck: state => state.recoveryCheck,
   getRecoveryData: state => state.recoveryData,
+  getUserSummaryData: state => state.userSummaryData,
 
   // EXAMPLES
   getCheckoutStatus: state => state.checkoutStatus,
@@ -110,6 +134,9 @@ const actions = {
           case "Symptom":
             commit("setSymptomAnswers", result['data']);
             break;
+          case "Decision":
+            commit("setDecisionAnswers", result['data']);
+            break;
           default:
             break;
         }
@@ -127,6 +154,17 @@ const actions = {
     }).catch(err => {
       throw err;
     });
+  },
+
+  getUserSummaryData: ({ commit }, data) => {
+    return API.get(`api/user/summary/layout`)
+      .then(result => {
+        commit("setUserSummaryData", result['data']);
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
   },
 
   getAllRecovery: ({commit}) => {
@@ -241,6 +279,9 @@ const mutations = {
   setQuestions: set("questions"),
   setDiagnosticAnswers: (state, data) => {
     state.diagnosticAnswers = Object.assign({}, data);
+  },
+  setDecisionAnswers: (state, data) => {
+    state.decisionAnswers = Object.assign({}, data);
   },
   setSymptomAnswers: (state, data) => {
     // state.diagnosticAnswers = Object.assign([], data);

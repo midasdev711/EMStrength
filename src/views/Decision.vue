@@ -1,12 +1,7 @@
 <template>
   <v-container grid-list-xl>
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular
-        :size="70"
-        :width="7"
-        color="orange"
-        indeterminate
-      ></v-progress-circular>
+      <v-progress-circular></v-progress-circular>
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
@@ -78,7 +73,7 @@ import debounce from "debounce";
 import components from '../components/questionLayout'
 
 export default {
-  name: "SymptomChecklist",
+  name: "DecisionProfile",
   components,
   data() {
     return {
@@ -100,8 +95,8 @@ export default {
   },
   computed: {
     ...mapGetters("app", {
-      getAnswersData: "getSymptomAnswersData",
-      getSymptomHorizontalData: "getSymptomHorizontalData"
+      getAnswersData: "getDecisionAnswersData",
+      getSymptomHorizontalData: "getDecisionHorizontalData"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -145,8 +140,6 @@ export default {
           }
           this.vStepper = 1;
         }
-      }).then(_ => {
-        vm.$forceUpdate();
       }).catch(err => {
         console.log(err);
       });
@@ -185,15 +178,15 @@ export default {
     if (window.innerWidth < 500 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
     let params = {
-      params: '?Article=Symptom',
-      article: "Symptom"
+      params: '?Article=Decision',
+      article: "Decision"
     }
 
     this._getQuestionsAnswers(params)
       .then(data => {
         this.isLoading = false;
         this.questions = data;
-        console.log("QuestionAnswer:");
+        console.log("Decision QA data:");
         console.log(data)
       });
   }
