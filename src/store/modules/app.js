@@ -31,6 +31,12 @@ const state = {
     }],
     
   },
+  userSummaryData: {
+    articles: [],  // Horiz 1
+    sections: [],  // Horiz 2 (filter 1)
+    items: [],  // all data with Tuple key of article, section, date
+  },
+
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -54,6 +60,8 @@ const initialState = {
   symptomAnswers: {
     horizontal: []
   },
+  userSummaryData: [],
+
 // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -78,6 +86,7 @@ const getters = {
   getSymptomHorizontalData: state => state.symptomAnswers && state.symptomAnswers.horizontal ? state.symptomAnswers.horizontal : [],
   getRecoveryCheck: state => state.recoveryCheck,
   getRecoveryData: state => state.recoveryData,
+  getUserSummaryData: state => state.userSummaryData,
 
   // EXAMPLES
   getCheckoutStatus: state => state.checkoutStatus,
@@ -145,6 +154,17 @@ const actions = {
     }).catch(err => {
       throw err;
     });
+  },
+
+  getUserSummaryData: ({ commit }, data) => {
+    return API.get(`api/user/summary/layout`)
+      .then(result => {
+        commit("setUserSummaryData", result['data']);
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
   },
 
   getAllRecovery: ({commit}) => {
