@@ -154,6 +154,13 @@ export const protectedRoute = [
       },
 
       {
+        path: "/summary",
+        name: "Summary",
+        component: () => import(`@/views/Summary.vue`),
+        meta: { title: "Summary", icon: "table", requiresAuth: true }
+      },
+
+      {
         path: "/stress_recovery",
         name: "StressRecovery",
         component: () => import(`@/views/StressRecovery.vue`),

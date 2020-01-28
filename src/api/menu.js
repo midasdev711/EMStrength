@@ -42,6 +42,13 @@ const Menu = [
     key: "key-DecisionProfile"
   },
 
+  {
+    title: "Summary",
+    icon: "filter_vintage",
+    name: "Summary",
+    key: "key-summary"
+  },
+
 
   {
     title: "Terms & Conditions",

@@ -294,6 +294,9 @@ const mutations = {
   saveRecovery: (state, data) => {
     console.log("mutation saveRecovery called");
   },
+  setUserSummaryData: (state, data) => {
+    state.userSummaryData = Object.assign({}, data);
+  },
 
   // EXAMPLES
   setDrawer: set("showDrawer"),
