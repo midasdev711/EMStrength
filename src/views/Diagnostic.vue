@@ -50,7 +50,7 @@
                     >
                       Continue
                     </v-btn>
-                    <v-btn flat v-if="stepl.sectionNo > 1" @click="prevVerticalStep">Back</v-btn>
+                    <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                   </v-card>
                 </v-stepper-content>
               </div>
@@ -63,7 +63,7 @@
           >
             Continue
           </v-btn>
-          <v-btn flat v-if="stepp.sectionNo > 1" @click="prevHorizontalStep">Back</v-btn>
+          <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>

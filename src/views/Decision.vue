@@ -50,7 +50,7 @@
                     >
                       Continue
                     </v-btn>
-                    <v-btn flat v-if="stepl.sectionNo > 1" @click="prevVerticalStep">Back</v-btn>
+                    <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                   </v-card>
                 </v-stepper-content>
               </div>
@@ -171,7 +171,7 @@ export default {
         userId: this.getDataUserProfile.id,
         answers: this.answers,
         complete: currentTime,
-        article: "Symptom"
+        article: "Decision"
       }
 
       return this._saveAnswers(answerData)
