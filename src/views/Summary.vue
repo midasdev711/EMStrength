@@ -5,70 +5,85 @@
     <div class="text-xs-center" v-if="isLoading">
       <v-progress-circular :size="70" :width="7" color="orange" indeterminate></v-progress-circular>
     </div>
-    <v-stepper v-model="hStepper" v-else>
-      <!-- Horiz1: each Article completed -->
-      <v-stepper-header>
-        <template v-for="(article, index) in getUserSummaryData">
-          <v-stepper-step
-            :key="`${index}-step`"
-            :complete="hStepper > (index + 1)"
-            :step="parseInt(index) + 1"
-            editable
-          >{{article}} {{article.articleTitle}} (Article) </v-stepper-step>
-        </template>
-      </v-stepper-header>
-
-      <!-- Horiz2: each Sections inside the Article  -->
-      <v-stepper-header>
-        <template v-for="(section, index) in getUserSummaryData.sections">
-          <v-stepper-step
-            :key="`${index}-step`"
-            :complete="hStepper > (index + 1)"
-            :step="parseInt(index) + 1"
-            editable
-          >{{section.section}} (Section)</v-stepper-step>
-        </template>
-      </v-stepper-header>
-
-      <!-- Horiz3: each Date inside the Section  -->
-      <v-stepper-header>
-        <template v-for="(date, index) in getUserSummaryData.sections[section].dates">
-          <v-stepper-step
-            :key="`${index}-step`"
-            :complete="hStepper > (index + 1)"
-            :step="parseInt(index) + 1"
-            editable
-          >{{date.created}} (Date page)</v-stepper-step>
-        </template>
-      </v-stepper-header>
-
-
-      <v-stepper-items>
-        <v-stepper-content
-          v-for="(stepp, indexp) in getUserSummaryData.sections[section].dates[date]"
-          :key="`${indexp}-content`"
-          :step="parseInt(indexp) + 1"
+    <div  v-else>
+      <template >
+        <v-tabs
+          v-model="articleTab"
+          color="cyan"
+          grow
         >
-          <v-card>
-              <!-- PAGE of results: for the date in the Section  -->
-                    <!-- Grid row with: Section No, Name, Value (Total)  -->
-                    <!-- DATA: v-for="a in stepl.items" :key="a.id" -->
+          <v-tabs-slider color="yellow"></v-tabs-slider>
 
-                    <template>
-                      <v-data-table :headers="headers" :items="stepl.items" class="elevation-1">
-                        <template v-slot:items="props">
-                          <td>{{ props.item.title }} {{ props.item.description }}</td>
-                          <td class="text-xs-right">{{ props.item.sectionNo }}</td>
-                          <td class="text-xs-right">{{ props.item.value }}</td>
-                          <!-- When loaded in Admin view this will contain multiple users (one per column) -->
+          <v-tab
+            v-for="article in getUserSummaryData"
+            :key="article.articleNo + '-article'"
+          >
+            {{ article.articleTitle }}
+          </v-tab>
+        </v-tabs>
+      </template>
+      <v-tabs-items v-model="articleTab">
+        <v-tab-item
+          v-for="article in getUserSummaryData"
+          :key="article.articleNo + '-articlecontent'"
+        >
+          <v-card flat>
+            <v-tabs
+              v-model="sectionTab"
+              color="grey"
+              grow
+            >
+              <v-tabs-slider color="yellow"></v-tabs-slider>
+
+              <v-tab
+                v-for="section in article.sections"
+                :key="section.sectionNo + '-section'"
+              >
+                {{ section.section }}
+              </v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="sectionTab">
+              <v-tab-item
+                v-for="section in article.sections"
+                :key="section.sectionNo + '-sectioncontent'"
+              >
+                <v-card flat>
+                  <v-tabs
+                    v-model="dateTab"
+                    color="purple"
+                    grow
+                  >
+                    <v-tabs-slider color="blue"></v-tabs-slider>
+
+                    <v-tab
+                      v-for="(dateItem, index) in section.dates"
+                      :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-date'"
+                    >
+                      {{ dateItem.date }}
+                    </v-tab>
+                  </v-tabs>
+                  <v-tabs-items v-model="dateTab">
+                    <v-tab-item
+                      v-for="(dateItem, index) in section.dates"
+                      :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-datecontent'"
+                    >
+                      <v-card flat>
+                        <template>
+                          <div v-for="(result, resultIndex) in dateItem.results" :key="resultIndex + '-result-' + result.forUserId" class="result">
+                            {{result}}
+                          </div>
                         </template>
-                      </v-data-table>
-                    </template>
+                      </v-card>
+                    </v-tab-item>
+                  </v-tabs-items>
                   
+                </v-card>
+              </v-tab-item>
+            </v-tabs-items>
           </v-card>
-        </v-stepper-content>
-      </v-stepper-items>
-    </v-stepper>
+        </v-tab-item>
+      </v-tabs-items>
+    </div>
   </v-container>
 </template>
 
@@ -91,7 +106,9 @@ export default {
       { text: "Score", align: "right", sortable: true, value: "value" } // when > 1, show: User's details above score
       // Other Users' scores
     ],
-
+    articleTab: null,
+    sectionTab: null,
+    dateTab: null
   
 
   }),
@@ -102,29 +119,6 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),
-    userSummaryData() {
-      console.log(this.getUserSummaryData);
-      let result = [];
-      for (let index in this.getUserSummaryData.items) {
-        let item = this.getUserSummaryData.items[index];
-        let positionInfo = index
-          .replace("(", "")
-          .replace(")", "")
-          .split(",");
-        let articleIndex = parseInt(positionInfo[0]);
-        let article = this.getUserSummaryData.articles[articleIndex];
-        let sectionIndex = parseInt(positionInfo[1]);
-        console.log(articleIndex, sectionIndex, item, index);
-        if (result[articleIndex] && result[articleIndex]["articleTitle"]) {
-          result[articleIndex]["sections"][sectionIndex].push(...item);
-        } else {
-          result[articleIndex] = {
-            articleTitle: article,
-            sections: [[...item]]
-          };
-        }
-      }
-    }
   },
   methods: {
     ...mapActions("app", {
@@ -157,4 +151,7 @@ export default {
 >>>.v-stepper__content {
   padding: 0;
 }
+
+>>>.v-card 
+  padding 0
 </style>
