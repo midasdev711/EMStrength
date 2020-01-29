@@ -136,7 +136,7 @@ export default {
             this.answers[i].value =
               value == true ? 1 : value == false ? 0 : value;
           }
-          console.log(this.answers);
+          //console.log(this.answers);
           return;
         }
       }

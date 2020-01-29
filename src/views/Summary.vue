@@ -1,40 +1,56 @@
 <template>
   <v-container grid-list-xl>
     <!-- TODO: Implement a Widget with User summary Information for selected user header -->
-    {{userSummaryData}}
+    <!--{{userSummaryData}}-->
     <div class="text-xs-center" v-if="isLoading">
       <v-progress-circular :size="70" :width="7" color="orange" indeterminate></v-progress-circular>
     </div>
     <v-stepper v-model="hStepper" v-else>
-      <!-- Horiz: each Article completed -->
+      <!-- Horiz1: each Article completed -->
       <v-stepper-header>
-        <template v-for="(step, index) in getUserSummaryData.articles">
+        <template v-for="(article, index) in getUserSummaryData">
           <v-stepper-step
             :key="`${index}-step`"
             :complete="hStepper > (index + 1)"
             :step="parseInt(index) + 1"
             editable
-          >{{step}} (Section)</v-stepper-step>
+          >{{article}} {{article.articleTitle}} (Article) </v-stepper-step>
         </template>
       </v-stepper-header>
 
+      <!-- Horiz2: each Sections inside the Article  -->
+      <v-stepper-header>
+        <template v-for="(section, index) in getUserSummaryData.sections">
+          <v-stepper-step
+            :key="`${index}-step`"
+            :complete="hStepper > (index + 1)"
+            :step="parseInt(index) + 1"
+            editable
+          >{{section.section}} (Section)</v-stepper-step>
+        </template>
+      </v-stepper-header>
+
+      <!-- Horiz3: each Date inside the Section  -->
+      <v-stepper-header>
+        <template v-for="(date, index) in getUserSummaryData.sections[section].dates">
+          <v-stepper-step
+            :key="`${index}-step`"
+            :complete="hStepper > (index + 1)"
+            :step="parseInt(index) + 1"
+            editable
+          >{{date.created}} (Date page)</v-stepper-step>
+        </template>
+      </v-stepper-header>
+
+
       <v-stepper-items>
         <v-stepper-content
-          v-for="(stepp, indexp) in getUserSummaryData.articles"
+          v-for="(stepp, indexp) in getUserSummaryData.sections[section].dates[date]"
           :key="`${indexp}-content`"
           :step="parseInt(indexp) + 1"
         >
           <v-card>
-            <v-stepper vertical v-model="vStepper">
-              <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
-                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1">
-                  <!-- DATE of Completion  -->
-                  Part {{stepl.subsectionNo}} (SS No {{stepl.subsectionNo}})
-                </v-stepper-step>
-
-                <v-stepper-content v-bind:step="stepl.sectionNo + 1">
-                  <v-card class="mb-5">
-                    P {{stepl.subsectionNo}} (SS No)
+              <!-- PAGE of results: for the date in the Section  -->
                     <!-- Grid row with: Section No, Name, Value (Total)  -->
                     <!-- DATA: v-for="a in stepl.items" :key="a.id" -->
 
@@ -48,10 +64,7 @@
                         </template>
                       </v-data-table>
                     </template>
-                  </v-card>
-                </v-stepper-content>
-              </div>
-            </v-stepper>
+                  
           </v-card>
         </v-stepper-content>
       </v-stepper-items>
@@ -77,7 +90,10 @@ export default {
       { text: "Section", align: "center", sortable: true, value: "sectionNo" },
       { text: "Score", align: "right", sortable: true, value: "value" } // when > 1, show: User's details above score
       // Other Users' scores
-    ]
+    ],
+
+  
+
   }),
   computed: {
     ...mapGetters("app", {
@@ -130,8 +146,10 @@ export default {
     this._getUserSummaryData(data).then(data => {
       this.isLoading = false;
       this.questions = data;
+      console.log("Summary:", this.questions);
     });
   }
+
 };
 </script>
 
