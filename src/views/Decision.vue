@@ -38,6 +38,7 @@
                     P {{stepl.subsectionNo}} (SS No)
                     <v-form v-model="form1Valid">
                       <div class="row" v-for="a in stepl.items" :key="a.id">
+                        <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
                         <components
                           v-if="a.question.useText"
                           :is="a.question.type"
