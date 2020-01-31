@@ -2,11 +2,11 @@
   <v-container grid-list-xl>
     <!-- TODO: Implement a Widget with User summary Information for selected user header -->
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular :size="70" :width="7" color="orange" indeterminate></v-progress-circular>
+      <v-progress-circular :size="70" :width="7" color="#213060" indeterminate></v-progress-circular>
     </div>
     <div v-else>
       <template>
-        <v-tabs v-model="articleTab" color="cyan" grow>
+        <v-tabs v-model="articleTab" color="primary" grow>
           <v-tabs-slider color="yellow"></v-tabs-slider>
 
           <v-tab
@@ -21,7 +21,7 @@
           :key="article.articleNo + '-articlecontent'"
         >
           <v-card flat>
-            <v-tabs v-model="sectionTab" color="grey" grow>
+            <v-tabs v-model="sectionTab" color="#00a38a" grow>
               <v-tabs-slider color="yellow"></v-tabs-slider>
 
               <v-tab
@@ -35,7 +35,7 @@
                 :key="section.sectionNo + '-sectioncontent'"
               >
                 <v-card flat>
-                  <v-tabs v-model="dateTab" color="purple" grow>
+                  <v-tabs v-model="dateTab" color="#47bbe9" grow> <!-- -->
                     <v-tabs-slider color="blue"></v-tabs-slider>
 
                     <v-tab

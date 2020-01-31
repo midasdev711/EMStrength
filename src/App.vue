@@ -58,4 +58,14 @@ export default {
   .body {
     font-family: 'Muli';
   } 
+
+.application {
+  font-family: 'Muli';
+}
+.headline,
+.title,
+.subheading{
+     font-family: 'Muli';
+}
+
 </style>
