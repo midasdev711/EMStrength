@@ -15,9 +15,10 @@
             :key="`${step.sectionNo}-step`"
             :complete="hStepper > (step.sectionNo + 1)"
             :step="step.sectionNo + 1"
+            :color="$vuetify.theme.subheading1"
             editable
           >
-            {{step.section}} (Section)
+            <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} (Section)</span>
           </v-stepper-step>
         </template>
       </v-stepper-header>
@@ -31,13 +32,13 @@
           <v-card>
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
-                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1" :key="stepl.subsectionNo + '-sub-step'">
-                  Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})
+                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1" :key="stepl.subsectionNo + '-sub-step'" :color="$vuetify.theme.subheading2">
+                  <span :style="{ color: $vuetify.theme.subheading2 }">Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span>
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.subsectionNo + 1" :key="stepl.subsectionNo + '-sub-content'">
                   <v-card class="mb-5">
-                    P {{stepl.subsectionNo}} (SS No)
+                    <span :style="{ color: $vuetify.theme.subheading3 }">P {{stepl.subsectionNo}} (SS No)</span>
                     <v-form v-model="form1Valid" >
                       <div class="row" v-for="a in stepl.items" :key="a.id">
                         <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
