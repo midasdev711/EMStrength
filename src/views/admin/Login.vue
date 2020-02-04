@@ -36,8 +36,8 @@ export default {
   data: () => ({
     loading: false,
     model: {
-      UserName: "admin@nus.app",
-      Password: "T3mp0r4ryNus@"
+      UserName: "admin@em.app",
+      Password: "T3mp0r4ryEM@"
     }
   }),
 
