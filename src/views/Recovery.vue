@@ -19,7 +19,7 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card :color="color" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
+    <v-card :color="questions.rating | shadeBackgroundColor" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
         <span class="title">{{questions.category}}</span>
         <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
@@ -32,10 +32,14 @@
         max-width="290"
       >
         <v-card>
-          <v-card-title class="headline">{{questions.title}} Recovery</v-card-title>
+          <v-card-title class="headline">{{questions.category}} Recovery</v-card-title>
 
           <v-card-text>
-            Last assessed 14 days ago
+            <v-layout justify-space-around>
+              <v-icon large color="green darken-2">label</v-icon>
+              <h4>{{questions.rating}}</h4>
+            </v-layout>
+            <p>Last assessed {{questions.lastCompleted | daysAgo }} </p>
             When you feel this aspect of your life has changed, re-run the diagnostic questionnaire
           </v-card-text>
 
@@ -77,12 +81,21 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+
+import moment from 'moment'
+
 export default {
   data () {
     return {
       dialog: false,
       topNotification: true,
-      color: "#c3e2ef",
+      /*colorRating: {
+        default: '#c3e2ef',
+        poor: '#f94e83', 
+        needsImproving: '#ff9d00',
+        couldBeImproved: '#8fcb64',
+        excellent: '#47bbe9'
+      },*/
       questionLists: [],
       checkbox1: true,
       checkbox2: false,
@@ -102,6 +115,36 @@ export default {
       return this.$vuetify.options.extra.mainNav
     }
   },
+  filters: {
+    daysAgo(when) {
+      if (when == undefined) return "never";
+      const date = moment(when);
+      return date.fromNow();
+    },
+    shadeBackgroundColor(rating){
+      let col = '#47bbe9'; 
+      switch (rating) {
+        case "Poor":
+          //return this.colorRating.poor; 
+          col = '#f94e83';
+          break;
+        case "NeedsImproving":
+          col = '#ff9d00';
+          //return this.colorRating.needsImproving;
+          break;     
+        case "CouldBeImproved":
+          col = '#8fcb64';
+          //return this.colorRating.couldBeImproved;
+          break; 
+        case "Excellent":
+          col = '#47bbe9';
+          //return this.colorRating.excellent;
+          break;                
+      }
+
+      return col; //adjustCol(col, -20); //this.colorRating.default; // // "#c3e2ef";// this.color.default;
+    },
+  },
   methods: {
     ...mapActions("app", {
       resetState: "resetState",
@@ -111,6 +154,9 @@ export default {
     }),
     commenceQuestionnaire() {
       
+    },
+    adjustCol(color, amount) {
+      return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
     },
     updateComponentValue(id, done) {
       if (done == false) {
@@ -133,8 +179,20 @@ export default {
   mounted() {
     this.getAllRecovery().then(res => {
       this.isLoading = false;
+
+      
+      //this.colorRating.default = '#c3e2ef';
+      //this.colorRating.poor = '#f94e83';
+      
+      //console.log(this.colorRating);
+      /*  needsImproving: '#ff9d00',
+        couldBeImproved: '#8fcb64',
+        excellent: '#47bbe9'
+      };*/
+
     });
   }
+
 }
 </script>
 
