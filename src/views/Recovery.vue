@@ -19,7 +19,7 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card :color="questions.rating | shadeBackgroundColor" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
+    <v-card :color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
         <span class="title">{{questions.category}}</span>
         <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
@@ -89,13 +89,13 @@ export default {
     return {
       dialog: false,
       topNotification: true,
-      /*colorRating: {
-        default: '#c3e2ef',
-        poor: '#f94e83', 
-        needsImproving: '#ff9d00',
-        couldBeImproved: '#8fcb64',
-        excellent: '#47bbe9'
-      },*/
+      colorRating: {
+        Default: '#c3e2ef',
+        Poor: '#f94e83', 
+        NeedsImproving: '#ff9d00',
+        CouldBeImproved: '#8fcb64',
+        Excellent: '#47bbe9'
+      },
       questionLists: [],
       checkbox1: true,
       checkbox2: false,
@@ -121,28 +121,9 @@ export default {
       const date = moment(when);
       return date.fromNow();
     },
-    shadeBackgroundColor(rating){
-      let col = '#47bbe9'; 
-      switch (rating) {
-        case "Poor":
-          //return this.colorRating.poor; 
-          col = '#f94e83';
-          break;
-        case "NeedsImproving":
-          col = '#ff9d00';
-          //return this.colorRating.needsImproving;
-          break;     
-        case "CouldBeImproved":
-          col = '#8fcb64';
-          //return this.colorRating.couldBeImproved;
-          break; 
-        case "Excellent":
-          col = '#47bbe9';
-          //return this.colorRating.excellent;
-          break;                
-      }
-
-      return col; //adjustCol(col, -20); //this.colorRating.default; // // "#c3e2ef";// this.color.default;
+    shadeBackgroundColor(rating, colorRating){
+      return colorRating[rating]
+      //adjustCol(col, -20); //this.colorRating.default; // // "#c3e2ef";// this.color.default;
     },
   },
   methods: {
