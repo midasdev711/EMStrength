@@ -39,8 +39,7 @@
                   <v-card class="mb-5">
                     P {{stepl.subsectionNo}} (SS No)
                     <v-form v-model="form1Valid" >
-                      <div class="row" v-for="a in stepl.items" :key="a.id">
-                        <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
+                      <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
                         <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
                         <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
                       </div>
