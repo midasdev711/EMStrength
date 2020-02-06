@@ -19,10 +19,12 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card :color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
+    <v-card dark :color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
         <span class="title">{{questions.category}}</span>
-        <v-toolbar-side-icon @click="dialog = true"></v-toolbar-side-icon>
+        <v-layout align-center justify-end>          
+          <v-icon large @click="dialog = true">help</v-icon>
+        </v-layout>
       </v-card-title>  
       <v-container fluid>
         <v-checkbox :key="question.recoveryId" v-model="question.done" v-if="(question.done ? true : false) | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.items" @change="updateComponentValue(question.recoveryId, question.done)"></v-checkbox>
@@ -36,7 +38,7 @@
 
           <v-card-text>
             <v-layout justify-space-around>
-              <v-icon large color="green darken-2">label</v-icon>
+              <v-icon large :color="questions.rating | shadeBackgroundColor(colorRating)">label</v-icon>
               <h4>{{questions.rating}}</h4>
             </v-layout>
             <p>Last assessed {{questions.lastCompleted | daysAgo }} </p>
@@ -122,7 +124,7 @@ export default {
       return date.fromNow();
     },
     shadeBackgroundColor(rating, colorRating){
-      return colorRating[rating]
+      return colorRating[rating];
       //adjustCol(col, -20); //this.colorRating.default; // // "#c3e2ef";// this.color.default;
     },
   },
@@ -136,8 +138,45 @@ export default {
     commenceQuestionnaire() {
       
     },
+
+    hex2(c) {
+        c = Math.round(c);
+        if (c < 0) c = 0;
+        if (c > 255) c = 255;
+
+        var s = c.toString(16);
+        if (s.length < 2) s = "0" + s;
+
+        return s;
+    },
+
+    color(r, g, b) {
+      return "#" + this.hex2(r) + this.hex2(g) + this.hex2(b);
+    },
+
+    shade(col, light) {
+
+        // TODO: Assert that col is good and that -1 < light < 1
+
+        var r = parseInt(col.substr(1, 2), 16);
+        var g = parseInt(col.substr(3, 2), 16);
+        var b = parseInt(col.substr(5, 2), 16);
+
+        if (light < 0) {
+            r = (1 + light) * r;
+            g = (1 + light) * g;
+            b = (1 + light) * b;
+        } else {
+            r = (1 - light) * r + light * 255;
+            g = (1 - light) * g + light * 255;
+            b = (1 - light) * b + light * 255;
+        }
+
+        return this.color(r, g, b);
+    },
+
     adjustCol(color, amount) {
-      return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+      return this.shade(color, 0.7);
     },
     updateComponentValue(id, done) {
       if (done == false) {
@@ -160,17 +199,6 @@ export default {
   mounted() {
     this.getAllRecovery().then(res => {
       this.isLoading = false;
-
-      
-      //this.colorRating.default = '#c3e2ef';
-      //this.colorRating.poor = '#f94e83';
-      
-      //console.log(this.colorRating);
-      /*  needsImproving: '#ff9d00',
-        couldBeImproved: '#8fcb64',
-        excellent: '#47bbe9'
-      };*/
-
     });
   }
 
@@ -178,6 +206,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.accent--text {
+  color: #fff !important;
+  caret-color: #fff !important;
+}
 .v-card__actions
   justify-content flex-end
 .text-justified
