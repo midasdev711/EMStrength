@@ -206,9 +206,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.accent--text {
-  color: #fff !important;
-  caret-color: #fff !important;
+>>>.accent--text {
+  color #fff!important
+  caret-color #fff!important
 }
 .v-card__actions
   justify-content flex-end
