@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <template>
-        <v-tabs v-model="articleTab" color="primary" grow>
+        <v-tabs dark v-model="articleTab" color="primary" grow>
           <v-tabs-slider color="yellow"></v-tabs-slider>
 
           <v-tab
@@ -15,7 +15,7 @@
           >{{ article.articleTitle }}</v-tab>
         </v-tabs>
       </template>
-      <v-tabs-items v-model="articleTab">
+      <v-tabs-items dark v-model="articleTab">
         <v-tab-item
           v-for="article in getUserSummaryData"
           :key="article.articleNo + '-articlecontent'"
@@ -59,6 +59,7 @@
                               :headers="headers"
                               :items="result['items']"
                               class="elevation-1"
+                              light
                             >
                               <template v-slot:items="props">
                                 <td>{{ props.item.article }}</td>

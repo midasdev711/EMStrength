@@ -12,7 +12,6 @@
       step="1"
       ticks="always"
       tick-size="7"
-      :tick-labels="tickLabels"
       :change="$emit('updateValue', sliderValue, questionId, answerId, useText)"
     >
       <template v-slot:thumb-label="props">
@@ -68,6 +67,7 @@ export default {
     },
     getTickLabels() {
       //tickLabels = {};
+      // add back to v-slider :tick-labels="tickLabels"
       for (let i = 0; i < this.items.length; i++) {
           
           this.tickLabels.push(this.items[i].title);
