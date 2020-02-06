@@ -40,10 +40,10 @@
                   <v-card class="mb-5">
                     <span :style="{ color: $vuetify.theme.subheading3 }">P {{stepl.subsectionNo}} (SS No)</span>
                     <v-form v-model="form1Valid" >
-                      <div class="row" v-for="a in stepl.items" :key="a.id">
+                      <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
                         <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
-                        <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
-                        <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
+                        <components v-if="a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
+                        <components v-if="!a.question.useText" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
                       </div>
                     </v-form>
                     <v-btn
