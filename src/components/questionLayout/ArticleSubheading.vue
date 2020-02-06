@@ -1,6 +1,10 @@
 <template>
  <v-flex xs12>
-    <span class="title"><strong>{{title}}</strong>(ArticleSubheading)</span>
+  <h1>
+    {{title}}
+    <!--span class="title"><strong></strong>(ArticleSubheading)</span-->
+  </h1>
+  <p></p>
 </v-flex>
 </template>
 

@@ -4,7 +4,7 @@
       <v-progress-circular
         :size="70"
         :width="7"
-        color="orange"
+        v-bind:color="$vuetify.theme['progressColor']"
         indeterminate
       ></v-progress-circular>
     </div>
@@ -15,9 +15,10 @@
             :key="`${step.sectionNo}-step`"
             :complete="hStepper > (step.sectionNo + 1)"
             :step="step.sectionNo + 1"
+            :color="$vuetify.theme.subheading1"
             editable
           >
-            {{step.section}} (Section)
+            <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} <span class="dev-hint">(Section)</span></span>
           </v-stepper-step>
         </template>
       </v-stepper-header>
@@ -31,13 +32,24 @@
           <v-card>
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
-                <v-stepper-step editable v-bind:step="stepl.subsectionNo + 1">
-                  Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})
+                <v-stepper-step 
+                  editable 
+                  v-bind:step="stepl.subsectionNo + 1"
+                  :key="stepl.subsectionNo + '-sub-step'" 
+                  :color="$vuetify.theme.subheading2">
+                  <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
+
+                  <SectionPartStepper
+                    v-if="sectionPartHead(stepl.items).type == 'SectionPart'"
+                    :id="compId('SectionPart-H-', sectionPartHead(stepl.items).id)"
+                    :title="sectionPartHead(stepl.items).title"
+                  />
+
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
                   <v-card class="mb-5">
-                    P {{stepl.subsectionNo}} (SS No)
+                    <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                     <v-form v-model="form1Valid" >
                       <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
                         <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
@@ -119,6 +131,18 @@ export default {
     {
       this.saveAnswers();
       //this.hStepper = step + 1;
+
+    },
+    sectionPartHead(list)
+    {
+      //traverse stepl.items[1] to find the SectionPart for the label
+        var item = list.find(x => x.question.type == 'SectionPart');
+         
+        //console.log("Question Item", item);
+        if (item) 
+          return item.question;
+        else
+          return undefined;
 
     },
 

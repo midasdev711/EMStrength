@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12>
+  <v-flex xs10>
     <span class="caption">{{title}}</span>
 
     <v-select

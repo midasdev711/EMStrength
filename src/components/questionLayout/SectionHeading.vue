@@ -1,6 +1,8 @@
 <template>
  <v-flex xs12>
-    <span class="title">{{title}}</span>
+  <h2>
+    <span >{{title}}</span>
+  </h2>
 </v-flex>
 </template>
 

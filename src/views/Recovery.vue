@@ -4,7 +4,7 @@
     <v-progress-circular
       :size="70"
       :width="7"
-      color="orange"
+      v-bind:color="$vuetify.theme['progressColor']"
       indeterminate
     ></v-progress-circular>
   </v-flex>

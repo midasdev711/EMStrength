@@ -55,17 +55,24 @@ export default {
 </script>
 
 <style>
-  .body {
-    font-family: 'Muli';
-  } 
+.body {
+  font-family: 'Muli' !important;
+} 
 
 .application {
-  font-family: 'Muli';
+  font-family: 'Muli' !important;
 }
 .headline,
 .title,
-.subheading{
-     font-family: 'Muli';
+.subheading {
+  font-family: 'Muli' !important;
+}
+
+.v-slider__thumb-label {
+  font-size: 10px !important;
+}
+.dev-hint {
+  color:rgba(238, 238, 238, 0.089);
 }
 
 </style>

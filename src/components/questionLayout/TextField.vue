@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12>
+  <v-flex xs10>
     <v-text-field
       v-bind:name="id"
       v-bind:label="title"
@@ -52,7 +52,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.length);
+    //console.log(this.length);
   }
 }
 </script>

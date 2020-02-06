@@ -1,9 +1,11 @@
 <template>
  <v-flex xs12>
-    <v-chip color="teal">
+  <p>
+    <v-chip :color="$vuetify.theme.subheading3">
       <span class="white--text subheading">{{prefix(title)}}</span>
     </v-chip>
     <span class="subheading">{{heading(title)}}</span>
+  </p>
 </v-flex>
 </template>
 

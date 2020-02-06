@@ -2,7 +2,7 @@
   <v-container grid-list-xl>
     <!-- TODO: Implement a Widget with User summary Information for selected user header -->
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular :size="70" :width="7" color="#213060" indeterminate></v-progress-circular>
+      <v-progress-circular :size="70" :width="7" v-bind:color="$vuetify.theme['progressColor']" indeterminate></v-progress-circular>
     </div>
     <div v-else>
       <template>

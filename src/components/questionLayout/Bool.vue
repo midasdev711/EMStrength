@@ -1,5 +1,5 @@
 <template>
- <v-flex xs12>
+ <v-flex xs10>
     <v-switch v-model="switchValue" v-bind:label="title" :change="$emit('updateValue', switchValue, questionId, answerId, useText)"></v-switch>
 </v-flex>
 </template>

@@ -21,7 +21,9 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-// .page-title 
-  // font-family 'Muli' 
+<style lang="css">
+ .page-title {
+   font-weight: 800;
+   color: #1c4698;
+ } 
 </style>
