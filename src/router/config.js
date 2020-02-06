@@ -171,7 +171,7 @@ export const protectedRoute = [
         path: "/account",
         name: "Account",
         component: () => import(`@/views/Account.vue`),
-        meta: { title: "Account", requiresAuth: true }
+        meta: { title: "Profile", requiresAuth: true }
       },      
 
       {

@@ -23,47 +23,13 @@
       <v-card-title>
         <span class="title">{{questions.category}}</span>
         <v-layout align-center justify-end>          
-          <v-icon large @click="dialog = true">help</v-icon>
+          <v-icon large @click="showHelpDialog(questions.category, questions.rating, questions.lastCompleted)">help</v-icon>
         </v-layout>
       </v-card-title>  
       <v-container fluid>
         <v-checkbox :key="question.recoveryId" v-model="question.done" v-if="(question.done ? true : false) | !getRecoveryCheck" :label="question.remedy" v-for="question in questions.items" @change="updateComponentValue(question.recoveryId, question.done)"></v-checkbox>
       </v-container>
-      <v-dialog
-        v-model="dialog"
-        max-width="290"
-      >
-        <v-card>
-          <v-card-title class="headline">{{questions.category}} Recovery</v-card-title>
-
-          <v-card-text>
-            <v-layout justify-space-around>
-              <v-icon large :color="questions.rating | shadeBackgroundColor(colorRating)">label</v-icon>
-              <h4>{{questions.rating}}</h4>
-            </v-layout>
-            <p>Last assessed {{questions.lastCompleted | daysAgo }} </p>
-            When you feel this aspect of your life has changed, re-run the diagnostic questionnaire
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              color="green darken-1"
-              flat="flat"
-              @click="dialog = false; commenceQuestionnaire();"
-            >
-              RE-RUN
-            </v-btn>
-
-            <v-btn
-              color="green darken-1"
-              flat="flat"
-              @click="dialog = false"
-            >
-              OK
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      
     </v-card>
     <v-card v-if="getRecoveryData.length == 0">
       <v-card-title>
@@ -76,7 +42,41 @@
         <h3>allow up to 15 mins to complete</h3>
       </v-container>
     </v-card>
-    
+    <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">{{dialogData.category}} Recovery</v-card-title>
+
+        <v-card-text>
+          <v-layout justify-space-around>
+            <v-icon large :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
+            <h4>{{dialogData.rating}}</h4>
+          </v-layout>
+          <p>Last assessed {{dialogData.lastCompleted | daysAgo }} </p>
+          When you feel this aspect of your life has changed, re-run the diagnostic questionnaire
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+            @click="dialog = false; commenceQuestionnaire();"
+          >
+            RE-RUN
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+            @click="dialog = false"
+          >
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-flex>
 </v-layout>
 </template>
@@ -90,6 +90,11 @@ export default {
   data () {
     return {
       dialog: false,
+      dialogData: {
+        category: "",
+        rating: "",
+        lastCompleted: ""
+      },
       topNotification: true,
       colorRating: {
         Default: '#c3e2ef',
@@ -137,6 +142,13 @@ export default {
     }),
     commenceQuestionnaire() {
       
+    },
+
+    showHelpDialog(category, rating, lastCompleted) {
+      this.dialogData.category = category;
+      this.dialogData.rating = rating;
+      this.dialogData.lastCompleted = lastCompleted;
+      this.dialog = true;
     },
 
     hex2(c) {

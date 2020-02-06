@@ -1,50 +1,87 @@
 <template>
   <v-container grid-list-xl class="account-page">
-    <v-card>
-      <v-layout wrap>
-        <v-flex xs12 sm5 text-xs-center>
-          <div class="mb-3">
-            <v-avatar size="150px">
-              <img v-bind:src="user.avatarURL" alt />
-            </v-avatar>
-            <DropzoneAvatar ref="dropzone" />
-          </div>
-          <v-btn @click="saveImage()" :loading="isUploadingAvatar">Change</v-btn>
-        </v-flex>
-        <v-flex xs12 sm7>
-          <h2>Account Details</h2>
-          <p>Full name: {{user.name}} ({{user.gender}})</p>
-          <p>Email: {{user.email}}</p>
-          <p>
-            Password: * * * * * * *
-            <v-btn class="v-btn--inline" @click.sync="passwordDialog = true">RESET</v-btn>
-            <ResetPassword :password-dialog.sync="passwordDialog" @close="passwordDialog = false"></ResetPassword>
-          </p>
-          <p>Group:{{user.groupName}}</p>
-          <p>Measurement preference: {{user.profile && user.profile.measure}}</p>
-        </v-flex>
-      </v-layout>
-      <hr />
-      <v-layout wrap text-xs-center mb-3>
-        <v-flex xs12 sm6>
-          <h2>Policies</h2>
-          <v-btn class="mb-3" @click="$router.push({ name: 'TermsConditions' })">
-            Terms &amp; Conditions
-            <v-icon>keyboard_arrow_right</v-icon>
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
+    >
+      <v-text-field
+        v-model="user.firstName"
+        :rules="firstNameRules"
+        label="First name"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="user.lastName"
+        :rules="lastNameRules"
+        label="Last name"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="user.email"
+        :rules="emailRules"
+        label="Email"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="user.age"
+        :rules="ageRules"
+        label="Age"
+        required
+      ></v-text-field>
+
+      <v-switch
+        v-model="user.sex"
+        :label="user.sex ? 'Female' : 'Male'"
+      ></v-switch>
+
+      <v-text-field
+        v-model="user.postCode"
+        :rules="postCodeRules"
+        label="Post code"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        v-model="user.occupation"
+        :rules="occupationRules"
+        label="Occupation"
+        required
+      ></v-text-field>
+
+      <v-btn
+        :disabled="!valid"
+        color="white"
+        @click="submit"
+      >
+        Done
+      </v-btn>
+    </v-form>
+    <v-dialog
+        v-model="dialog"
+        max-width="290"
+      >
+      <v-card>
+        <v-card-title class="headline">Tell us about yourself</v-card-title>
+        <v-card-text>
+          <p>Dr Sean has worked with X clients and achieve ... (credibility factors) <br> To provide quality actionable information to improve your recovery <br> Lorem ipsum dolor sit amet</p>
+         
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+            @click="dialog = false"
+          >
+            OK
           </v-btn>
-          <v-btn class="mb-3" @click="$router.push({ name: 'PrivacyPolicy' })">
-            Privacy Policy
-            <v-icon>keyboard_arrow_right</v-icon>
-          </v-btn>
-        </v-flex>
-      </v-layout>
-      <hr />
-      <v-layout wrap text-xs-center>
-        <v-flex xs12>
-          <v-btn color="primary" :loading="signOutLoading" @click="signOut">Sign out</v-btn>
-        </v-flex>
-      </v-layout>
-    </v-card>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -58,104 +95,83 @@ export default {
   name: "Account",
   data() {
     return {
-      userId: "3c2692a0-8768-4472-b9de-3fcb57fde1d9", //TODO: set userId on open
+      valid: null,
+      dialog: true,
       user: {
-        id: "",
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        gender: "Male",
-        groupName: "",
-        measure: "Metric",
-        avatarURL: '',
-        // avatarURL: '/static/avatar/default.png',
-        profile: {}
+        age: "",
+        sex: false,
+        postCode: "",
+        occupation: ""
       },
-      passwordDialog: false,
-      signOutLoading: false,
-      isUser: true,
-      isUploadingAvatar: false
+      firstNameRules: [
+        v => !!v || 'First name is required',
+      ],
+      lastNameRules: [
+        v => !!v || 'Last name is required',
+      ],
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+/.test(v) || 'E-mail must be valid'
+      ],
+      ageRules: [
+        v => !!v || 'Age is required',
+        v => /^\d+$/.test(v) || 'Age must be valid'
+      ],
+      occupationRules: [
+        v => !!v || 'Occupation is required',
+      ],
+      postCodeRules: [
+        v => !!v || 'Post code is required',
+      ],
     };
   },
   components: {
-    ResetPassword,
-    DropzoneAvatar
   },
   methods: {
     ...mapActions("app", {
-      uploadImage: "uploadImage",
-      updateAvatar: "updateAvatar"
     }),
     ...mapActions("admin", {
       getUser: "getUser",
-      updateAvatarAdmin: "updateAvatar"
     }),
     ...mapActions("auth", {
       updateCurrentUserData: "getMe",
     }),
-
-    async saveImage() {
-      this.isUploadingAvatar = true;
-      let files = this.$refs.dropzone.getFiles();
-      let file = files[0];
-
-      var newAvatarURL = await this.uploadImage(file);
-      var data = {
-        "userId": this.user.id,
-        "avatar": newAvatarURL
-      }
-
-      var callback = () => {
-        this.user.avatarURL = newAvatarURL;
-        this.$toast.success('Successfully saved', {});
-        this.updateCurrentUserData();
-        this.$refs.dropzone.removeAllFiles();
-        this.isUploadingAvatar = false;
-      };
-
-      if(this.isAdmin){
-        this.updateAvatarAdmin(data).then(res => {
-          callback();
-        });
-      }
-      else {
-        this.updateAvatar(data).then(res => {
-          callback();
-        });
-      }
+    reset () {
+      this.$refs.form.reset()
+    },
+    resetValidation () {
+      this.$refs.form.resetValidation()
     },
 
-    signOut() {
-      this.signOutLoading = true;
-      setTimeout(() => {
-        this.$router.push(`/auth/login`);
-      }, 1000);
-    },
-    backToDashboard() {
-      this.$router.push({ name: "Dashboard" });
+    submit () {
+      if (this.$refs.form.validate()) {
+        console.log(this.user);
+
+        // save action
+
+        this.$router.push({ name: 'Recovery'});
+        this.snackbar = true
+      }
     }
+
   },
   computed: {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
-      isAdmin: "getIsAdmin"
     })
   },
   mounted() {
-    this.userId = this.getDataUserProfile.id;
-
-    this.user["name"] = this.getDataUserProfile.userName;
-    this.user["email"] = this.getDataUserProfile.email;
-    this.user["avatarURL"] = this.getDataUserProfile.avatarURL;
-    console.log("Avatar:" + this.user["avatarURL"]);
-    this.user["groupName"] = this.getDataUserProfile.groupName;
-    this.user.profile["measure"] = this.getDataUserProfile.profile.measure;
-    console.log("Measure:" + this.user.profile["measure"]);
-    this.userId = this.getDataUserProfile.id;
   }
 };
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
+form 
+  text-align center
+
 .hidden {
   display: none;
 }
@@ -163,4 +179,7 @@ export default {
 .dropzone .dz-preview .dz-image {
   z-index: 5;
 }
+
+.v-card__actions
+  justify-content flex-end
 </style>
