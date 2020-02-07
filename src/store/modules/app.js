@@ -185,8 +185,6 @@ const actions = {
       'Content-Type': 'application/json; charset=utf-8',
     };
 
-
-
     return API.put(`api/user/recovery`, data, headers)
       .then(result => {
         commit("saveRecovery", data);
@@ -195,6 +193,36 @@ const actions = {
       .catch(err => {
         throw err;
       });
+  },
+
+  postUserCode: ({commit}, accessCode) => {
+    var headers = { 'Accept': 'application/json' };
+    return API.get(`/api/user/userCode/${accessCode}`, headers).then(result => {
+      commit("validUserCode", result['data']);
+      return result['data'];
+    }).catch(err => {
+      throw err;
+    });
+  },
+
+  postUser: ({commit}, data) => {
+    var headers = { 'Accept': 'application/json' };
+    return API.post(`/api/user/userCode/user`, data, headers).then(result => {
+      console.log(result['data']);
+      return result['data'];
+    }).catch(err => {
+      throw err;
+    });
+  },
+
+  updateUser: ({commit}, data) => {
+    var headers = { 'Accept': 'application/json' };
+    return API.put(`/api/user/userCode/user`, data, headers).then(result => {
+      console.log(result['data']);
+      return result['data'];
+    }).catch(err => {
+      throw err;
+    });
   },
 
 //EXAMPLE CALLS
@@ -296,6 +324,9 @@ const mutations = {
   },
   setUserSummaryData: (state, data) => {
     state.userSummaryData = Object.assign({}, data);
+  },
+  validUserCode: (state, data) => {
+
   },
 
   // EXAMPLES

@@ -1,12 +1,44 @@
 <template>
   <v-container grid-list-xl>
+    <vue-circle
+        :progress="50"
+        :size="100"
+        :reverse="false"
+        line-cap="round"
+        :fill="fill"
+        empty-fill="rgba(0, 0, 0, .1)"
+        :animation-start-value="0.0"
+        :start-angle="0"
+        insert-mode="append"
+        :thickness="5"
+        :show-percent="true"
+        @vue-circle-progress="progress"
+        @vue-circle-end="progress_end">
+          <p>Slot!</p>
+      </vue-circle>
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular
+      <vue-circle
+        :progress="50"
+        :size="100"
+        :reverse="false"
+        line-cap="round"
+        :fill="fill"
+        empty-fill="rgba(0, 0, 0, .1)"
+        :animation-start-value="0.0"
+        :start-angle="0"
+        insert-mode="append"
+        :thickness="5"
+        :show-percent="true"
+        @vue-circle-progress="progress"
+        @vue-circle-end="progress_end">
+          <p>Slot!</p>
+      </vue-circle>
+      <!-- <v-progress-circular
         :size="70"
         :width="7"
         v-bind:color="$vuetify.theme['progressColor']"
         indeterminate
-      ></v-progress-circular>
+      ></v-progress-circular> -->
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
@@ -84,12 +116,16 @@
 
 <script>
 
+import VueCircle from 'vue2-circle-progress'
 import components from '../components/questionLayout'
 import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Diagnostic",
-  components,
+  components: {
+    ...components,
+    VueCircle
+  },
   data: () => ({
     hStepper: 1,
     vStepper: 1,
@@ -100,6 +136,7 @@ export default {
 
     isLoading: true,
     saved: false,
+    fill : { gradient: ["red", "green", "blue"] },
   }),
   computed: {
     ...mapGetters("app", {
@@ -144,6 +181,13 @@ export default {
         else
           return undefined;
 
+    },
+
+    progress(event,progress,stepValue){
+      console.log(stepValue);
+    },
+    progress_end(event){
+      console.log("Circle progress end");
     },
 
     updateComponentValue(value, questionId, answerId, useText) {

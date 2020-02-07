@@ -1,9 +1,18 @@
 <template>
   <v-container grid-list-xl class="account-page">
+    <div class="text-xs-center" v-if="isLoading">
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        v-bind:color="$vuetify.theme['progressColor']"
+        indeterminate
+      ></v-progress-circular>
+    </div>
     <v-form
       ref="form"
       v-model="valid"
       lazy-validation
+      v-else
     >
       <v-text-field
         v-model="user.firstName"
@@ -34,8 +43,8 @@
       ></v-text-field>
 
       <v-switch
-        v-model="user.sex"
-        :label="user.sex ? 'Female' : 'Male'"
+        v-model="user.gender"
+        :label="user.gender ? 'Female' : 'Male'"
       ></v-switch>
 
       <v-text-field
@@ -57,7 +66,7 @@
         color="white"
         @click="submit"
       >
-        Done
+      {{isUserDataExist? 'Update' : 'Done'}}
       </v-btn>
     </v-form>
     <v-dialog
@@ -97,12 +106,14 @@ export default {
     return {
       valid: null,
       dialog: true,
+      userCode: "fMvsVLvSf",              // fMvsVLvSf       Zsk5t2JDH              IAFGR1Rfa
+      groupId: null,
       user: {
         firstName: "",
         lastName: "",
         email: "",
         age: "",
-        sex: false,
+        gender: false,
         postCode: "",
         occupation: ""
       },
@@ -126,12 +137,17 @@ export default {
       postCodeRules: [
         v => !!v || 'Post code is required',
       ],
+      isLoading: false,
+      isUserDataExist: false
     };
   },
   components: {
   },
   methods: {
     ...mapActions("app", {
+      _postUserCode: "postUserCode",
+      _updateUser: "updateUser",
+      _postUser: "postUser"
     }),
     ...mapActions("admin", {
       getUser: "getUser",
@@ -148,13 +164,38 @@ export default {
 
     submit () {
       if (this.$refs.form.validate()) {
-        console.log(this.user);
+        let data = {
+          FirstName: this.user.firstName,
+          LastName: this.user.lastName,
+          Occupation: this.user.occupation,
+          PostCode: this.user.postCode,
+          Age: this.user.age,
+          Email: this.user.email,
+          Password: this.user.password,
+          UserType: this.user.userType,
+          GroupId: this.groupId,
+          UserAccessCode: this.userCode
+        };
 
-        // save action
+        console.log(data);
 
-        this.$router.push({ name: 'Recovery'});
-        this.snackbar = true
+        if (this.isUserDataExist) {
+          this._updateUser(data).then(res => {
+            this.$toast.success(`Successfully updated`);
+            this.$router.push({ name: 'Recovery'});
+          });
+        } else {
+          this._postUser(data).then(res => {
+            this.$toast.success(`Successfully updated`);
+            this.$router.push({ name: 'Recovery'});
+          });
+        }
+
       }
+    },
+    checkUserDataExist() {
+
+      this.isUserDataExist =  this.user.firstName || this.user.lastName || this.user.email || this.user.age || this.user.gender || this.user.postCode || this.user.occupation;
     }
 
   },
@@ -164,6 +205,16 @@ export default {
     })
   },
   mounted() {
+    this.isLoading = true;
+    this._postUserCode(this.userCode).then(res => {
+      this.user = Object.assign({}, this.getDataUserProfile);
+      this.groupId = res.groupId;
+      this.checkUserDataExist();
+      this.isLoading = false;
+    }).catch(err => {
+      this.$toast.warning(`User code invalid`);
+      this.$router.push({ name: 'dashboard'});
+    });
   }
 };
 </script>

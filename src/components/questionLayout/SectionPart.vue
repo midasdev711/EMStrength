@@ -33,6 +33,9 @@ export default {
 
       return pre[0];
     },
+  },
+  mounted() {
+    console.log(this.title);
   }
 }
 </script>
