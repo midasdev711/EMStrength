@@ -63,12 +63,13 @@ export default {
         console.log(data);
 
         this._getUserCode(data).then(res => {
-            this.$toast.success(`Valid UserCode`);
-            this.$router.push({ name: 'Account', query: { code: this.userCode }});
+          console.log(res);
+          this.$toast.success(`Valid UserCode`);
+          this.$router.push({ name: 'Account', query: { code: this.userCode }});
             
         }).catch(err => {
-            this.$toast.warning(`User code invalid or claimed`);
-            this.$toast.warning(err.errors[0].errorMessage);
+          this.$toast.warning(`User code invalid or claimed`);
+          this.$toast.warning(err.errors[0].errorMessage);
         });
       }
 

@@ -1,44 +1,20 @@
 <template>
   <v-container grid-list-xl>
-    <vue-circle
-        :progress="50"
-        :size="100"
-        :reverse="false"
-        line-cap="round"
-        :fill="fill"
-        empty-fill="rgba(0, 0, 0, .1)"
-        :animation-start-value="0.0"
-        :start-angle="0"
-        insert-mode="append"
-        :thickness="5"
-        :show-percent="true"
-        @vue-circle-progress="progress"
-        @vue-circle-end="progress_end">
-          <p>Slot!</p>
-      </vue-circle>
     <div class="text-xs-center" v-if="isLoading">
-      <vue-circle
-        :progress="50"
-        :size="100"
-        :reverse="false"
-        line-cap="round"
-        :fill="fill"
-        empty-fill="rgba(0, 0, 0, .1)"
-        :animation-start-value="0.0"
-        :start-angle="0"
-        insert-mode="append"
-        :thickness="5"
-        :show-percent="true"
-        @vue-circle-progress="progress"
-        @vue-circle-end="progress_end">
-          <p>Slot!</p>
-      </vue-circle>
-      <!-- <v-progress-circular
-        :size="70"
-        :width="7"
-        v-bind:color="$vuetify.theme['progressColor']"
-        indeterminate
-      ></v-progress-circular> -->
+      <v-card>
+        <v-card-title>
+          <img src="/img/Eden-2.png" width="100%"/>
+        </v-card-title>  
+        <v-container fluid align-center text-center>
+          <v-progress-circular
+            :size="70"
+            :width="7"
+            v-bind:color="$vuetify.theme['progressColor']"
+            indeterminate
+          ></v-progress-circular>
+          <h3>Loading ...</h3>
+        </v-container>
+      </v-card>
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
@@ -66,7 +42,7 @@
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
                 <v-stepper-step 
                   editable 
-                  v-bind:step="stepl.subsectionNo + 1"
+                  v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                   :key="stepl.subsectionNo + '-sub-step'" 
                   :color="$vuetify.theme.subheading2">
                   <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
