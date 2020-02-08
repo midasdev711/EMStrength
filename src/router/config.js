@@ -32,6 +32,12 @@ export const publicRoute = [
         name: "signup",
         meta: { title: "Signup" },
         component: () => import(/* webpackChunkName: "login" */ "@/views/Signup.vue")
+      },
+      {
+        path: "forgot",
+        name: "forgot",
+        meta: { title: "Forgot password" },
+        component: () => import(/* webpackChunkName: "login" */ "@/views/Forgot.vue")
       }
     ]
   },

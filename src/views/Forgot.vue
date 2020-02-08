@@ -12,22 +12,26 @@
                     class="auth__logo img-responsive"
                     alt="EM Sign up"
                   />
-                  <h1 class="flex my-4 primary--text">Sign Up</h1>
+                  <h1 class="flex my-4 primary--text">Reset password</h1>
                 </div>
-                <v-form>
+                <v-form id="formUser">
+                    <p>Enter your email address to receive a link to reset your password</p>
                   <v-text-field
                     append-icon="person"
                     name="login"
-                    label="Login"
+                    label="email address"
                     type="text"
-                    v-model="model.UserCode"
+                    :rules="emailRules"
+                    v-model="model.Username"
+                    required
                   ></v-text-field>
                 </v-form>
               </v-card-text>
               <div class="login-btn">
                 <v-spacer></v-spacer>
-                <v-btn block color="primary" @click="login" :loading="loading">Sign up</v-btn>
-                <p class="text-xs-center mt-5">Already have an account?<br><a href="/auth/login"> Login here</a> </p>
+                
+                <v-btn block color="primary" @click="submit" :loading="loading"  >Reset password</v-btn>
+                <p class="text-xs-center mt-5">Know your login and password?<br><a href="/auth/login"> Login here</a> </p>
               </div>
             </v-card>
           </v-flex>
@@ -41,34 +45,40 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "Signup",
+  name: "Forgot",
   data() {
       return {
         loading: false,
+
         model: {
-            UserCode: "Zsk5t2JDH" 
-        }
+            Username: "" 
+        },
+
+        emailRules: [ 
+            v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+        ],
+      
     }
   },
   methods: {
     ...mapActions("app", {
-       _getUserCode: "getUserCode",
+       _postForgotPassword: "postResetPassword",
     }),
     submit () {
-      //if (this.$refs.form.validate()) 
+      //if (this.model.Username.valid()) 
       {
         let data = {
-          UserAccessCode: this.userCode
+          email: this.Username
         };
 
         console.log(data);
 
 
-        this._getUserCode(data).then(res => {
-            this.$toast.success(`Valid UserCode`);
+        this.postForgotPassword(data).then(res => {
+            this.$toast.success(`Check your inbox for the reset link`);
             this.$router.push({ name: 'Account'});
         }).catch(err => {
-            this.$toast.warning(`User code invalid or claimed`);
+            this.$toast.warning(`Username invalid or could not be found`);
             this.$toast.warning(err.errors[0].errorMessage);
         });
       }

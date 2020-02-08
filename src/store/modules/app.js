@@ -195,6 +195,35 @@ const actions = {
       });
   },
 
+  postForgotPassword: ({commit}, data) => {
+    var headers = {
+      'Content-Type': 'application/json-patch+json',
+      'Accept': 'application/json'
+    };
+    return API.patch(`api/users/forgotPassword`, data, headers)
+    .then(resp => {
+      return resp;
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
+  
+  postResetPassword: ({commit}, data) => {
+    var headers = {
+      'Content-Type': 'application/json-patch+json',
+      'Accept': 'application/json'
+    };
+    return API.patch(`api/users/resetPassword`, data, headers)
+    .then(resp => {
+      return resp;
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
   getUserCode: ({commit}, accessCode) => {
     var headers = { 'Accept': 'application/json' };
     return API.get(`/api/user/userCode/${accessCode}`, headers).then(result => {
