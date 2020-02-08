@@ -20,7 +20,7 @@
                     name="login"
                     label="Login"
                     type="text"
-                    v-model="model.UserCode"
+                    v-model="userCode"
                   ></v-text-field>
                 </v-form>
               </v-card-text>
@@ -45,16 +45,15 @@ export default {
   data() {
       return {
         loading: false,
-        model: {
-            UserCode: "Zsk5t2JDH" 
-        }
+        userCode: "Zsk5t2JDH" 
     }
   },
   methods: {
     ...mapActions("app", {
        _getUserCode: "getUserCode",
     }),
-    submit () {
+
+    login () {
       //if (this.$refs.form.validate()) 
       {
         let data = {
@@ -63,10 +62,10 @@ export default {
 
         console.log(data);
 
-
         this._getUserCode(data).then(res => {
             this.$toast.success(`Valid UserCode`);
-            this.$router.push({ name: 'Account'});
+            this.$router.push({ name: 'Account', query: { code: this.userCode }});
+            
         }).catch(err => {
             this.$toast.warning(`User code invalid or claimed`);
             this.$toast.warning(err.errors[0].errorMessage);

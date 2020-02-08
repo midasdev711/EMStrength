@@ -205,6 +205,7 @@ export default {
     })
   },
   mounted() {
+    this.userCode = this.$route.query.code;
     this.isLoading = true;
     this._postUserCode(this.userCode).then(res => {
       this.user = Object.assign({}, this.getDataUserProfile);
