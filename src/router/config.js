@@ -20,6 +20,23 @@ export const publicRoute = [
   },
 
   {
+    path: "/",
+    component: AuthLayout,
+    name: "Signup",
+    meta: { title: "Signup" },
+    redirect: "/signup",
+    hidden: true,
+    children: [
+      {
+        path: "signup",
+        name: "signup",
+        meta: { title: "Signup" },
+        component: () => import(/* webpackChunkName: "login" */ "@/views/Signup.vue")
+      }
+    ]
+  },
+
+  {
     path: "/auth",
     component: AuthLayout,
     name: "Auth",
