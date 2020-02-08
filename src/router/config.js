@@ -38,6 +38,16 @@ export const publicRoute = [
         name: "forgot",
         meta: { title: "Forgot password" },
         component: () => import(/* webpackChunkName: "login" */ "@/views/Forgot.vue")
+      },
+      {
+        path: "resetPassword",
+        name: "resetPassword",
+        meta: { title: "Reset password" },
+        component: () => import(/* webpackChunkName: "login" */ "@/views/ResetPassword.vue"),
+        props: (r) => ({
+          token: r.query.token
+        })
+        /* http://domain/resetPassword?token=fromemail */
       }
     ]
   },

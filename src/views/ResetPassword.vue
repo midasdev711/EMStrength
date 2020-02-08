@@ -10,27 +10,30 @@
                   <img
                     src="/img/icons/msapplication-icon-144x144.png"
                     class="auth__logo img-responsive"
-                    alt="EM Forgot password"
+                    alt="EM Sign up"
                   />
-                  <h1 class="flex my-4 primary--text">Reset password</h1>
+                  <h1 class="flex my-4 primary--text">Create password</h1>
                 </div>
                 <v-form id="formUser">
-                    <p>Enter your email address to receive a link to reset your password</p>
+
+                  <p> TOKEN: {{token}} for debug</p>
+
+                  <p>Enter your new password</p>
+                    
                   <v-text-field
-                    append-icon="person"
-                    name="login"
-                    label="email address"
-                    type="text"
-                    :rules="emailRules"
-                    v-model="model.Username"
-                    required
+                    append-icon="lock"
+                    name="password"
+                    label="Password"
+                    id="password"
+                    type="password"
+                    v-model="model.newPassword"
                   ></v-text-field>
                 </v-form>
               </v-card-text>
               <div class="login-btn">
                 <v-spacer></v-spacer>
                 
-                <v-btn block color="primary" @click="submit" :loading="loading"  >Reset password</v-btn>
+                <v-btn block color="primary" @click="submit" :loading="loading"  >Set Password</v-btn>
                 <p class="text-xs-center mt-5">Know your login and password?<br><a href="/auth/login"> Login here</a> </p>
               </div>
             </v-card>
@@ -45,40 +48,42 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "Forgot",
+  name: "ResetPassword",
+  props: {
+      token: {
+          type: String,
+          default: "notset",
+
+      }
+  },
   data() {
       return {
         loading: false,
-
         model: {
-            Username: "" 
-        },
-
-        emailRules: [ 
-            v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-        ],
-      
+            newPassword: "" 
+        }
     }
   },
   methods: {
     ...mapActions("app", {
-       _postForgotPassword: "postForgotPassword",
+       _postResetPassword: "postResetPassword",
     }),
     submit () {
       //if (this.model.Username.valid()) 
       {
         let data = {
-          email: this.Username
+          token: this.props.token,
+          newPassword: this.newPassword
         };
 
         console.log(data);
 
 
-        this.postForgotPassword(data).then(res => {
-            this.$toast.success(`Check your inbox for the reset link`);
-            this.$router.push({ name: 'Account'});
+        this.postResetPassword(data).then(res => {
+            this.$toast.success(`Your password has been reset`);
+            //this.$router.push({ name: 'Login'});
         }).catch(err => {
-            this.$toast.warning(`Username invalid or could not be found`);
+            this.$toast.warning(`Problem resetting password`);
             this.$toast.warning(err.errors[0].errorMessage);
         });
       }
