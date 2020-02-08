@@ -13,6 +13,7 @@ const state = {
   group: null,
   group_data: [],
   user_data: [],
+  generated_user_codes: [],
   diets: [],
   checkinData: [],
   // Coach
@@ -29,6 +30,7 @@ const getters = {
   getCheckoutStatus: state => state.checkoutStatus,
   getGroupData: state => state.group_data,
   getUserData: state => state.user_data,
+  //getUserCodes: state => state.generated_user_codes,
   getDataDiets: state => state.diets,
   getCheckinData: state => state.checkinData,
   //Coach
@@ -84,6 +86,21 @@ const actions = {
       throw err;
     });
   },
+
+///api/admin/userCode
+  postGenerateUserCodes: ({commit}, data) => {
+    var headers = { 'Accept': 'application/json' };
+    return API.post(`/api/user/userCode`, data, headers).then(result => {
+      console.log(result['data']);
+      commit("saveGeneratedUserCodes", resp['data']);
+      return result['data'];
+    }).catch(err => {
+      throw err;
+    });
+  },
+
+
+
   deleteUser: ({ commit }, userId) => {
     return API.delete('api/admin/user/'+userId).then(result => {
       commit("removeUser", userId)
@@ -485,6 +502,10 @@ const mutations = {
     }
     state.weeklySummary = Object.assign([], tempArray)
   },
+
+  saveGeneratedUserCodes: (state, codes) => {
+    state.generated_user_codes = codes;
+  }
 }
 
 export default {
