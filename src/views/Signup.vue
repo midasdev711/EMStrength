@@ -56,16 +56,10 @@ export default {
     login () {
       //if (this.$refs.form.validate()) 
       {
-        let data = {
-          UserAccessCode: this.userCode
-        };
-
-        console.log(data);
-
-        this._getUserCode(data).then(res => {
+        this._getUserCode(this.userCode).then(res => {
           console.log(res);
           this.$toast.success(`Valid UserCode`);
-          this.$router.push({ name: 'Account', query: { code: this.userCode }});
+          this.$router.push({ name: 'AccountDetails', query: { code: this.userCode }});
             
         }).catch(err => {
           this.$toast.warning(`User code invalid or claimed`);
