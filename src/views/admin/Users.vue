@@ -5,6 +5,7 @@
       <v-flex xs12 lg5>
         <CreateNewUser @switchTab="activeTab = 2" class="mb-4" />
         <CreateNewGroup @switchTab="activeTab = 1" />
+        <CreateUserCodes @switchTab="activeTab = 1" />
       </v-flex>
       <v-flex xs12 lg7>
         <v-tabs v-model="activeTab">
@@ -27,6 +28,7 @@
 <script>
 import CreateNewUser from "@/components/user/CreateNewUser"
 import CreateNewGroup from "@/components/user/CreateNewGroup"
+import CreateUserCodes from "@/components/user/CreateUserCodes"
 import UserList from "@/components/user/UserList"
 import GroupList from "@/components/user/GroupList"
 
@@ -35,6 +37,7 @@ export default {
   components: {
     CreateNewUser,
     CreateNewGroup,
+    CreateUserCodes,
     UserList,
     GroupList
   },

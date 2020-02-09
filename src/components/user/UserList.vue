@@ -94,14 +94,14 @@ export default {
           sortable: false,
           value: "checkbox"
         },
-        { text: "Name ", value: "fullName" },
+        { text: "Name ", value: "firstName" },
         { text: "User type ", value: "userType" },
         { text: "Email address", value: "email" },
         { text: "Group name ", value: "groupName" },
         { text: "Date joined", value: "groupJoined" }
       ],
       pagination: {
-        sortBy: 'fullName',
+        sortBy: 'email',
         rowsPerPage: 10
       },
       filters: {

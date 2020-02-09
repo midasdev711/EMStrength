@@ -1,6 +1,8 @@
 <template>
  <v-flex xs12>
-    <span class="caption"><strong>{{title}}</strong>(SECTION Instr.)</span>
+  <p>
+    <span class="caption"><strong>{{title}}</strong></span><span class="dev-hint">(SECTION Instr.)</span>
+  </p>
 </v-flex>
 </template>
 

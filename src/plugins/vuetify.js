@@ -15,6 +15,9 @@ Vue.use(Vuetify, {
     subheading1: "#48cba2",
     subheading2: "#00a38a",
     subheading3: "#47bbe9",
+    progressColor: "#47bbe9",
+    "heading-font-family": 'Muli',
+    step: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
   },
   customProperties: true

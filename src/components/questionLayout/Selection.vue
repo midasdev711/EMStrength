@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12>
+  <v-flex xs10>
     <span class="caption">{{title}}</span>
 
     <v-select
@@ -12,13 +12,12 @@
       step="1"
       ticks="always"
       tick-size="7"
+      :items="items"
+      :item-text="'title'"
+      :item-value="'value'"
       :change="$emit('updateValue', sliderValue, questionId, answerId, useText)"
     >
-      <template v-slot:thumb-label="props">
-        <span>
-          {{ getTickLabel(props.value) }}
-        </span>
-      </template>
+      
     </v-select>
   </v-flex>
 </template>
@@ -59,6 +58,8 @@ export default {
         }
       }
     }
+  },
+  mounted() {
   }
   // NOTE: PLACEHOLDER ONLY - update to use QuestionItems in a drop down selector and pass back the selection index
 }

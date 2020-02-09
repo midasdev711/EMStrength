@@ -1,7 +1,20 @@
 <template>
   <v-container grid-list-xl>
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular :size="70" :width="7" color="orange" indeterminate></v-progress-circular>
+      <v-card>
+        <v-card-title>
+          <img src="/img/Eden-2.png" width="100%"/>
+        </v-card-title>  
+        <v-container fluid align-center text-center>
+          <v-progress-circular
+            :size="70"
+            :width="7"
+            v-bind:color="$vuetify.theme['progressColor']"
+            indeterminate
+          ></v-progress-circular>
+          <h3>Loading ...</h3>
+        </v-container>
+      </v-card>
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
@@ -10,6 +23,7 @@
             :key="`${step.sectionNo}-step`"
             :complete="hStepper > (step.sectionNo + 1)"
             :step="step.sectionNo + 1"
+            :color="$vuetify.theme.subheading1"
             editable
           >{{step.section}} (Section)</v-stepper-step>
         </template>
@@ -26,18 +40,38 @@
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
                 <v-stepper-step
                   editable
-                  v-bind:step="stepl.subsectionNo + 1"
+                  v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                   :key="stepl.subsectionNo + '-sub-step'"
-                >Part {{stepl.subsectionNo}} (SS No {{stepl.subsectionNo}})</v-stepper-step>
+                  :color="$vuetify.theme.subheading2">
+
+                  <!-- for DEBUG: span :style="{ color: $vuetify.theme.subheading2 }">Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
+                  <!--SectionHeading 
+                    v-if="stepl.items[0].question.type == 'SectionHeading'"
+                    :id="compId('SectionHeading-H-', stepl.items[0].question.id)"
+                    :title="stepl.items[0].question.title"
+                  /-->
+                  <SectionPartStepper
+                    v-if="stepl.items[1].question.type == 'SectionPart'"
+                    :id="compId('SectionPart-H1-', stepl.items[1].question.id)"
+                    :title="stepl.items[1].question.title"
+                  />
+                  <SectionPartStepper
+                    v-if="stepl.items[2].question.type == 'SectionPart'"
+                    :id="compId('SectionPart-H2-', stepl.items[2].question.id)"
+                    :title="stepl.items[2].question.title"
+                  />
+                  <!-- for DEBUG: span v-if="stepl.items[1].question.type == 'SectionPart'">{{stepl.items[1].question.title}}</span-->
+
+                </v-stepper-step>
 
                 <v-stepper-content
                   v-bind:step="stepl.subsectionNo + 1"
                   :key="stepl.subsectionNo + '-sub-content'"
                 >
                   <v-card class="mb-5">
-                    P {{stepl.subsectionNo}} (SS No)
+                    <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                     <v-form v-model="form1Valid">
-                      <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet == true">
+                      <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
                         <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
                         <components
                           v-if="a.question.useText"

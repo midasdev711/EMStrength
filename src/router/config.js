@@ -20,6 +20,39 @@ export const publicRoute = [
   },
 
   {
+    path: "/",
+    component: AuthLayout,
+    name: "Signup",
+    meta: { title: "Signup" },
+    redirect: "/signup",
+    hidden: true,
+    children: [
+      {
+        path: "signup",
+        name: "signup",
+        meta: { title: "Signup" },
+        component: () => import(/* webpackChunkName: "login" */ "@/views/Signup.vue")
+      },
+      {
+        path: "forgot",
+        name: "forgot",
+        meta: { title: "Forgot password" },
+        component: () => import(/* webpackChunkName: "login" */ "@/views/Forgot.vue")
+      },
+      {
+        path: "resetPassword",
+        name: "resetPassword",
+        meta: { title: "Reset password" },
+        component: () => import(/* webpackChunkName: "login" */ "@/views/ResetPassword.vue"),
+        props: (r) => ({
+          token: r.query.token
+        })
+        /* http://domain/resetPassword?token=fromemail */
+      }
+    ]
+  },
+
+  {
     path: "/auth",
     component: AuthLayout,
     name: "Auth",
@@ -171,7 +204,7 @@ export const protectedRoute = [
         path: "/account",
         name: "Account",
         component: () => import(`@/views/Account.vue`),
-        meta: { title: "Account", requiresAuth: true }
+        meta: { title: "Profile", requiresAuth: true }
       },      
 
       {

@@ -1,5 +1,6 @@
 import SectionHeading from './SectionHeading.vue'
 import SectionPart from './SectionPart.vue'
+import SectionPartStepper from './SectionPartStepper.vue'
 import Instruction from './Instruction.vue'
 import Bool from './Bool.vue'
 import TextField from './TextField.vue'
@@ -14,6 +15,7 @@ const components = {
     ArticleSubheading,
     SectionHeading,
     SectionPart,
+    SectionPartStepper,
     Instruction,
     SectionInstruction,
     ArticleGeneralInstruction,

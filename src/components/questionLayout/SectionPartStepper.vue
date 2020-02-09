@@ -1,17 +1,15 @@
 <template>
  <v-flex xs12>
-  <p>
-    <v-chip :color="$vuetify.theme.subheading3">
+    <!--v-chip :color="$vuetify.theme.subheading3">
       <span class="white--text subheading">{{prefix(title)}}</span>
-    </v-chip>
-    <span class="subheading">{{heading(title)}}</span>
-  </p>
+    </v-chip-->
+    <span :color="$vuetify.theme.subheading2">{{heading(title)}}</span>
 </v-flex>
 </template>
 
 <script>
 export default {
-  name: "SectionPart",
+  name: "SectionPartStepper",
   props: {
     title: String,
     id: String,
@@ -33,9 +31,6 @@ export default {
 
       return pre[0];
     },
-  },
-  mounted() {
-    console.log(this.title);
   }
 }
 </script>

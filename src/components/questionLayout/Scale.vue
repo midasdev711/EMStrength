@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12>
+  <v-flex xs10>
     <span class="caption">{{title}}</span>
 
     <v-slider
@@ -48,7 +48,13 @@ export default {
     return {
       themeColourSeconary_Dark: '#213060',
       themeColourSeconary_Mid: '#00a38a',
-      sliderValue: this.value ? this.value : 0
+      sliderValue: this.value ? this.value : 0,
+      tickLabels: [
+        'one', 
+        'two', 
+        'three'
+        ////this.getTickLabels()
+      ],  
     }
   },
   methods: {
@@ -58,7 +64,20 @@ export default {
           return this.items[i].title;
         }
       }
+    },
+    getTickLabels() {
+      //tickLabels = {};
+      // add back to v-slider :tick-labels="tickLabels"
+      for (let i = 0; i < this.items.length; i++) {
+          
+          this.tickLabels.push(this.items[i].title);
+          
+      }
+      console.log(tickLabels);
     }
+  },
+  mounted() {
+
   }
 }
 </script>

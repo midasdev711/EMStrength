@@ -4,7 +4,7 @@ import router from "./router/"
 import store from "./store/"
 import "./registerServiceWorker"
 import "./plugins/vuetify"
-import "roboto-fontface/css/roboto/roboto-fontface.css"
+//import "roboto-fontface/css/roboto/roboto-fontface.css"
 import "@openfonts/muli_latin"
 import "font-awesome/css/font-awesome.css"
 import VueToast from 'vue-toast-notification'
