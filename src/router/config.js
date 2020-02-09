@@ -1,4 +1,4 @@
-import { AuthLayout, DefaultLayout, AdminLayout, AdminWithoutDrawerLayout } from "@/components/layouts"
+import { AuthLayout, AuthBlankLayout, DefaultLayout, AdminLayout, AdminWithoutDrawerLayout } from "@/components/layouts"
 
 export const publicRoute = [
   { path: "*", component: () => import(/* webpackChunkName: "errors-404" */ "@/views/error/NotFound.vue") },
@@ -49,6 +49,23 @@ export const publicRoute = [
         })
         /* http://domain/resetPassword?token=fromemail */
       }
+    ]
+  },
+
+  {
+    path: "/account",
+    component: AuthBlankLayout,
+    name: "Account",
+    meta: { title: "Account" },
+    redirect: "/account/details",
+    hidden: true,
+    children: [
+      {
+        path: "details",
+        name: "AccountDetails",
+        meta: { title: "Account" },
+        component: () => import(/* webpackChunkName: "login" */"@/views/Account.vue")
+      },
     ]
   },
 

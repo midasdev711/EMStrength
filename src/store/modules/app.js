@@ -226,7 +226,7 @@ const actions = {
 
   getUserCode: ({commit}, accessCode) => {
     var headers = { 'Accept': 'application/json' };
-    return API.get(`/api/user/userCode/${accessCode}`, headers).then(result => {
+    return API.get(`api/user/userCode/${accessCode}`, headers).then(result => {
       commit("validUserCode", result['data']);
       return result['data'];
     }).catch(err => {
@@ -238,7 +238,7 @@ const actions = {
   // remove this? not sure what it is for:
   postUserCode: ({commit}, accessCode) => {
     var headers = { 'Accept': 'application/json' };
-    return API.get(`/api/user/userCode/${accessCode}`, headers).then(result => {
+    return API.get(`api/user/userCode/${accessCode}`, headers).then(result => {
       commit("validUserCode", result['data']);
       return result['data'];
     }).catch(err => {
@@ -248,7 +248,7 @@ const actions = {
 
   postUser: ({commit}, data) => {
     var headers = { 'Accept': 'application/json' };
-    return API.post(`/api/user/userCode/user`, data, headers).then(result => {
+    return API.post(`api/user/userCode/user`, data, headers).then(result => {
       console.log(result['data']);
       return result['data'];
     }).catch(err => {
@@ -258,7 +258,7 @@ const actions = {
 
   updateUser: ({commit}, data) => {
     var headers = { 'Accept': 'application/json' };
-    return API.put(`/api/user/userCode/user`, data, headers).then(result => {
+    return API.put(`api/user/userCode/user`, data, headers).then(result => {
       console.log(result['data']);
       return result['data'];
     }).catch(err => {
