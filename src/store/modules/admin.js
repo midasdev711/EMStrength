@@ -89,10 +89,21 @@ const actions = {
 
   postGenerateUserCodes: ({commit}, data) => {
     var headers = { 'Accept': 'application/json' };
-    return API.post(`/api/admin/userCode`, data, headers).then(result => {
-      console.log(result['data']);
-      commit("saveGeneratedUserCodes", result['data']);
-      return result['data'];
+    return API.post(`/api/admin/userCode/download`, data, headers).then(result => {
+      console.log(result);
+      let blob = new Blob([result]);
+      let openUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = openUrl;
+        var now = new Date();
+        var timestamp = moment(now).format('YYYY-MM-DD.hh:mm:ss');
+        link.setAttribute('download', `UserCodes-${timestamp}-${data.groupId}-${data.qty}-file.txt`); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      //window.open(openUrl);
+      //console.log(result['data']);
+      //commit("saveGeneratedUserCodes", result['data']);
+      return result; //result['data'];
     }).catch(err => {
       throw err;
     });

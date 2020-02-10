@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     ...mapActions("admin", {
-      _postGenerateUserCodes: "postGenerateUserCodesDownload"
+      _postGenerateUserCodes: "postGenerateUserCodes"
     }),
     save() {
       // Validate before submit
@@ -61,7 +61,7 @@ export default {
         this.loading = false;
         this.$toast.success('Generated User codes for group');
         console.log(result);
-        
+
       }).catch( e => {
         console.log(e);
       });
