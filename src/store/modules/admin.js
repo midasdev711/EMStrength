@@ -87,18 +87,29 @@ const actions = {
     });
   },
 
-///api/admin/userCode
   postGenerateUserCodes: ({commit}, data) => {
     var headers = { 'Accept': 'application/json' };
-    return API.post(`/api/user/userCode`, data, headers).then(result => {
+    return API.post(`/api/admin/userCode`, data, headers).then(result => {
       console.log(result['data']);
-      commit("saveGeneratedUserCodes", resp['data']);
+      commit("saveGeneratedUserCodes", result['data']);
       return result['data'];
     }).catch(err => {
       throw err;
     });
   },
 
+  //relay to the browser to download the file.  Returns application/octet-stream
+  postGenerateUserCodesDownload: ({commit}, data) => {
+    var headers = { 
+        'Accept': 'application/json'
+      };
+    return API.postDownload(`/api/admin/userCode/download`, data, headers).then(result => {
+      console.log(result);
+      return result;
+    }).catch(err => {
+      throw err;
+    });
+  },
 
 
   deleteUser: ({ commit }, userId) => {

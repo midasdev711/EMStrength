@@ -134,6 +134,45 @@ export default class APIService {
       });
   }
 
+
+  postDownload(sub_url, content, headers = {}) {
+    let token = localStorage.getItem("token");
+
+    let url = `${API_URL}` + sub_url;
+    console.log('POST download: ' + url);
+
+    return axios.post(
+      url, 
+      content,
+      {
+        responseType: 'arraybuffer',
+        headers: {
+            ...headers,
+            Authorization: "bearer " + token,
+          }  
+      })
+      .then(response => {
+        console.log(response);
+
+        let blob = new Blob([response.data], { type: 'application/octet-stream' });
+        let openUrl = window.URL.createObjectURL(blob);
+
+        window.open(openUrl);
+      })
+      .catch(e => {
+        if (e.response.status == 401) {
+          if (sub_url.indexOf('admin') > -1) {
+            router.push({ name: 'AdminAuth' })
+          } else {
+            router.push({ name: 'Auth' })
+          }
+        }
+        // this.errors.push(e)
+        throw e;
+      });
+  }
+
+
   buildRequestQuery(params) {
     if (!params) {
       return "";
