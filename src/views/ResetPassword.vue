@@ -71,17 +71,15 @@ export default {
     submit () {
       //if (this.model.Username.valid()) 
       {
+        debugger;
         let data = {
-          token: this.props.token,
-          newPassword: this.newPassword
+          token: this.$router.currentRoute.query.token,
+          newPassword: this.model.newPassword
         };
-
         console.log(data);
-
-
-        this.postResetPassword(data).then(res => {
+        this._postResetPassword(data).then(res => {
             this.$toast.success(`Your password has been reset`);
-            //this.$router.push({ name: 'Login'});
+            this.$router.push({ name: 'Login'});
         }).catch(err => {
             this.$toast.warning(`Problem resetting password`);
             this.$toast.warning(err.errors[0].errorMessage);
