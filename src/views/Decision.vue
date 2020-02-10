@@ -1,23 +1,21 @@
 <template>
   <v-container grid-list-xl>
     <div class="text-xs-center" v-if="isLoading">
-      <v-card class="justify-center">
-        <v-card-title>
-          <div>
-          <img src="/img/Eden-2.png"  width="40%"/>
-          </div>
-        </v-card-title>  
-        <v-container fluid align-center text-center>
-          <v-progress-circular
-            :size="70"
-            :width="7"
-            v-bind:color="$vuetify.theme['progressColor']"
-            indeterminate
-          ></v-progress-circular>
-          <p></p>
-          <h3>Loading ...</h3>
-        </v-container>
-      </v-card>
+      <vue-circle
+        :progress="100"
+        :size="300"
+        :reverse="false"
+        line-cap="round"
+        :fill="fill"
+        empty-fill="rgba(200, 200, 200, .8)"
+        :animation="{ duration: 1500, easing: 'circleProgressEasing' }"
+        :animation-start-value="0.0"
+        :start-angle="0"
+        insert-mode="append"
+        :thickness="12"
+        :show-percent="false">
+        <img src="/img/Eden-2.png" width="80%"/>
+      </vue-circle>
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
@@ -122,6 +120,8 @@
 </template>
 
 <script>
+
+import VueCircle from 'vue2-circle-progress'
 import moment from "moment";
 import { mapActions, mapGetters } from "vuex";
 import debounce from "debounce";
@@ -129,7 +129,10 @@ import components from "../components/questionLayout";
 
 export default {
   name: "DecisionProfile",
-  components,
+  components: {
+    ...components,
+    VueCircle
+  },
   data() {
     return {
       isMobile: false,
@@ -138,7 +141,8 @@ export default {
       form1Valid: false,
       questions: [],
       answers: [],
-      isLoading: true
+      isLoading: true,
+      fill : { gradient: ["#ABE5A1", "#34495e"] },
     };
   },
   filters: {
