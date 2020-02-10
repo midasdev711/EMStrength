@@ -2,7 +2,21 @@
   <v-container grid-list-xl>
     <!-- TODO: Implement a Widget with User summary Information for selected user header -->
     <div class="text-xs-center" v-if="isLoading">
-      <v-progress-circular :size="70" :width="7" v-bind:color="$vuetify.theme['progressColor']" indeterminate></v-progress-circular>
+      <vue-circle
+        :progress="100"
+        :size="300"
+        :reverse="false"
+        line-cap="round"
+        :fill="fill"
+        empty-fill="rgba(200, 200, 200, .8)"
+        :animation="{ duration: 1500, easing: 'circleProgressEasing' }"
+        :animation-start-value="0.0"
+        :start-angle="0"
+        insert-mode="append"
+        :thickness="12"
+        :show-percent="false">
+        <img src="/img/Eden-2.png" width="80%"/>
+      </vue-circle>
     </div>
     <div v-else>
       <template>
@@ -88,23 +102,22 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import moment from 'moment';
+import VueCircle from 'vue2-circle-progress';
 
 export default {
   name: "Summary",
+  components: {
+    VueCircle
+  },
   data: () => ({
     hStepper: 1,
     vStepper: 1,
-
+    fill : { gradient: ["#ABE5A1", "#34495e"] },
+    
     results: [],
 
     isLoading: true,
 
-    headers: [
-      { text: "Questions", align: "left", sortable: false, value: "title" },
-      { text: "Section", align: "center", sortable: true, value: "sectionNo" },
-      { text: "Score", align: "right", sortable: true, value: "value" } // when > 1, show: User's details above score
-      // Other Users' scores
-    ],
     articleTab: null,
     sectionTab: null,
     dateTab: null,
