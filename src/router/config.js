@@ -172,10 +172,10 @@ export const protectedRoute = [
       },
 
       {
-        path: "/diagnostic",
-        name: "Diagnostic",
+        path: "/stress_recovery",
+        name: "StressRecovery",
         component: () => import(`@/views/Diagnostic.vue`),
-        meta: { title: "Diagnostic", icon: "healing", requiresAuth: true }
+        meta: { title: "Stress Recovery Diagnostic", icon: "checklist", requiresAuth: true }
       },
 
       {
@@ -197,13 +197,6 @@ export const protectedRoute = [
         name: "Summary",
         component: () => import(`@/views/Summary.vue`),
         meta: { title: "Summary", icon: "table", requiresAuth: true }
-      },
-
-      {
-        path: "/stress_recovery",
-        name: "StressRecovery",
-        component: () => import(`@/views/StressRecovery.vue`),
-        meta: { title: "Stress Recovery Diagnostic", icon: "checklist", requiresAuth: true }
       },
         
       {
