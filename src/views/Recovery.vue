@@ -1,12 +1,23 @@
 <template>
 <v-layout justify-center class="pa-2">
   <v-flex xs12 sm6 v-if="isLoading" justify-center>
-    <v-progress-circular
-      :size="70"
-      :width="7"
-      v-bind:color="$vuetify.theme['progressColor']"
-      indeterminate
-    ></v-progress-circular>
+     <v-card class="justify-center">
+        <v-card-title>
+          <div>
+          <img src="/img/Eden-2.png"  width="100%"/>
+          </div>
+        </v-card-title>  
+        <v-container fluid align-center text-center>
+          <v-progress-circular
+            :size="70"
+            :width="7"
+            v-bind:color="$vuetify.theme['progressColor']"
+            indeterminate
+          ></v-progress-circular>
+          <p></p>
+          <h3>Loading ...</h3>
+        </v-container>
+      </v-card>
   </v-flex>
   <v-flex xs12 sm6 v-else>
     <v-card color="" class="black--text" v-if="topNotification & getRecoveryData.length > 0">
@@ -19,7 +30,7 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card dark :color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
+    <v-card dark v-bind:color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
         <span class="title">{{questions.category}}</span>
         <v-layout align-center justify-end>          

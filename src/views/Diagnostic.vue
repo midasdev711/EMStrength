@@ -1,9 +1,11 @@
 <template>
   <v-container grid-list-xl>
     <div class="text-xs-center" v-if="isLoading">
-      <v-card>
+      <v-card class="justify-center">
         <v-card-title>
-          <img src="/img/Eden-2.png" width="100%"/>
+          <div>
+          <img src="/img/Eden-2.png"  width="40%"/>
+          </div>
         </v-card-title>  
         <v-container fluid align-center text-center>
           <v-progress-circular
@@ -12,6 +14,7 @@
             v-bind:color="$vuetify.theme['progressColor']"
             indeterminate
           ></v-progress-circular>
+          <p></p>
           <h3>Loading ...</h3>
         </v-container>
       </v-card>
