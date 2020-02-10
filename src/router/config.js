@@ -79,7 +79,7 @@ export const publicRoute = [
     children: [
       {
         path: "login",
-        name: "login",
+        name: "Login",
         meta: { title: "Login" },
         component: () => import(/* webpackChunkName: "login" */ "@/views/Login.vue")
       }
