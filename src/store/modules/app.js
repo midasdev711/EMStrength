@@ -200,7 +200,7 @@ const actions = {
       'Content-Type': 'application/json-patch+json',
       'Accept': 'application/json'
     };
-    return API.patch(`api/users/forgotPassword`, data, headers)
+    return API.post(`api/users/forgotPassword`, data, headers)
     .then(resp => {
       return resp;
     })
@@ -215,7 +215,7 @@ const actions = {
       'Content-Type': 'application/json-patch+json',
       'Accept': 'application/json'
     };
-    return API.patch(`api/users/resetPassword`, data, headers)
+    return API.post(`api/users/resetPassword`, data, headers)
     .then(resp => {
       return resp;
     })

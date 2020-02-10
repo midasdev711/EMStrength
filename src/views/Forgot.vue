@@ -68,13 +68,13 @@ export default {
       //if (this.model.Username.valid()) 
       {
         let data = {
-          email: this.Username
+          email: this.model.Username
         };
 
         console.log(data);
 
 
-        this.postForgotPassword(data).then(res => {
+        this._postForgotPassword(data).then(res => {
             this.$toast.success(`Check your inbox for the reset link`);
             this.$router.push({ name: 'Account'});
         }).catch(err => {

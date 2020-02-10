@@ -46,7 +46,7 @@ export const publicRoute = [
     children: [
       {
         path: "login",
-        name: "login",
+        name: "Login",
         meta: { title: "Login" },
         component: () => import("@/views/Login.vue")
       },
