@@ -41,7 +41,7 @@
                     <v-tab
                       v-for="(dateItem, index) in section.dates"
                       :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-date'"
-                    >{{ dateItem.date }}</v-tab>
+                    >{{ dateItem.date | formatDateOnly }}</v-tab>
                   </v-tabs>
                   <v-tabs-items v-model="dateTab">
                     <v-tab-item
@@ -63,7 +63,7 @@
                             >
                               <template v-slot:items="props">
                                 <td>{{ props.item.article }}</td>
-                                <td class="text-xs-right">{{ props.item.created }}</td>
+                                <td class="text-xs-right">{{ props.item.created | formatDate }}</td>
                                 <td class="text-xs-right">{{ props.item.title }}</td>
                                 <td class="text-xs-right">{{ props.item.description }}</td>
                                 <td class="text-xs-right">{{ props.item.value }}</td>
@@ -87,6 +87,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import moment from 'moment';
 
 export default {
   name: "Summary",
@@ -121,6 +122,14 @@ export default {
       { text: "Deleted", align: "center", value: "deleted" }
     ]
   }),
+  filters: {
+    formatDate(date) {
+      return moment(date).format('YYYY-MM-DD hh:mm:ss');
+    },
+    formatDateOnly(date) {
+      return moment(date).format('YYYY-MM-DD');
+    },
+  },
   computed: {
     ...mapGetters("app", {
       getUserSummaryData: "getUserSummaryData"
