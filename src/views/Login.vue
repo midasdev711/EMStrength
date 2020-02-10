@@ -30,7 +30,8 @@
                     type="password"
                     v-model="model.Password"
                   ></v-text-field>
-                  <a class="right mb-4" href="/forgot">Forgot Password?</a>
+                  <a class="left mb-4" href="/auth/signup">Not registered?</a>
+                  <a class="right mb-4" href="/auth/forgot">Forgot Password?</a>
                 </v-form>
               </v-card-text>
               <div class="login-btn">

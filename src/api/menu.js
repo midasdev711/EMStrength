@@ -14,10 +14,10 @@ const Menu = [
   },
 
   {
-    title: "Diagnostic",
+    title: "Stress Recovery Diagnostic",
     icon: "healing",
-    name: "Diagnostic",
-    key: "key-Diagnostic"
+    name: "StressRecovery",
+    key: "key-RecoveryDiagnostic"
   },
 
   {
@@ -26,14 +26,6 @@ const Menu = [
     name: "Symptom Checklist",
     key: "key-SymptomChecklist"
   },
-
-  {
-    title: "Stress Recovery Diagnostic",
-    icon: "healing",
-    name: "StressRecovery",
-    key: "key-RecoveryDiagnostic"
-  },
-
 
   {
     title: "Energy Health Decision Profile",
