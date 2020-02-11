@@ -81,7 +81,7 @@
                                 <td class="text-xs-right">{{ props.item.title }}</td>
                                 <td class="text-xs-right">{{ props.item.description }}</td>
                                 <td class="text-xs-right">{{ props.item.value }}</td>
-                                <td class="text-xs-right">{{ props.item.deleted }}</td>
+                                <td class="text-xs-right">{{ props.item.id }}</td>
                               </template>
                             </v-data-table>
                           </div>
@@ -132,7 +132,7 @@ export default {
       { text: "Title", align: "center", value: "title" },
       { text: "Description", align: "center", value: "description" },
       { text: "Value", align: "center", value: "value" },
-      { text: "Deleted", align: "center", value: "deleted" }
+      { text: "Action", align: "center", value: "Id" }
     ]
   }),
   filters: {
