@@ -1,7 +1,7 @@
 <template>
  <v-flex xs12>
   <p>
-    <v-chip :color="$vuetify.theme.subheading3">
+    <v-chip :color="$vuetify.theme.subheading3" :disabled="disabled">
       <span class="white--text subheading">{{prefix(title)}}</span>
     </v-chip>
     <span class="subheading">{{heading(title)}}</span>

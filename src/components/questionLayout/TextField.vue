@@ -9,6 +9,7 @@
       counter
       v-bind:maxLength="length"
       @input="updateValue"
+      :disabled="disabled"
     ></v-text-field>
   </v-flex>
 </template>

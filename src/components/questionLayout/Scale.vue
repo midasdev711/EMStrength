@@ -13,6 +13,7 @@
       ticks="always"
       tick-size="7"
       :change="$emit('updateValue', sliderValue, questionId, answerId, useText)"
+      :disabled="disabled"
     >
       <template v-slot:thumb-label="props">
         <span>

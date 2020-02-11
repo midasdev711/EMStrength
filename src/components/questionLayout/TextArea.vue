@@ -7,6 +7,7 @@
       v-model="textValue"
       v-validate="'required'"
       @input="updateValue"
+      :disabled="disabled"
     ></v-textarea>
   </v-flex>
 </template>

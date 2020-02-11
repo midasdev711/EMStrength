@@ -29,8 +29,8 @@ const state = {
         subsectionNo: 0
       }]
     }],
-    
   },
+  summaryAnswers: [],
   userSummaryData: {
     articles: [],  // Horiz 1
     sections: [],  // Horiz 2 (filter 1)
@@ -80,6 +80,7 @@ const initialState = {
 const getters = {
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
+  getSummaryAnswersData: state => state.summaryAnswers && state.summaryAnswers.horizontal ? state.summaryAnswers.horizontal : [],
   getDecisionAnswersData: state => state.decisionAnswers,
   getDecisionHorizontalData: state => state.decisionAnswers.horizontal ? state.decisionAnswers.horizontal : [],
   getSymptomAnswersData: state => state.symptomAnswers,
@@ -136,6 +137,9 @@ const actions = {
             break;
           case "Decision":
             commit("setDecisionAnswers", result['data']);
+            break;
+          case "Summary":
+            commit("setSummaryAnswers", result['data']);
             break;
           default:
             break;
@@ -353,8 +357,10 @@ const mutations = {
     state.decisionAnswers = Object.assign({}, data);
   },
   setSymptomAnswers: (state, data) => {
-    // state.diagnosticAnswers = Object.assign([], data);
     state.symptomAnswers = Object.assign({}, data);
+  },
+  setSummaryAnswers: (state, data) => {
+    state.summaryAnswers = Object.assign({}, data);
   },
   setRecoveryCheck: (state) => {
     state.recoveryCheck = !state.recoveryCheck;

@@ -16,6 +16,7 @@
       :item-text="'title'"
       :item-value="'value'"
       :change="$emit('updateValue', sliderValue, questionId, answerId, useText)"
+      :disabled="disabled"
     >
       
     </v-select>

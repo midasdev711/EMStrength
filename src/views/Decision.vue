@@ -14,7 +14,7 @@
         insert-mode="append"
         :thickness="12"
         :show-percent="false">
-        <img src="/img/Eden-2.png" width="80%"/>
+        <img src="/img/Eden-4.png" width="80%"/>
       </vue-circle>
     </div>
     <v-stepper v-model="hStepper" v-else>
@@ -142,7 +142,7 @@ export default {
       questions: [],
       answers: [],
       isLoading: true,
-      fill : { gradient: ["#ABE5A1", "#34495e"] },
+      fill : { gradient: ["#48cba2", "#47bbe9"] },
     };
   },
   filters: {

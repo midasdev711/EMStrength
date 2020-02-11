@@ -15,7 +15,7 @@
         insert-mode="append"
         :thickness="12"
         :show-percent="false">
-        <img src="/img/Eden-2.png" width="80%"/>
+        <img src="/img/Eden-4.png" width="80%"/>
       </vue-circle>
     </div>
     <div v-else>
@@ -75,13 +75,13 @@
                               class="elevation-1"
                               light
                             >
-                              <template v-slot:items="props">
-                                <td>{{ props.item.article }}</td>
-                                <td class="text-xs-right">{{ props.item.created | formatDate }}</td>
-                                <td class="text-xs-right">{{ props.item.title }}</td>
-                                <td class="text-xs-right">{{ props.item.description }}</td>
-                                <td class="text-xs-right">{{ props.item.value }}</td>
-                                <td class="text-xs-right">{{ props.item.id }}</td>
+                              <template v-slot:items="props" >
+                                <td class="pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.article }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.created | formatDate }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.title }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.description }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.value }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.id }}</td>
                               </template>
                             </v-data-table>
                           </div>
@@ -95,6 +95,76 @@
           </v-card>
         </v-tab-item>
       </v-tabs-items>
+      <v-stepper v-model="hStepper">
+        <v-stepper-header>
+          <template v-for="step in getAnswersData">
+            <v-stepper-step
+              :key="`${step.sectionNo}-step`"
+              :complete="hStepper > (step.sectionNo + 1)"
+              :step="step.sectionNo + 1"
+              :color="$vuetify.theme.subheading1"
+              editable
+            >
+              <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} <span class="dev-hint">(Section)</span></span>
+            </v-stepper-step>
+          </template>
+        </v-stepper-header>
+
+        <v-stepper-items>
+          <v-stepper-content
+            v-for="stepp in getAnswersData"
+            :key="`${stepp.sectionNo}-content`"
+            :step="stepp.sectionNo + 1"
+          >
+            <v-card>
+              <v-stepper vertical v-model="vStepper">
+                <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
+                  <v-stepper-step 
+                    editable 
+                    v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
+                    :key="stepl.subsectionNo + '-sub-step'" 
+                    :color="$vuetify.theme.subheading2">
+                    <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
+                    <!-- <SectionPartStepper
+                      v-if="sectionPartHead(stepl.items).type == 'SectionPart'"
+                      :id="compId('SectionPart-H-', sectionPartHead(stepl.items).id)"
+                      :title="sectionPartHead(stepl.items).title"
+                    /> -->
+
+                  </v-stepper-step>
+
+                  <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
+                    <v-card class="mb-5">
+                      <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
+                      <v-form v-model="form1Valid" >
+                        <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
+                          <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" :disabled="true" />
+                          <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :value="a.value" :disabled="true" @updateValue="updateComponentValue"/>
+                        </div>
+                      </v-form>
+                      <v-btn
+                        color="primary"
+                        @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
+                      >
+                        Continue
+                      </v-btn>
+                      <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
+                    </v-card>
+                  </v-stepper-content>
+                </div>
+              </v-stepper>
+            </v-card>
+
+            <v-btn
+              color="primary"
+              @click="nextHorizontalStep"
+            >
+              Continue
+            </v-btn>
+            <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>
     </div>
   </v-container>
 </template>
@@ -103,16 +173,19 @@
 import { mapActions, mapGetters } from "vuex";
 import moment from 'moment';
 import VueCircle from 'vue2-circle-progress';
+import components from '../components/questionLayout'
 
 export default {
   name: "Summary",
   components: {
+    ...components,
     VueCircle
   },
   data: () => ({
     hStepper: 1,
     vStepper: 1,
-    fill : { gradient: ["#ABE5A1", "#34495e"] },
+    form1Valid: null,
+    fill : { gradient: ["#48cba2", "#47bbe9"] },
     
     results: [],
 
@@ -145,7 +218,8 @@ export default {
   },
   computed: {
     ...mapGetters("app", {
-      getUserSummaryData: "getUserSummaryData"
+      getUserSummaryData: "getUserSummaryData",
+      getAnswersData: "getSummaryAnswersData",
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -153,7 +227,8 @@ export default {
   },
   methods: {
     ...mapActions("app", {
-      _getUserSummaryData: "getUserSummaryData"
+      _getUserSummaryData: "getUserSummaryData",
+      _getSummaryData: "getAnswersData",
     }),
 
     compId(type, id) {
@@ -162,6 +237,54 @@ export default {
 
     nameId(type, row, col) {
       return `${type}_${row}x${col}`;
+    }, 
+
+    showAnswerLayout(summaryId) {
+      console.log(summaryId);
+      let data = {
+        params: `?Article=Symptom&AnswerSummaryId=${summaryId}`,
+        article: "Summary"
+      };
+      return this._getSummaryData(data).then(res => {
+        console.log(res);
+      });
+    },
+
+    updateComponentValue() {
+
+    },
+
+    sectionPartHead(list)
+    {
+      //traverse stepl.items[1] to find the SectionPart for the label
+        var item = list.find(x => x.question.type == 'SectionPart');
+        //console.log("Question Item", item);
+        if (item) 
+          return item.question;
+        else
+          return undefined;
+
+    },
+    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
+      if (this.vStepper < verticalMaxSteps) {
+        this.vStepper ++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper ++;
+        }
+        this.vStepper = 1;
+      }
+    },
+    nextHorizontalStep() {
+      this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
+      this.vStepper = 1;
+    },
+    prevVerticalStep() {
+      this.vStepper = this.vStepper > 1 ? this.vStepper - 1 : this.vStepper;
+    },
+    prevHorizontalStep() {
+      this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
+      this.vStepper = 1;
     }
   },
   mounted() {
@@ -184,5 +307,9 @@ export default {
 
 >>>.v-card {
   padding: 0;
+}
+
+>>>.pointer-cursor {
+  cursor pointer
 }
 </style>

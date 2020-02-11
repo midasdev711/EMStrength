@@ -8,14 +8,14 @@
         line-cap="round"
         :fill="fill"
         empty-fill="rgba(200, 200, 200, .8)"
-        :animation="{ duration: 10000, easing: 'circleProgressEasing' }"
+        :animation="{ duration: 3000, easing: 'circleProgressEasing' }"
         :animation-start-value="0.0"
         :start-angle="90"
         insert-mode="append"
         :thickness="12"
         :show-percent="false"
         @vue-circle-end="progress_end">
-        <img src="/img/Eden-2.png" width="80%"/>
+        <img src="/img/Eden-4.png" width="80%"/>
       </vue-circle>
     </div>
     <v-stepper v-model="hStepper" v-else>
@@ -63,7 +63,7 @@
                     <v-form v-model="form1Valid" >
                       <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
                         <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" />
-                        <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue"/>
+                        <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :value="a.value" @updateValue="updateComponentValue"/>
                       </div>
                     </v-form>
                     <v-btn
@@ -114,7 +114,7 @@ export default {
 
     isLoading: true,
     saved: false,
-    fill : { gradient: ["#ABE5A1", "#34495e"] },
+    fill : { gradient: ["#48cba2", "#47bbe9"] },
   }),
   computed: {
     ...mapGetters("app", {
