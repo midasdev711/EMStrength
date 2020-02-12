@@ -21,6 +21,7 @@
         </span>
       </template>
     </v-slider>
+    <p class="text-xs-right">{{ getTickLabel(this.sliderValue) }}</p>
   </v-flex>
 </template>
 
