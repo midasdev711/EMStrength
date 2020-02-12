@@ -169,7 +169,7 @@ const actions = {
       "hasFilter": true,
       "filters": [{
         "fieldName": "Id",
-        "value": params.params.Search,
+        "value": params.Search,
         "operator": 3,
         "tablePrefix": "FT"
       }]
@@ -177,7 +177,7 @@ const actions = {
     var headers = {
       "Content-Type": "application/json"
     };
-    return API.post(`api/admin/users/filter?Count=${params.params.Count}&Page=${params.params.Page}&Sort=${params.params.Sort}`, data, headers).then(resp => {
+    return API.post(`api/admin/users/filter?Count=${params.Count}&Page=${params.Page}&Sort=${params.Sort}`, data, headers).then(resp => {
       commit("get_user_success", resp.data);
       return resp.data;
     }).catch(err => {
