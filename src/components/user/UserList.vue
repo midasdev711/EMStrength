@@ -175,14 +175,14 @@ export default {
         }
         if (this.count == -1) this.count = this.total;
         this.$store
-          .dispatch("admin/getusers", {
-            params: {
+          .dispatch("admin/getusers", 
+            {
               Count: this.count,
               Page: this.page,
               Search: this.search,
               Sort: sorting,
             }
-          })
+          )
           .then(resp => {
             console.log(resp.data);
             let items = resp.data;
