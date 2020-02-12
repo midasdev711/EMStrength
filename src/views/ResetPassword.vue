@@ -71,7 +71,6 @@ export default {
     submit () {
       //if (this.model.Username.valid()) 
       {
-        debugger;
         let data = {
           token: this.$router.currentRoute.query.token,
           newPassword: this.model.newPassword
