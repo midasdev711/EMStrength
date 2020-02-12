@@ -1,5 +1,6 @@
 <template>
   <v-container grid-list-xl>
+    {{getLastAnswered}}
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -155,11 +156,16 @@ export default {
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getDecisionAnswersData",
-      getDecisionHorizontalData: "getDecisionHorizontalData"
+      getDecisionHorizontalData: "getDecisionHorizontalData",
+      getDecisionLastAnswered: "getDecisionLastAnswered",
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
-    })
+    }),
+    getLastAnswered() {
+      this.hStepper = this.getDecisionLastAnswered.sectionNo ? this.getDecisionLastAnswered.sectionNo + 1 : 1;
+      this.vStepper = this.getDecisionLastAnswered.subsectionNo ? this.getDecisionLastAnswered.subsectionNo + 1 : 1;
+    }
   },
   methods: {
     ...mapActions("app", {
@@ -193,7 +199,17 @@ export default {
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
-      return this.saveAnswers()
+      let nextSectionNo = this.hStepper;
+      let nextSubsectionNo = this.vStepper;
+      if (this.vStepper < verticalMaxSteps) {
+        nextSubsectionNo++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          nextSectionNo++;
+        }
+        nextSubsectionNo = 1;
+      }
+      return this.saveAnswers(nextSectionNo, nextSubsectionNo)
         .then(res => {
           if (this.vStepper < verticalMaxSteps) {
             this.vStepper++;
@@ -226,14 +242,17 @@ export default {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
       this.vStepper = 1;
     },
-    saveAnswers() {
+    saveAnswers(nextSectionNo, nextSubsectionNo) {
+     
       let currentTime = new Date().toISOString();
       console.log(currentTime);
       let answerData = {
         userId: this.getDataUserProfile.id,
         answers: this.answers,
         complete: currentTime,
-        article: "Decision"
+        article: "Decision",
+        nextSectionNo: nextSectionNo - 1,
+        nextSubsectionNo: nextSubsectionNo - 1
       };
 
       return this._saveAnswers(answerData)
@@ -257,7 +276,6 @@ export default {
     this._getQuestionsAnswers(params).then(data => {
       this.isLoading = false;
       this.questions = data;
-      console.log("Decision QA data:");
       console.log(data);
     });
   }

@@ -205,7 +205,7 @@ export default {
       return filteredItems;
     },
     switchUser(item) {
-      //this.$router.push({ name: 'DashboardAdmin', query: { userId: item.userId, user: item.fullName, weekId: item.weeklyDataId } })
+      this.$router.push({ name: 'AdminSummary', query: { userId: item.id, user: item.fullName, symptomCompleted: item.symptomCompleted } })
 
       /*this.getMessagesForUser(item.userId)(data => {
          this.message_thread = data.items;

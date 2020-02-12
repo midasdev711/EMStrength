@@ -1,5 +1,6 @@
 <template>
   <v-container grid-list-xl>
+    {{getLastAnswered}}
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -118,11 +119,16 @@ export default {
   }),
   computed: {
     ...mapGetters("app", {
-      getAnswersData: "getDiagnosticAnswersData"
+      getAnswersData: "getDiagnosticAnswersData",
+      getDiagnosticLastAnswered: "getDiagnosticLastAnswered",
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
-    })
+    }),
+    getLastAnswered() {
+      this.hStepper = this.getDiagnosticLastAnswered.sectionNo ? this.getDiagnosticLastAnswered.sectionNo + 1 : 1;
+      this.vStepper = this.getDiagnosticLastAnswered.subsectionNo ? this.getDiagnosticLastAnswered.subsectionNo + 1 : 1;
+    }
   },
   methods: {
     ...mapActions("app", {

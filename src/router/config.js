@@ -79,16 +79,16 @@ export const publicRoute = [
     path: "/admin",
     component: AdminLayout,
     name: "Admin",
-    redirect: "/admin/dashboard",
+    redirect: "/admin/summary",
     hidden: true,
     meta: {
       requiresAuth: true,
     },
     children: [
       {
-        path: "dashboard",
-        name: "DashboardAdmin",
-        component: () => import("@/views/admin/Dashboard.vue")
+        path: "summary",
+        name: "AdminSummary",
+        component: () => import("@/views/admin/Summary.vue")
       },
       {
         path: "account",
