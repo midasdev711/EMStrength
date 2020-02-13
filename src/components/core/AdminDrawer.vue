@@ -39,8 +39,8 @@
           :custom-filter="messageFilter"
           hide-actions>
           <template v-slot:items="props">
-            <td @click="switchUser(props.item)">{{ props.item.symptomCompleted | fromNow }}<br/>@ {{ props.item.symptomCompleted | hour }}</td>
-            <td @click="switchUser(props.item)">{{ props.item.fullName }}<br>{{ props.item.age }} {{ props.item.occupation }} {{ props.item.groupName }}</td>
+            <td @click="switchUser(props.item)">{{ props.item.lastCompleted | fromNow }}<br/>@ {{ props.item.lastCompleted | hour }}</td>
+            <td @click="switchUser(props.item)">{{ props.item.fullName }} {{ props.item.age }}yo <br> {{ props.item.occupation }} ({{ props.item.groupName }})</td>
           </template>
         </v-data-table>
         
@@ -205,7 +205,7 @@ export default {
       return filteredItems;
     },
     switchUser(item) {
-      this.$router.push({ name: 'AdminSummary', query: { userId: item.id, user: item.fullName, symptomCompleted: item.symptomCompleted } })
+      this.$router.push({ name: 'AdminSummary', query: { userId: item.id, user: item.fullName, lastCompleted: item.lastCompleted } })
 
       /*this.getMessagesForUser(item.userId)(data => {
          this.message_thread = data.items;

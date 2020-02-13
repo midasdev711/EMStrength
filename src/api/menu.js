@@ -14,17 +14,17 @@ const Menu = [
   },
 
   {
-    title: "Stress Recovery Diagnostic",
-    icon: "healing",
-    name: "StressRecovery",
-    key: "key-RecoveryDiagnostic"
-  },
-
-  {
     title: "Symptom Checklist",
     icon: "check_box",
     name: "Symptom Checklist",
     key: "key-SymptomChecklist"
+  },
+
+  {
+    title: "Stress Recovery Diagnostic",
+    icon: "healing",
+    name: "StressRecovery",
+    key: "key-RecoveryDiagnostic"
   },
 
   {

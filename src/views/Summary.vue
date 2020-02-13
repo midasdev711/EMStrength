@@ -138,7 +138,7 @@
                       <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                       <v-form v-model="form1Valid" >
                         <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
-                          <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" @updateValue="updateComponentValue" :disabled="true" />
+                          <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :text="a.text" @updateValue="updateComponentValue" :disabled="true" />
                           <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :value="a.value" :disabled="true" @updateValue="updateComponentValue"/>
                         </div>
                       </v-form>

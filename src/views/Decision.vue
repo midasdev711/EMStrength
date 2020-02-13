@@ -85,6 +85,7 @@
                           :answerId="a.answerId"
                           :length="a.question.length"
                           :items="a.question.items"
+                          :text="a.text"
                           @updateValue="updateComponentValue"
                         />
                         <components
@@ -97,6 +98,7 @@
                           :answerId="a.answerId"
                           :length="a.question.length"
                           :items="a.question.items"
+                          :value="a.value"
                           @updateValue="updateComponentValue"
                         />
                       </div>
