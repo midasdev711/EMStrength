@@ -110,6 +110,10 @@ const getters = {
 
 // actions
 const actions = {
+  clearAnswersData: ({ commit }) => {
+    commit("setSummaryAnswers", []);
+  }, 
+
   resetState: ({ commit }) => {
     commit("resetState");
   },
@@ -165,7 +169,7 @@ const actions = {
   },
 
   getUserSummaryData: ({ commit }, data) => {
-    return API.get(`api/user/summary/layout`)
+    return API.get(`api/user/summary/layout${data.params}`)
       .then(result => {
         commit("setUserSummaryData", result['data']);
         return result['data'];
@@ -376,6 +380,11 @@ const mutations = {
   setUserSummaryData: (state, data) => {
     state.userSummaryData = Object.assign({}, data);
   },
+
+  clearSummaryAnswers: (state) => {
+    state.summaryAnswers = [];
+  },
+
   validUserCode: (state, data) => {
 
   },

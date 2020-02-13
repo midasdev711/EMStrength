@@ -95,7 +95,24 @@
           </v-card>
         </v-tab-item>
       </v-tabs-items>
-      <v-stepper v-model="hStepper">
+      <div class="text-xs-center mt-2" v-if="isAnswerLoading">
+        <vue-circle
+          :progress="100"
+          :size="300"
+          :reverse="false"
+          line-cap="round"
+          :fill="fill"
+          empty-fill="rgba(200, 200, 200, .8)"
+          :animation="{ duration: 1000, easing: 'circleProgressEasing' }"
+          :animation-start-value="0.0"
+          :start-angle="0"
+          insert-mode="append"
+          :thickness="12"
+          :show-percent="false">
+          <img src="/img/Eden-4.png" width="80%"/>
+        </vue-circle>
+      </div>
+      <v-stepper v-model="hStepper" v-else>
         <v-stepper-header>
           <template v-for="step in getAnswersData">
             <v-stepper-step
@@ -190,6 +207,7 @@ export default {
     results: [],
 
     isLoading: true,
+    isAnswerLoading: false,
 
     articleTab: null,
     sectionTab: null,
@@ -246,11 +264,13 @@ export default {
 
     showAnswerLayout(summaryId) {
       console.log(summaryId);
+      this.isAnswerLoading = true;
       let data = {
         params: `?Article=Symptom&AnswerSummaryId=${summaryId}`,
         article: "Summary"
       };
       return this._getSummaryData(data).then(res => {
+        this.isAnswerLoading = false;
         console.log(res);
       });
     },
@@ -292,15 +312,15 @@ export default {
       this.vStepper = 1;
     },
     getSummary(index) {
-        this.isLoading = true;
-        let data = {
-            params: "?Article="
-        };
-        this._getUserSummaryData(data).then(data => {
-            this.isLoading = false;
-            this.questions = data;
-            console.log("Summary:", this.questions);
-        });
+      this.isLoading = true;
+      let data = {
+          params: "?userId=" + this.$route.query.userId
+      };
+      this._getUserSummaryData(data).then(data => {
+          this.isLoading = false;
+          this.questions = data;
+          console.log("Summary:", this.questions);
+      });
     }
   },
   mounted() {

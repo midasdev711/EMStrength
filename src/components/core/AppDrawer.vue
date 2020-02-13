@@ -140,6 +140,7 @@ export default {
 
   methods: {
     ...mapMutations("app", ["setDrawer", "toggleDrawer"]),
+    
     genChildTarget(item, subItem) {
       if (subItem.href) return
       if (subItem.component) {

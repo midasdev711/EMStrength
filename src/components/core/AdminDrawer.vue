@@ -152,6 +152,9 @@ export default {
       getgroups: "getgroups",
       getusers: "getusers"
     }),
+    ...mapActions("app", {
+      _clearAnswersData: "clearAnswersData",
+    }),
     ...mapMutations("admin", ["setDrawer", "toggleDrawer"]),
     getGroupList() {
       this.loading = true;
@@ -205,6 +208,7 @@ export default {
       return filteredItems;
     },
     switchUser(item) {
+      this._clearAnswersData();
       this.$router.push({ name: 'AdminSummary', query: { userId: item.id, user: item.fullName, lastCompleted: item.lastCompleted } })
 
       /*this.getMessagesForUser(item.userId)(data => {
