@@ -128,6 +128,7 @@ export default {
     getLastAnswered() {
       this.hStepper = this.getDiagnosticLastAnswered.sectionNo ? this.getDiagnosticLastAnswered.sectionNo + 1 : 1;
       this.vStepper = this.getDiagnosticLastAnswered.subsectionNo ? this.getDiagnosticLastAnswered.subsectionNo + 1 : 1;
+      this.goToLastStep(this.getAnswersData[this.getDiagnosticLastAnswered.sectionNo].vertical.length, this.getAnswersData.length);
     }
   },
   methods: {
@@ -195,32 +196,29 @@ export default {
       this.answers.push(tmp);
     },
 
-    saveAnswers() {
-      this.$validator.validateAll().then((result) => {
-        if (result) {
-          this.loading = true;
-          console.log(this.answers);
+    saveAnswers(nextSectionNo, nextSubsectionNo) {
+     
+      let currentTime = new Date().toISOString();
+      console.log(currentTime);
+      let answerData = {
+        userId: this.getDataUserProfile.id,
+        answers: this.answers,
+        complete: currentTime,
+        article: "Diagnostic",
+        nextSectionNo: nextSectionNo - 1,
+        nextSubsectionNo: nextSubsectionNo - 1
+      };
 
-          const formData = {
-            userId: this.getDataUserProfile.id, 
-            answers: this.answers,
-          };
-          console.log(formData);
-          this._saveAnswers(formData).then(res => {
-            this.$toast.success('Successfully saved');
-            this.saved = true;
-            this.loading = false;
-
-          }).catch(err => {
-            this.$toast.error(err);
-          })
-          
-        }
-      }).catch((error) => {
-        console.error(error);
-      });
+      return this._saveAnswers(answerData)
+        .then(res => {
+          console.log(res);
+          return res;
+        })
+        .catch(err => {
+          throw err;
+        });
     },
-    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
+    goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
       if (this.vStepper < verticalMaxSteps) {
         this.vStepper ++;
       } else {
@@ -229,6 +227,37 @@ export default {
         }
         this.vStepper = 1;
       }
+    },
+    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
+      this.isLoading = true;
+      let nextSectionNo = this.hStepper;
+      let nextSubsectionNo = this.vStepper;
+      if (this.vStepper < verticalMaxSteps) {
+        nextSubsectionNo++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          nextSectionNo++;
+        }
+        nextSubsectionNo = 1;
+      }
+      return this.saveAnswers(nextSectionNo, nextSubsectionNo)
+        .then(res => {
+          if (this.vStepper < verticalMaxSteps) {
+            this.vStepper++;
+          } else {
+            if (this.hStepper < horizontalMaxSteps) {
+              this.hStepper++;
+            }
+            this.vStepper = 1;
+          }
+        })
+        .then(_ => {
+          this.isLoading = false;
+          this.$forceUpdate();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     nextHorizontalStep() {
       this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;

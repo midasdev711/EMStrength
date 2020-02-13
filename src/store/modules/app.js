@@ -110,6 +110,18 @@ const getters = {
 
 // actions
 const actions = {
+  setSymptomLastAnswered: ({commit}, data) => {
+    commit("setSymptomLastAnswered", data);
+  },
+
+  setDiagnosticLastAnswered: ({commit}, data) => {
+    commit("setDiagnosticLastAnswered", data);
+  },
+
+  setDecisionLastAnswered: ({commit}, data) => {
+    commit("setDecisionLastAnswered", data);
+  },
+
   clearAnswersData: ({ commit }) => {
     commit("setSummaryAnswers", []);
   }, 
@@ -160,9 +172,15 @@ const actions = {
   },
 
   saveAnswers: ({ commit }, data) => {
+    let lastAnswered = {
+      sectionNo: data.nextSectionNo - 1,
+      subsectionNo: data.nextSubsectionNo - 1
+    };
+    console.log(data);
     var headers = { 'Content-Type': 'application/json-patch+json' };
     return API.post('api/user/answers', data, headers).then(result => {
       // commit("setAnswers", data);
+      commit("set" + data.article + "LastAnswered", lastAnswered);
     }).catch(err => {
       throw err;
     });
@@ -387,6 +405,18 @@ const mutations = {
 
   validUserCode: (state, data) => {
 
+  },
+
+  setSymptomLastAnswered: (state, data) => {
+    state.symptomAnswers.lastAnswered = Object.assign({}, data);
+  },
+
+  setDiagnosticLastAnswered: (state, data) => {
+    state.diagnosticAnswers.lastAnswered = Object.assign({}, data);
+  },
+
+  setDecisionLastAnswered: (state, data) => {
+    state.decisionAnswers.lastAnswered = Object.assign({}, data);
   },
 
   // EXAMPLES

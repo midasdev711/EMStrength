@@ -167,6 +167,9 @@ export default {
     getLastAnswered() {
       this.hStepper = this.getDecisionLastAnswered.sectionNo ? this.getDecisionLastAnswered.sectionNo + 1 : 1;
       this.vStepper = this.getDecisionLastAnswered.subsectionNo ? this.getDecisionLastAnswered.subsectionNo + 1 : 1;
+      if (this.getDecisionLastAnswered.sectionNo != null && this.getDecisionLastAnswered.subsectionNo != null) {
+        this.goToLastStep(this.getDecisionHorizontalData[this.getDecisionLastAnswered.sectionNo || 0].vertical.length, this.getDecisionHorizontalData.length);
+      }
     }
   },
   methods: {
@@ -198,6 +201,16 @@ export default {
       };
 
       this.answers.push(tmp);
+    },
+    goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
+      if (this.vStepper < verticalMaxSteps) {
+        this.vStepper ++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper ++;
+        }
+        this.vStepper = 1;
+      }
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;

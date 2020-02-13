@@ -144,12 +144,17 @@ export default {
     getLastAnswered() {
       this.hStepper = this.getSymptomLastAnswered.sectionNo ? this.getSymptomLastAnswered.sectionNo + 1 : 1;
       this.vStepper = this.getSymptomLastAnswered.subsectionNo ? this.getSymptomLastAnswered.subsectionNo + 1 : 1;
+      if (this.getSymptomLastAnswered.sectionNo != null && this.getSymptomLastAnswered.subsectionNo != null) {
+        this.goToLastStep(this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo].vertical.length, this.getSymptomHorizontalData.length);
+      }
+      
     }
   },
   methods: {
     ...mapActions("app", {
       _getQuestionsAnswers: "getAnswersData",
-      _saveAnswers: "saveAnswers"
+      _saveAnswers: "saveAnswers",
+      _setLastAnswered: "setSymptomLastAnswered"
     }),
     compId(type, id) {
       return "comp"+type+id;
@@ -174,23 +179,47 @@ export default {
 
       this.answers.push(tmp);
     },
-    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
-      this.isLoading = true;
-      return this.saveAnswers().then(res => {
-        if (this.vStepper < verticalMaxSteps) {
-          this.vStepper ++;
-        } else {
-          if (this.hStepper < horizontalMaxSteps) {
-            this.hStepper ++;
-          }
-          this.vStepper = 1;
+    goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
+      if (this.vStepper < verticalMaxSteps) {
+        this.vStepper ++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper ++;
         }
-      }).then(_ => {
-        this.isLoading = false;
-        this.$forceUpdate();
-      }).catch(err => {
-        console.log(err);
-      });
+        this.vStepper = 1;
+      }
+    },
+    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps, isSavingAnswer = true) {
+      console.log(this.hStepper, this.vStepper, verticalMaxSteps, horizontalMaxSteps, isSavingAnswer);
+      this.isLoading = true;
+      let nextSectionNo = this.hStepper;
+      let nextSubsectionNo = this.vStepper;
+      if (this.vStepper < verticalMaxSteps) {
+        nextSubsectionNo++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          nextSectionNo++;
+        }
+        nextSubsectionNo = 1;
+      }
+      if (isSavingAnswer) {
+        return this.saveAnswers(nextSectionNo, nextSubsectionNo).then(res => {
+          if (this.vStepper < verticalMaxSteps) {
+            this.vStepper ++;
+            console.log("----------- ", this.hStepper, this.vStepper);
+          } else {
+            if (this.hStepper < horizontalMaxSteps) {
+              this.hStepper ++;
+            }
+            this.vStepper = 1;
+          }
+        }).then(_ => {
+          this.isLoading = false;
+          // this.$forceUpdate();
+        }).catch(err => {
+          console.log(err);
+        });
+      }
     },
     nextHorizontalStep() {
       this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
@@ -203,7 +232,7 @@ export default {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
       this.vStepper = 1;
     },
-    saveAnswers() {
+    saveAnswers(nextSectionNo, nextSubsectionNo) {
       let currentTime = new Date().toISOString();
       console.log(currentTime);
       let answerData = {
@@ -211,8 +240,8 @@ export default {
         answers: this.answers,
         complete: currentTime,
         article: "Symptom",
-        nextSectionNo: this.hStepper,
-        nextSubsectionNo: this.vStepper
+        nextSectionNo: nextSectionNo,
+        nextSubsectionNo: nextSubsectionNo
       }
 
       return this._saveAnswers(answerData)
