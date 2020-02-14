@@ -144,9 +144,9 @@ export default {
     getLastAnswered() {
       this.hStepper = this.getSymptomLastAnswered.sectionNo ? this.getSymptomLastAnswered.sectionNo + 1 : 1;
       this.vStepper = this.getSymptomLastAnswered.subsectionNo ? this.getSymptomLastAnswered.subsectionNo + 1 : 1;
-      if (this.getSymptomLastAnswered.sectionNo != null && this.getSymptomLastAnswered.subsectionNo != null) {
-        this.goToLastStep(this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo].vertical.length, this.getSymptomHorizontalData.length);
-      }
+      // if (this.getSymptomLastAnswered.sectionNo != null && this.getSymptomLastAnswered.subsectionNo != null) {
+      //   this.goToLastStep(this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo].vertical.length, this.getSymptomHorizontalData.length);
+      // }
       
     }
   },
@@ -204,15 +204,15 @@ export default {
       }
       if (isSavingAnswer) {
         return this.saveAnswers(nextSectionNo, nextSubsectionNo).then(res => {
-          if (this.vStepper < verticalMaxSteps) {
-            this.vStepper ++;
-            console.log("----------- ", this.hStepper, this.vStepper);
-          } else {
-            if (this.hStepper < horizontalMaxSteps) {
-              this.hStepper ++;
-            }
-            this.vStepper = 1;
-          }
+          // if (this.vStepper < verticalMaxSteps) {
+          //   this.vStepper ++;
+          //   console.log("----------- ", this.hStepper, this.vStepper);
+          // } else {
+          //   if (this.hStepper < horizontalMaxSteps) {
+          //     this.hStepper ++;
+          //   }
+          //   this.vStepper = 1;
+          // }
         }).then(_ => {
           this.isLoading = false;
           // this.$forceUpdate();

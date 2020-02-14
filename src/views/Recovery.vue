@@ -1,24 +1,22 @@
 <template>
 <v-layout justify-center class="pa-2">
-  <v-flex xs12 sm6 v-if="isLoading" justify-center>
-     <v-card class="justify-center">
-        <v-card-title>
-          <div>
-          <img src="/img/Eden-2.png"  width="100%"/>
-          </div>
-        </v-card-title>  
-        <v-container fluid align-center text-center>
-          <v-progress-circular
-            :size="70"
-            :width="7"
-            v-bind:color="$vuetify.theme['progressColor']"
-            indeterminate
-          ></v-progress-circular>
-          <p></p>
-          <h3>Loading ...</h3>
-        </v-container>
-      </v-card>
-  </v-flex>
+  <div class="text-xs-center" v-if="isLoading">
+    <vue-circle
+      :progress="100"
+      :size="300"
+      :reverse="false"
+      line-cap="round"
+      :fill="fill"
+      empty-fill="rgba(200, 200, 200, .8)"
+      :animation="{ duration: 1000, easing: 'circleProgressEasing' }"
+      :animation-start-value="0.0"
+      :start-angle="0"
+      insert-mode="append"
+      :thickness="12"
+      :show-percent="false">
+      <img src="/img/Eden-4.png" width="80%"/>
+    </vue-circle>
+  </div>
   <v-flex xs12 sm6 v-else>
     <v-card color="" class="black--text" v-if="topNotification & getRecoveryData.length > 0">
       <v-card-title primary-title>
@@ -93,6 +91,7 @@
 </template>
 
 <script>
+import VueCircle from 'vue2-circle-progress'
 import { mapActions, mapGetters } from "vuex";
 
 import moment from 'moment'
@@ -119,7 +118,11 @@ export default {
       checkbox2: false,
       hidden: false,
       isLoading: true,
+      fill : { gradient: ["#48cba2", "#47bbe9"] },
     }
+  },
+  components: {
+    VueCircle
   },
   computed: {
     ...mapGetters("auth", {
