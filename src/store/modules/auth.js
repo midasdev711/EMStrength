@@ -4,11 +4,13 @@ import APIService from '@/apiService/apiService.js';
 const API = new APIService()
 
 const state = {
+
   isLogined: false,
   isAdmin: false,
   userProfile: {
     id: "",
     email: "",
+    userAccessCode: "",
     userRoles: []
   }
 }
@@ -18,10 +20,29 @@ const getters = {
   getIsLogined: state => state.isLogined,
   getIsAdmin: state => state.isAdmin,
   getDataUserProfile: state => state.userProfile,
+  getCurrentUserCode: state=> state.userProfile.userAccessCode
 }
 
 // actions
 const actions = {
+  updateUser: ({commit}, data) => {
+    var headers = { 'Accept': 'application/json' };
+    return API.put(`api/users/current/update`, data, headers).then(result => {
+      commit("updateUserProfile", data);
+      return result['data'];
+    }).catch(err => {
+      throw err;
+    });
+  },
+  getUserCode: ({commit}, accessCode) => {
+    var headers = { 'Accept': 'application/json' };
+    return API.get(`api/user/userCode/${accessCode}`, headers).then(result => {
+      commit("validUserCode", accessCode);
+      return result['data'];
+    }).catch(err => {
+      throw err;
+    });
+  },
   getMe: ({ commit }) => {
     if(!localStorage.getItem("token")){
       return;
@@ -90,6 +111,19 @@ const mutations = {
   setAdmin: set("isAdmin"),
   toggleDrawer: toggle("showDrawer"),
   setUserProfile: set("userProfile"),
+  validUserCode: (state, code) => {
+    state.userProfile.userAccessCode = code;
+  },
+  updateUserProfile: (state, data) => {
+    state.userProfile.firstName = data.firstName;
+    state.userProfile.lastName = data.lastName;
+    state.userProfile.occupation = data.occupation;
+    state.userProfile.postCode = data.postCode;
+    state.userProfile.age = data.age;
+    state.userProfile.gender = data.gender;
+    state.userProfile.email = data.email;
+    state.userProfile.userType = data.userType;
+  }
 }
 
 export default {

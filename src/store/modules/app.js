@@ -254,28 +254,6 @@ const actions = {
     });
   },
 
-  getUserCode: ({commit}, accessCode) => {
-    var headers = { 'Accept': 'application/json' };
-    return API.get(`api/user/userCode/${accessCode}`, headers).then(result => {
-      commit("validUserCode", result['data']);
-      return result['data'];
-    }).catch(err => {
-      throw err;
-    });
-  },
-
-
-  // remove this? not sure what it is for:
-  postUserCode: ({commit}, accessCode) => {
-    var headers = { 'Accept': 'application/json' };
-    return API.get(`api/user/userCode/${accessCode}`, headers).then(result => {
-      commit("validUserCode", result['data']);
-      return result['data'];
-    }).catch(err => {
-      throw err;
-    });
-  },
-
   postUser: ({commit}, data) => {
     var headers = { 'Accept': 'application/json' };
     return API.post(`api/user/userCode/user`, data, headers).then(result => {
@@ -401,10 +379,6 @@ const mutations = {
 
   clearSummaryAnswers: (state) => {
     state.summaryAnswers = [];
-  },
-
-  validUserCode: (state, data) => {
-
   },
 
   setSymptomLastAnswered: (state, data) => {

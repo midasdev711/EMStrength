@@ -49,7 +49,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("app", {
+    ...mapActions("auth", {
        _getUserCode: "getUserCode",
     }),
 

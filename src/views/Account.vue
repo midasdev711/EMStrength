@@ -44,7 +44,7 @@
 
       <v-switch
         v-model="user.gender"
-        :label="user.gender ? 'Female' : 'Male'"
+        :label="user.gender ? 'Male' : 'Male'"
       ></v-switch>
 
       <v-text-field
@@ -106,7 +106,7 @@ export default {
     return {
       valid: null,
       dialog: true,
-      userCode: "fMvsVLvSf",              // fMvsVLvSf       Zsk5t2JDH              IAFGR1Rfa
+      userCode: "",              // fMvsVLvSf       Zsk5t2JDH              IAFGR1Rfa
       groupId: null,
       user: {
         firstName: "",
@@ -115,7 +115,9 @@ export default {
         age: "",
         gender: false,
         postCode: "",
-        occupation: ""
+        occupation: "",
+        userType: "User",
+        groupId: "",
       },
       firstNameRules: [
         v => !!v || 'First name is required',
@@ -145,15 +147,15 @@ export default {
   },
   methods: {
     ...mapActions("app", {
-      _postUserCode: "postUserCode",
-      _updateUser: "updateUser",
       _postUser: "postUser"
     }),
     ...mapActions("admin", {
       getUser: "getUser",
     }),
     ...mapActions("auth", {
+      _updateUser: "updateUser",
       updateCurrentUserData: "getMe",
+      _getUserCode: "getUserCode",
     }),
     reset () {
       this.$refs.form.reset()
@@ -165,29 +167,32 @@ export default {
     submit () {
       if (this.$refs.form.validate()) {
         let data = {
-          FirstName: this.user.firstName,
-          LastName: this.user.lastName,
-          Occupation: this.user.occupation,
-          PostCode: this.user.postCode,
-          Age: this.user.age,
-          Email: this.user.email,
-          Password: this.user.password,
-          UserType: this.user.userType,
-          GroupId: this.groupId,
-          UserAccessCode: this.userCode
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          occupation: this.user.occupation,
+          postCode: this.user.postCode,
+          age: this.user.age,
+          gender: this.user.gender ? 'Male' : 'Female',
+          email: this.user.email,
+          password: this.user.password,
+          userType: this.user.userType,
+          groupId: this.user.groupId,
+          userAccessCode: this.getCurrentUserCode
         };
-
-        console.log(data);
 
         if (this.isUserDataExist) {
           this._updateUser(data).then(res => {
             this.$toast.success(`Successfully updated`);
             this.$router.push({ name: 'Recovery'});
+          }).catch(err => {
+            console.log('update failed');
           });
         } else {
           this._postUser(data).then(res => {
             this.$toast.success(`Successfully updated`);
             this.$router.push({ name: 'Recovery'});
+          }).catch(err => {
+            console.log('create failed');
           });
         }
 
@@ -202,14 +207,19 @@ export default {
   computed: {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
+      getCurrentUserCode: "getCurrentUserCode"
     })
   },
   mounted() {
-    this.userCode = this.$route.query.code;
     this.isLoading = true;
-    this._postUserCode(this.userCode).then(res => {
+    this._getUserCode(this.getCurrentUserCode).then(res => {
       this.user = Object.assign({}, this.getDataUserProfile);
-      this.groupId = res.groupId;
+      if (this.user.gender == 'Male') {
+        this.user.gender = true;
+      } else {
+        this.user.gender = false;
+      }
+      this.user.groupId = res.groupId;
       this.checkUserDataExist();
       this.isLoading = false;
     }).catch(err => {
