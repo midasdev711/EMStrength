@@ -48,18 +48,7 @@
                   v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)" 
                   :key="stepl.subsectionNo + '-sub-step'" 
                   :color="$vuetify.theme.subheading2">
-                  <!-- for DEBUG: span :style="{ color: $vuetify.theme.subheading2 }">Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
-                  <!--SectionHeading 
-                    v-if="stepl.items[0].question.type == 'SectionHeading'"
-                    :id="compId('SectionHeading-H-', stepl.items[0].question.id)"
-                    :title="stepl.items[0].question.title"
-                  /-->
-                  <SectionPartStepper
-                    v-if="stepl.items[1].question.type == 'SectionPart'"
-                    :id="compId('SectionPart-H-', stepl.items[1].question.id)"
-                    :title="stepl.items[1].question.title"
-                  />
-                  <!-- for DEBUG: span v-if="stepl.items[1].question.type == 'SectionPart'">{{stepl.items[1].question.title}}</span-->
+                  <SectionPartStepper :data="stepl.items"/>
 
                 </v-stepper-step>
 

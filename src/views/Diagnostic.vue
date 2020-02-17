@@ -33,8 +33,7 @@
         :start-angle="90"
         insert-mode="append"
         :thickness="12"
-        :show-percent="false"
-        @vue-circle-end="progress_end">
+        :show-percent="false">
         <img src="/img/Eden-4.png" width="80%"/>
       </vue-circle>
     </div>
@@ -71,11 +70,7 @@
                   :color="$vuetify.theme.subheading2">
                   <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
 
-                  <SectionPartStepper
-                    v-if="sectionPartHead(stepl.items).type == 'SectionPart'"
-                    :id="compId('SectionPart-H-', sectionPartHead(stepl.items).id)"
-                    :title="sectionPartHead(stepl.items).title"
-                  />
+                  <SectionPartStepper :data="stepl.items"/>
 
                 </v-stepper-step>
 
@@ -187,25 +182,7 @@ export default {
       //this.hStepper = step + 1;
 
     },
-    sectionPartHead(list)
-    {
-      //traverse stepl.items[1] to find the SectionPart for the label
-        var item = list.find(x => x.question.type == 'SectionPart');
-         
-        //console.log("Question Item", item);
-        if (item) 
-          return item.question;
-        else
-          return undefined;
-
-    },
-
-    progress(event,progress,stepValue){
-      console.log(stepValue);
-    },
-    progress_end(event){
-      console.log("Circle progress end");
-    },
+    
 
     updateComponentValue(value, questionId, answerId, useText) {
       for (let i = 0; i < this.answers.length; i ++) {
