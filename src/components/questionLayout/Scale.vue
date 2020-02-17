@@ -90,5 +90,6 @@ export default {
 >>>.v-slider__thumb-label
   height 78px!important
   width 78px!important
+  text-align center
   border-radius 60% 27% 0
 </style>

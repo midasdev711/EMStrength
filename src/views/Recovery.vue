@@ -29,10 +29,7 @@
         <h3>allow up to 15 mins to complete</h3>
       </v-container>
     </v-card>
-    <v-div>
-      <p></p>
-    </v-div>
-    <v-card color="" class="black--text" v-if="topNotification & getRecoveryData.length > 0">
+    <v-card color="" class="black--text mt-2" v-if="topNotification & getRecoveryData.length > 0">
      
       <v-card-title primary-title>
         <div>
@@ -232,7 +229,7 @@ export default {
     this.getAllRecovery().then(res => {
       this.isLoading = false;
       //if (res.) //(getRecoveryData.length == 0)
-      firstTime = true;
+      this.firstTime = true;
     });
   }
 
