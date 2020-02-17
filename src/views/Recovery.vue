@@ -18,7 +18,22 @@
     </vue-circle>
   </div>
   <v-flex xs12 sm6 v-else>
+    <v-card v-if="firstTime">
+      <v-card-title>
+        <h2>Your recovery Do list is empty</h2>
+        <img src="/img/Eden-2.png" width="100%"/>
+      </v-card-title>  
+      <v-container fluid align-center text-center>
+        <h3 class="text-justified">To identify imbalances in your life and the ways to recover we will guide you though questions.</h3>
+        <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
+        <h3>allow up to 15 mins to complete</h3>
+      </v-container>
+    </v-card>
+    <v-div>
+      <p></p>
+    </v-div>
     <v-card color="" class="black--text" v-if="topNotification & getRecoveryData.length > 0">
+     
       <v-card-title primary-title>
         <div>
           <h3>Adopt one of these activities each week. When you have mastered it ... Lorem ipsum dolor sit amet</h3>
@@ -40,17 +55,7 @@
       </v-container>
       
     </v-card>
-    <v-card v-if="getRecoveryData.length == 0">
-      <v-card-title>
-        <h2>Your recovery Do list is empty</h2>
-        <img src="/img/Eden-2.png" width="100%"/>
-      </v-card-title>  
-      <v-container fluid align-center text-center>
-        <h3 class="text-justified">To identify imbalances in your life and the ways to recover we will guide you though questions.</h3>
-        <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
-        <h3>allow up to 15 mins to complete</h3>
-      </v-container>
-    </v-card>
+    
     <v-dialog
       v-model="dialog"
       max-width="290"
@@ -99,6 +104,7 @@ import moment from 'moment'
 export default {
   data () {
     return {
+      firstTime: true,
       dialog: false,
       dialogData: {
         category: "",
@@ -225,6 +231,8 @@ export default {
   mounted() {
     this.getAllRecovery().then(res => {
       this.isLoading = false;
+      //if (res.) //(getRecoveryData.length == 0)
+      firstTime = true;
     });
   }
 

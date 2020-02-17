@@ -32,7 +32,7 @@
       <v-tabs-items dark v-model="articleTab">
         <v-tab-item
           v-for="article in getUserSummaryData"
-          :key="article.articleNo + '-articlecontent'"
+          :key="article.articleNo + '-articlecontent' + article.article"
         >
           <v-card flat>
             <v-tabs v-model="sectionTab" color="#00a38a" grow>
@@ -105,7 +105,9 @@
               :color="$vuetify.theme.subheading1"
               editable
             >
-              <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} <span class="dev-hint">(Section)</span></span>
+              <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} 
+                <!--span class="dev-hint">(Section)</span-->
+              </span>
             </v-stepper-step>
           </template>
         </v-stepper-header>
@@ -135,7 +137,7 @@
 
                   <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
                     <v-card class="mb-5">
-                      <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
+                      <!--span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span-->
                       <v-form v-model="form1Valid" >
                         <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
                           <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :text="a.text" @updateValue="updateComponentValue" :disabled="true" />
@@ -290,6 +292,7 @@ export default {
   mounted() {
     let data = {
       params: "?Article="
+      
     };
     this._getUserSummaryData(data).then(data => {
       this.isLoading = false;

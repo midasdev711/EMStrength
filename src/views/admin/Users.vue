@@ -3,9 +3,18 @@
     <v-btn class="v-btn--back-link" @click="$router.push({ name: 'DashboardAdmin' });">Back to Dashboard</v-btn>
     <v-layout wrap>
       <v-flex xs12 lg5>
-        <CreateNewUser @switchTab="activeTab = 2" class="mb-4" />
+       
         <CreateNewGroup @switchTab="activeTab = 1" />
+        <div>
+          <p></p>
+        </div>
         <CreateUserCodes @switchTab="activeTab = 1" />
+        <div>
+          <p></p>
+<p></p>
+<p></p>
+        </div>
+         <CreateNewUser @switchTab="activeTab = 2" class="mb-4" />
       </v-flex>
       <v-flex xs12 lg7>
         <v-tabs v-model="activeTab">

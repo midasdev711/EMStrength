@@ -27,7 +27,7 @@
             :step="step.sectionNo + 1"
             :color="$vuetify.theme.subheading1"
             editable
-          >{{step.section}} (Section)</v-stepper-step>
+          >{{step.section}}</v-stepper-step>
         </template>
       </v-stepper-header>
 
@@ -167,9 +167,21 @@ export default {
     getLastAnswered() {
       this.hStepper = this.getDecisionLastAnswered.sectionNo ? this.getDecisionLastAnswered.sectionNo + 1 : 1;
       this.vStepper = this.getDecisionLastAnswered.subsectionNo ? this.getDecisionLastAnswered.subsectionNo + 1 : 1;
-      if (this.getDecisionLastAnswered.sectionNo != null && this.getDecisionLastAnswered.subsectionNo != null) {
-        this.goToLastStep(this.getDecisionHorizontalData[this.getDecisionLastAnswered.sectionNo || 0].vertical.length, this.getDecisionHorizontalData.length);
+
+      let pageHolder = this.getAnswersData[this.getDecisionLastAnswered.sectionNo];
+      if (pageHolder != undefined)
+      {
+        let page = pageHolder.vertical;
+        if (page != undefined)
+        {
+          //this.goToLastStep(page.length, this.getDecisionHorizontalData.length);
+        }
       }
+
+
+      //if (this.getDecisionLastAnswered.sectionNo != null && this.getDecisionLastAnswered.subsectionNo != null) {
+      //  this.goToLastStep(this.getDecisionHorizontalData[this.getDecisionLastAnswered.sectionNo || 0].vertical.length, this.getDecisionHorizontalData.length);
+      //}
     }
   },
   methods: {

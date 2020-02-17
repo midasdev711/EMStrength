@@ -1,6 +1,25 @@
 <template>
   <v-container grid-list-xl>
     {{getLastAnswered}}
+    <v-tabs dark color="primary"
+      v-model="activeMeasurement"
+      :hide-slider="false">
+      <v-tabs-slider :color="$vuetify.theme.subheading2">
+      </v-tabs-slider>
+      <v-tab @click="loadSubheading(0)">
+        Stress Measurement
+      </v-tab>
+
+
+      <v-tab @click="loadSubheading(1)">
+        Recovery Measurement
+      </v-tab>
+
+    </v-tabs>
+    <p>
+      &nbsp;
+    </p>
+
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -29,7 +48,9 @@
             :color="$vuetify.theme.subheading1"
             editable
           >
-            <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} <span class="dev-hint">(Section)</span></span>
+            <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} 
+              <!--span class="dev-hint">(Section)</span-->
+            </span>
           </v-stepper-step>
         </template>
       </v-stepper-header>
@@ -106,6 +127,8 @@ export default {
     VueCircle
   },
   data: () => ({
+    activeMeasurement: 0,
+
     hStepper: 1,
     vStepper: 1,
     form1Valid: false,
@@ -126,9 +149,18 @@ export default {
       getDataUserProfile: "getDataUserProfile"
     }),
     getLastAnswered() {
+      if (this.getDiagnosticLastAnswered.sectionNo == undefined) this.getDiagnosticLastAnswered.sectionNo = 0; 
       this.hStepper = this.getDiagnosticLastAnswered.sectionNo ? this.getDiagnosticLastAnswered.sectionNo + 1 : 1;
       this.vStepper = this.getDiagnosticLastAnswered.subsectionNo ? this.getDiagnosticLastAnswered.subsectionNo + 1 : 1;
-      this.goToLastStep(this.getAnswersData[this.getDiagnosticLastAnswered.sectionNo].vertical.length, this.getAnswersData.length);
+      let pageHolder = this.getAnswersData[this.getDiagnosticLastAnswered.sectionNo];
+      if (pageHolder != undefined)
+      {
+        let page = pageHolder.vertical;
+        if (page != undefined)
+        {
+          //this.goToLastStep(page.length, this.getAnswersData.length);
+        }
+      }
     }
   },
   methods: {
@@ -269,10 +301,28 @@ export default {
     prevHorizontalStep() {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
       this.vStepper = 1;
+    },
+
+    loadSubheading(activeMeasurement)
+    {
+      console.log(activeMeasurement);
+      this.isLoading = true;
+      let data = {
+        params: `?Article=Diagnostic&ArticleSubheading=${activeMeasurement}`,
+        article: "Diagnostic"
+      }
+      this._getQuestionsAnswers(data)
+        .then(data => {
+          this.isLoading = false;
+          this.questions = data;
+          console.log(data)
+        });
     }
+
   },
   mounted() {
-    let data = {
+    this.loadSubheading(0);
+    /*let data = {
       params: "?Article=Diagnostic",
       article: "Diagnostic"
     }
@@ -281,7 +331,7 @@ export default {
         this.isLoading = false;
         this.questions = data;
         console.log(data)
-      });
+      });*/
   } 
 }
 </script>

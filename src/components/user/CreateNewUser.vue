@@ -58,14 +58,14 @@
             v-model="newUser.password">
           </v-text-field>
         </v-flex>
-        <v-flex xs12>
+        <!--v-flex xs12>
           <v-select
             :items="unitOfMeasure"
             v-model="newUser.unit"
             item-text="title"
             item-value="title"
             label="Measurement preference"></v-select>
-        </v-flex>
+        </v-flex-->
         <div class="ma-auto">
           <v-btn color="primary"
             :disabled="!valid"
