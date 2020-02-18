@@ -18,7 +18,7 @@
     </vue-circle>
   </div>
   <v-flex xs12 sm6 v-else>
-    <v-card v-if="firstTime">
+    <v-card v-if="getSymptomUpdated == null">
       <v-card-title>
         <h2>Your recovery Do list is empty</h2>
         <img src="/img/Eden-2.png" width="100%"/>
@@ -29,7 +29,7 @@
         <h3>allow up to 15 mins to complete</h3>
       </v-container>
     </v-card>
-    <v-card color="" class="black--text mt-2" v-if="topNotification & getRecoveryData.length > 0">
+    <v-card color="" class="black--text mt-2" v-if="getSymptomUpdated & topNotification & getRecoveryData.length > 0">
      
       <v-card-title primary-title>
         <div>
@@ -40,7 +40,7 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card dark v-bind:color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getRecoveryData.length > 0" class="question-box mb-2 mt-2">
+    <v-card dark v-bind:color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getSymptomUpdated & getRecoveryData.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
         <span class="title">{{questions.category}}</span>
         <v-layout align-center justify-end>          
@@ -65,7 +65,7 @@
             <v-icon large :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
             <h4>{{dialogData.rating}}</h4>
           </v-layout>
-          <p>Last assessed {{dialogData.lastCompleted | daysAgo }} </p>
+          <p>Last assessed {{getSymptomUpdated | daysAgo }} </p>
           When you feel this aspect of your life has changed, re-run the diagnostic questionnaire
         </v-card-text>
 
@@ -129,7 +129,8 @@ export default {
   },
   computed: {
     ...mapGetters("auth", {
-      getDataUserProfile: "getDataUserProfile"
+      getDataUserProfile: "getDataUserProfile",
+      getSymptomUpdated: "getSymptomUpdated"
     }),
     ...mapGetters("app", {
       getRecoveryCheck: "getRecoveryCheck",
