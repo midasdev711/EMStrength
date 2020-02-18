@@ -26,4 +26,11 @@ export default {
    font-weight: 800;
    color: #1c4698;
  } 
+
+ /* body {
+  background-image: url("/img/Eden-4.png");
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  margin-right: 200px;
+} */
 </style>

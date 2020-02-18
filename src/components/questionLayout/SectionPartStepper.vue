@@ -20,7 +20,6 @@ export default {
   methods: {
     sectionPartHead(list) {
         var item = list.find(x => x.question.type == 'SectionPart');
-        console.log("Question Item", item);
         if (item) {
           this.id = 'SectionPart-H-' + item.question.id;
           this.title = item.question.title;

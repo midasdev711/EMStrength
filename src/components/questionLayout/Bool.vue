@@ -1,6 +1,16 @@
 <template>
   <v-flex xs10>
-    <v-checkbox :label="title" :indeterminate="indeterminate" v-model="valueStatus" :disabled="disabled"></v-checkbox>
+    <span>{{title}}</span>
+    <v-radio-group v-model="valueStatus" :disabled="disabled">
+      <v-radio
+        :label="'Yes'"
+        :value="true"
+      ></v-radio>
+      <v-radio
+        :label="'No'"
+        :value="false"
+      ></v-radio>
+    </v-radio-group>
   </v-flex>
 </template>
 
@@ -18,29 +28,15 @@ export default {
   },
   data () {
     return {
-      valueStatus: this.value == 1 ? true : false,
-      indeterminate: this.value == null ? true : false,
-    }
-  },
-  methods: {
-    changeValue(status) {
-      if (status) {
-        this.valueStatus = 'true';
-      } else {
-        this.valueStatus = 'false';
-      }
-      this.$emit('updateValue', status, this.questionId, this.answerId, this.useText);
+      valueStatus: this.value == null ? null : this.value == 1 ? true : false,
     }
   },
   watch: {
     valueStatus(newProps, oldProps) {
-      if (newProps == true) {
-        this.indeterminate = false;
+      if (newProps != oldProps) {
+        this.$emit('updateValue', newProps, this.questionId, this.answerId, this.useText);
       }
     }
-  },
-  mounted() {
-    //console.log(this.value);
   }
 }
 </script>
