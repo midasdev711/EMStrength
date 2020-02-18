@@ -1,5 +1,7 @@
 <template>
+
   <v-app id="inspire" class="app dashboard">
+    <span class="bg origin"></span>
     <app-drawer class="app--drawer"></app-drawer>
     <app-toolbar class="app--toolbar"></app-toolbar>
     <v-content>
@@ -33,4 +35,24 @@ export default {
   background-position: right bottom;
   margin-right: 200px;
 } */
+
+.bg {
+  background-position: right 0px bottom 0px;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: calc(100% - 200px);
+    bottom: 0;
+    background: url( '/img/circle.png') no-repeat bottom right;
+    background-size: cover;
+    /* background-color: red;*/
+    transform: scale(1.0);
+    box-sizing: border-box;
+  }
+
+.origin {
+  /* padding: 15px; */
+  background-origin: content-box;
+  background-position: 100% 100%;
+}
 </style>
