@@ -43,7 +43,7 @@ export default {
     position: absolute;
     left: calc(100% - 200px);
     bottom: 0;
-    background: url( '/img/circle.png') no-repeat bottom right;
+    background: url( '/img/Corner-Graphic-2.png') no-repeat bottom right;
     background-size: cover;
     /* background-color: red;*/
     transform: scale(1.0);
