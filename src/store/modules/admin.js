@@ -45,6 +45,7 @@ const getters = {
 
 // actions
 const actions = {
+  
   createGroup: ({ commit }, data) => {
     return API.post('api/admin/group', data ).then(result => {
       if(result.data) {

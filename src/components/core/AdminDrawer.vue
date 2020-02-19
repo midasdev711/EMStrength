@@ -29,6 +29,7 @@
             item-text="title"
             item-value="title"
             v-model="messageFilters.groupId"
+            @change="selectGroup"
             clearable
             label="Group">
           </v-select>
@@ -207,9 +208,22 @@ export default {
 
       return filteredItems;
     },
+
+    selectGroup() {
+      this._clearAnswersData();
+      let index;
+      for (let i = 0; i < this.getGroupData.length; i ++) {
+        const element = this.getGroupData[i];
+        if (element['title'] == this.messageFilters.groupId) {
+          index = element['id'];
+        }
+      }
+      this.$router.push({ name: 'AdminSummary', query: { groupId: index, type: 'group' } })
+    },
+
     switchUser(item) {
       this._clearAnswersData();
-      this.$router.push({ name: 'AdminSummary', query: { userId: item.id, user: item.fullName, lastCompleted: item.lastCompleted } })
+      this.$router.push({ name: 'AdminSummary', query: { userId: item.id, user: item.fullName, type: 'user', lastCompleted: item.lastCompleted } })
 
       /*this.getMessagesForUser(item.userId)(data => {
          this.message_thread = data.items;

@@ -197,6 +197,17 @@ const actions = {
       });
   },
 
+  getGroupSummaryData: ({ commit }, data) => {
+    return API.get(`api/group/summary/layout${data.params}`)
+      .then(result => {
+        commit("setUserSummaryData", result['data']);
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
+
   getAllRecovery: ({commit}) => {
     return API.get(`api/user/recovery`)
       .then(result => {

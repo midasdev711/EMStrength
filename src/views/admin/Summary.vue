@@ -252,8 +252,8 @@ export default {
     ...mapActions("app", {
       _getUserSummaryData: "getUserSummaryData",
       _getSummaryData: "getAnswersData",
+      _getGroupSummaryData: "getGroupSummaryData",
     }),
-
     compId(type, id) {
       return "comp" + type + id;
     },
@@ -313,14 +313,24 @@ export default {
     },
     getSummary(index) {
       this.isLoading = true;
-      let data = {
-          params: "?userId=" + this.$route.query.userId
-      };
-      this._getUserSummaryData(data).then(data => {
+      if (this.$route.query.type == "user") {
+        let data = {
+            params: "?userId=" + this.$route.query.userId
+        };
+        this._getUserSummaryData(data).then(data => {
           this.isLoading = false;
           this.questions = data;
-          console.log("Summary:", this.questions);
-      });
+        });
+      } else if (this.$route.query.type == "group") {
+        let data = {
+            params: "?groupId=" + this.$route.query.groupId             //  &featureUserId=dd
+        };
+        this._getGroupSummaryData(data).then(data => {
+          this.isLoading = false;
+          console.log(data);
+          this.questions = data;
+        });
+      }
     }
   },
   mounted() {
