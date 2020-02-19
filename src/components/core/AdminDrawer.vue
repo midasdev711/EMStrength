@@ -27,7 +27,7 @@
             name="group_2"
             :items="getGroupData"
             item-text="title"
-            item-value="id"
+            item-value="title"
             v-model="messageFilters.groupId"
             clearable
             label="Group">
@@ -203,7 +203,7 @@ export default {
                         : filteredItems.filter(item => item.fullName.toLowerCase().includes(userNameFilter));
       var groupId = messageFilters.groupId;
       filteredItems = (!groupId || groupId.length === 0)
-                      ? filteredItems : filteredItems.filter(item => item.groupId === groupId);
+                      ? filteredItems : filteredItems.filter(item => item.groupName === groupId);
 
       return filteredItems;
     },
