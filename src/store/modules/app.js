@@ -178,7 +178,7 @@ const actions = {
     };
     console.log(data);
     var headers = { 'Content-Type': 'application/json-patch+json' };
-    return API.post('api/user/answers', data, headers).then(result => {
+    return API.patch('api/user/answers', data, headers).then(result => {
       // commit("setAnswers", data);
       commit("set" + data.article + "LastAnswered", lastAnswered);
     }).catch(err => {

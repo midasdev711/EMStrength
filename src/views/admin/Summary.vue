@@ -19,10 +19,13 @@
       </vue-circle>
     </div>
     <div v-else>
+      <v-flex row layout>
+        <v-flex xs6 class="text-xs-center"><h2>{{username}}</h2></v-flex>
+        <v-flex xs6 class="text-xs-center"><h2>{{groupname}}</h2></v-flex>
+      </v-flex>
       <template>
         <v-tabs dark v-model="articleTab" color="primary" grow>
           <v-tabs-slider color="yellow"></v-tabs-slider>
-
           <v-tab
             v-for="article in getUserSummaryData"
             :key="article.articleNo + '-article'"
@@ -62,7 +65,7 @@
                       v-for="(dateItem, index) in section.dates"
                       :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-datecontent'"
                     >
-                      <v-card flat>
+                      <v-card flat v-if="!isGroupView">
                         <template>
                           <div
                             v-for="(result, resultIndex) in dateItem.results"
@@ -82,6 +85,32 @@
                                 <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.description }}</td>
                                 <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.value }}</td>
                                 <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.id }}</td>
+                              </template>
+                            </v-data-table>
+                          </div>
+                        </template>
+                      </v-card>
+                      <v-card flat v-else>
+                        <template>
+                          <div
+                            v-for="(result, resultIndex) in dateItem.results"
+                            :key="resultIndex + '-result-' + result.forUserId"
+                            class="result"
+                          >
+                            <v-data-table
+                              :headers="groupHeaders"
+                              :items="result['items']"
+                              class="elevation-1"
+                              light
+                            >
+                              <template v-slot:items="props" >
+                                <td class="pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.article }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.created | formatDate }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.title }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.description }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.value }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.id }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUserId }}</td>
                               </template>
                             </v-data-table>
                           </div>
@@ -199,6 +228,8 @@ export default {
     VueCircle
   },
   data: () => ({
+    username: "",
+    groupname: "",
     hStepper: 1,
     vStepper: 1,
     form1Valid: null,
@@ -212,19 +243,63 @@ export default {
     articleTab: null,
     sectionTab: null,
     dateTab: null,
-    headers: [
-      {
-        text: "Article",
-        align: "center",
-        sortable: false,
-        value: "article"
-      },
-      { text: "Created", align: "center", value: "created" },
-      { text: "Title", align: "center", value: "title" },
-      { text: "Description", align: "center", value: "description" },
-      { text: "Value", align: "center", value: "value" },
-      { text: "Action", align: "center", value: "Id" }
-    ]
+    headers: [{
+      text: "Article",
+      align: "center",
+      sortable: false,
+      value: "article"
+    }, { 
+      text: "Created", 
+      align: "center", 
+      value: "created" 
+    }, { 
+      text: "Title", 
+      align: "center", 
+      value: "title" 
+    }, { 
+      text: "Description", 
+      align: "center", 
+      value: "description" 
+    }, { 
+      text: "Value", 
+      align: "center", 
+      value: "value" 
+    }, { 
+      text: "Action", 
+      align: "center", 
+      value: "Id" 
+    }],
+    groupHeaders: [{
+      text: "Article",
+      align: "center",
+      sortable: false,
+      value: "article"
+    }, { 
+      text: "Created", 
+      align: "center", 
+      value: "created" 
+    }, { 
+      text: "Title", 
+      align: "center", 
+      value: "title" 
+    }, { 
+      text: "Description", 
+      align: "center", 
+      value: "description" 
+    }, { 
+      text: "Value", 
+      align: "center", 
+      value: "value" 
+    }, { 
+      text: "Action", 
+      align: "center", 
+      value: "Id" 
+    }, { 
+      text: "UserId", 
+      align: "center", 
+      value: "userId" 
+    }],
+    isGroupView: false,
   }),
   filters: {
     formatDate(date) {
@@ -245,6 +320,9 @@ export default {
   },
   watch: {
     "$route.query"(newQuery, oldQuery) {
+      this.isGroupView = newQuery.groupId ? true : false;
+      this.groupname = newQuery.groupName ? newQuery.groupName : "";
+      this.username = newQuery.user ? newQuery.user : "";
       this.getSummary(newQuery);
     }
   },
@@ -335,6 +413,9 @@ export default {
   },
   mounted() {
     var routeQuery = this.$route.query;
+    this.isGroupView = routeQuery.groupId ? true : false;
+    this.groupname = routeQuery.groupName ? routeQuery.groupName : "";
+    this.username = routeQuery.user ? routeQuery.user : "";
     this.getSummary(routeQuery);
   }
 };

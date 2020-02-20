@@ -218,12 +218,13 @@ export default {
           index = element['id'];
         }
       }
-      this.$router.push({ name: 'AdminSummary', query: { groupId: index, type: 'group' } })
+      this.$router.push({ name: 'AdminSummary', query: { groupName: this.messageFilters.groupId, groupId: index, type: 'group' } })
     },
 
     switchUser(item) {
       this._clearAnswersData();
-      this.$router.push({ name: 'AdminSummary', query: { userId: item.id, user: item.fullName, type: 'user', lastCompleted: item.lastCompleted } })
+      console.log(item);
+      this.$router.push({ name: 'AdminSummary', query: { groupName: item.groupName, userId: item.id, user: item.fullName, type: 'user', lastCompleted: item.lastCompleted } })
 
       /*this.getMessagesForUser(item.userId)(data => {
          this.message_thread = data.items;
