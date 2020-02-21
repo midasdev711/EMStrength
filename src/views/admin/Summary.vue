@@ -39,37 +39,37 @@
         >
           <v-card flat>
             <v-tabs v-model="sectionTab" color="#00a38a" grow>
-              <v-tabs-slider color="yellow"></v-tabs-slider>
+              <v-tabs-slider color="red"></v-tabs-slider>
 
               <v-tab
                 v-for="section in article.sections"
-                :key="section.sectionNo + '-section'"
+                :key="article.articleNo + '_' + section.sectionNo + '-section'"
               >{{ section.section }}</v-tab>
             </v-tabs>
             <v-tabs-items v-model="sectionTab">
               <v-tab-item
                 v-for="section in article.sections"
-                :key="section.sectionNo + '-sectioncontent'"
+                :key="article.articleNo + '_' + section.sectionNo + '-sectioncontent'"
               >
                 <v-card flat>
                   <v-tabs v-model="dateTab" color="#47bbe9" grow> <!-- -->
-                    <v-tabs-slider color="blue"></v-tabs-slider>
+                    <v-tabs-slider color="green"></v-tabs-slider>
 
                     <v-tab
                       v-for="(dateItem, index) in section.dates"
-                      :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-date'"
+                      :key="article.articleNo + '_' + section.sectionNo + '-' + index + '-' + dateItem.date + '-date'"
                     >{{ dateItem.date | formatDateOnly }}</v-tab>
                   </v-tabs>
                   <v-tabs-items v-model="dateTab">
                     <v-tab-item
                       v-for="(dateItem, index) in section.dates"
-                      :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-datecontent'"
+                      :key="article.articleNo + '_' + section.sectionNo + '-' + index + '-' + dateItem.date + '-datecontent'"
                     >
                       <v-card flat v-if="!isGroupView">
                         <template>
                           <div
                             v-for="(result, resultIndex) in dateItem.results"
-                            :key="resultIndex + '-result-' + result.forUserId"
+                            :key="article.articleNo + '_' + section.sectionNo + '-' + index + '-' + dateItem.date + resultIndex + '-result-' + result.forUserId"
                             class="result"
                           >
                             <v-data-table
@@ -109,8 +109,9 @@
                                 <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.title }}</td>
                                 <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.description }}</td>
                                 <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.value }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.id }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUserId }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUser.userName }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUser.age }}</td>
+                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUser.postCode }}</td>
                               </template>
                             </v-data-table>
                           </div>
@@ -291,14 +292,18 @@ export default {
       align: "center", 
       value: "value" 
     }, { 
-      text: "Action", 
+      text: "Username", 
       align: "center", 
-      value: "Id" 
+      value: "username" 
     }, { 
-      text: "UserId", 
+      text: "Age", 
       align: "center", 
-      value: "userId" 
-    }],
+      value: "age" 
+    }, { 
+      text: "Postcode", 
+      align: "center", 
+      value: "postcode" 
+    },],
     isGroupView: false,
   }),
   filters: {
@@ -324,7 +329,15 @@ export default {
       this.groupname = newQuery.groupName ? newQuery.groupName : "";
       this.username = newQuery.user ? newQuery.user : "";
       this.getSummary(newQuery);
-    }
+    },
+    // articleTab (newQuery, oldQuery) {
+    //   if (newQuery != oldQuery) {
+    //     this.isLoading = true;
+    //     setTimeout(() => {
+    //       this.isLoading = false;
+    //     }, 2000)
+    //   }
+    // }
   },
   methods: {
     ...mapActions("app", {
