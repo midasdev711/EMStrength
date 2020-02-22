@@ -1,13 +1,21 @@
 <template>
   <v-container grid-list-xl>
-    <v-flex row layout>
-      <v-flex xs6 class="text-xs-center">
-        <h2>{{username}}</h2>
+    <v-alert
+      v-model="alert"
+      dismissible
+      outline
+      color="info"
+    >
+      <v-flex row layout>
+        <v-flex xs6 class="text-xs-center">
+          <h2>{{username}}</h2>
+        </v-flex>
+        <v-flex xs6 class="text-xs-center">
+          <h2>{{groupname}}</h2>
+        </v-flex>
       </v-flex>
-      <v-flex xs6 class="text-xs-center">
-        <h2>{{groupname}}</h2>
-      </v-flex>
-    </v-flex>
+    </v-alert>
+    
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -313,6 +321,7 @@ export default {
     VueCircle
   },
   data: () => ({
+    alert: true,
     username: "",
     groupname: "",
     hStepper: 1,

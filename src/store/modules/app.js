@@ -80,9 +80,9 @@ const initialState = {
 const getters = {
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
-  getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.lastAnswered ? state.diagnosticAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0},
-  getSymptomLastAnswered: state => state.symptomAnswers && state.symptomAnswers.lastAnswered ? state.symptomAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0},
-  getDecisionLastAnswered: state => state.decisionAnswers && state.decisionAnswers.lastAnswered ? state.decisionAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0},
+  getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.firstAnswered ? state.diagnosticAnswers.firstAnswered : { sectionNo: 0, subsectionNo: 0},
+  getSymptomLastAnswered: state => state.symptomAnswers && state.symptomAnswers.firstAnswered ? state.symptomAnswers.firstAnswered : { sectionNo: 0, subsectionNo: 0},
+  getDecisionLastAnswered: state => state.decisionAnswers && state.decisionAnswers.firstAnswered ? state.decisionAnswers.firstAnswered : { sectionNo: 0, subsectionNo: 0},
 
   getSummaryAnswersData: state => state.summaryAnswers && state.summaryAnswers.horizontal ? state.summaryAnswers.horizontal : [],
   getDecisionAnswersData: state => state.decisionAnswers,

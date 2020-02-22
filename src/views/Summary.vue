@@ -31,11 +31,11 @@
       </template>
       <v-tabs-items dark v-model="articleTab">
         <v-tab-item
-          v-for="article in getUserSummaryData"
+          v-for="(article, index) in getUserSummaryData"
           :key="article.articleNo + '-articlecontent' + article.article"
         >
           <v-card flat>
-            <v-tabs v-model="sectionTab" color="#00a38a" grow>
+            <v-tabs v-model="sectionTab[index]" color="#00a38a" grow>
               <v-tabs-slider color="yellow"></v-tabs-slider>
 
               <v-tab
@@ -43,13 +43,13 @@
                 :key="section.sectionNo + '-section'"
               >{{ section.section }}</v-tab>
             </v-tabs>
-            <v-tabs-items v-model="sectionTab">
+            <v-tabs-items v-model="sectionTab[index]">
               <v-tab-item
-                v-for="section in article.sections"
+                v-for="(section, iindex) in article.sections"
                 :key="section.sectionNo + '-sectioncontent'"
               >
                 <v-card flat>
-                  <v-tabs v-model="dateTab" color="#47bbe9" grow> <!-- -->
+                  <v-tabs v-model="dateTab[iindex]" color="#47bbe9" grow> <!-- -->
                     <v-tabs-slider color="blue"></v-tabs-slider>
 
                     <v-tab
@@ -57,7 +57,7 @@
                       :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-date'"
                     >{{ dateItem.date | formatDateOnly }}</v-tab>
                   </v-tabs>
-                  <v-tabs-items v-model="dateTab">
+                  <v-tabs-items v-model="dateTab[iindex]">
                     <v-tab-item
                       v-for="(dateItem, index) in section.dates"
                       :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-datecontent'"
@@ -212,8 +212,8 @@ export default {
     isAnswerLoading: null,
 
     articleTab: null,
-    sectionTab: null,
-    dateTab: null,
+    sectionTab: [],
+    dateTab: [],
     headers: [
       {
         text: "Article",
