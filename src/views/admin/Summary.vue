@@ -119,40 +119,59 @@
                           </div>
                         </template>
                       </v-card>
-                      <v-card flat v-else>
-                        <template>
-                          <div
-                            v-for="(result, resultIndex) in dateItem.results"
-                            :key="resultIndex + '-result-' + result.forUserId"
-                            class="result"
-                          >
-                            <v-data-table
-                              :headers="groupHeaders"
-                              :items="result['items']"
-                              class="elevation-1"
-                              light
+                      <v-card  flat v-else >
+                        <v-flex class="groupview-card" row layout>
+                          <v-flex xs6 class="pa-0">
+                            <div class="result-group">
+                              <h3 class="text-xs-center">{{dateItem['results'][0]['items'][0]['forUser']['userName']}}</h3>
+                              <h4 class="text-xs-center">{{dateItem['results'][0]['items'][0]['forUser']['age']}} {{dateItem['results'][0]['items'][0]['forUser']['gender']}}  {{dateItem['results'][0]['items'][0]['forUser']['postCode']}}</h4>
+                              <v-data-table
+                                :headers="groupHeaders"
+                                :items="dateItem['results'][0]['items']"
+                                class="elevation-1"
+                                light
+                              >
+                                <template v-slot:items="props">
+                                  <td
+                                    class="text-xs-right pointer-cursor"
+                                    @click="showAnswerLayout(props.item.id)"
+                                  >{{ props.item.title }}</td>
+                                  <td
+                                    class="text-xs-right pointer-cursor"
+                                    @click="showAnswerLayout(props.item.id)"
+                                  >{{ props.item.value }}</td>
+                                </template>
+                              </v-data-table>
+                            </div>    
+                          </v-flex>
+                          <v-flex xs6 class="groupview">
+                            <div
+                              v-for="(result, resultIndex) in dateItem.results"
+                              :key="resultIndex + '-result-' + result.forUserId"
+                              class="result-group"
                             >
-                              <template v-slot:items="props">
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.created | formatDate }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.title }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.description }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.value }}</td>
-                              </template>
-                            </v-data-table>
-                          </div>
-                        </template>
+                              <h3 class="text-xs-center">{{dateItem['results'][resultIndex]['items'][0]['forUser']['userName']}}</h3>
+                              <h4 class="text-xs-center">{{dateItem['results'][resultIndex]['items'][0]['forUser']['age']}} {{dateItem['results'][resultIndex]['items'][0]['forUser']['gender']}}  {{dateItem['results'][resultIndex]['items'][0]['forUser']['postCode']}}</h4>
+                              <v-data-table
+                                :headers="groupHeaders"
+                                :items="result['items']"
+                                class="elevation-1"
+                                light
+                              >
+                                <template v-slot:items="props">
+                                  <td
+                                    class="text-xs-right pointer-cursor"
+                                    @click="showAnswerLayout(props.item.id)"
+                                  >{{ props.item.title }}</td>
+                                  <td
+                                    class="text-xs-right pointer-cursor"
+                                    @click="showAnswerLayout(props.item.id)"
+                                  >{{ props.item.value }}</td>
+                                </template>
+                              </v-data-table>
+                            </div>
+                          </v-flex>
+                        </v-flex>
                       </v-card>
                     </v-tab-item>
                   </v-tabs-items>
@@ -343,21 +362,21 @@ export default {
       }
     ],
     groupHeaders: [
-      {
-        text: "Created",
-        align: "center",
-        value: "created"
-      },
+      // {
+      //   text: "Created",
+      //   align: "center",
+      //   value: "created"
+      // },
       {
         text: "Title",
         align: "center",
         value: "title"
       },
-      {
-        text: "Description",
-        align: "center",
-        value: "description"
-      },
+      // {
+      //   text: "Description",
+      //   align: "center",
+      //   value: "description"
+      // },
       {
         text: "Value",
         align: "center",
@@ -503,4 +522,19 @@ export default {
 >>>.pointer-cursor {
   cursor: pointer;
 }
+
+>>>.groupview-card
+  margin 0!important
+
+>>>.groupview
+  overflow-x scroll
+  white-space nowrap
+  padding 0!important
+
+>>>.result-group
+  display inline-block
+
+>>>.padding-0
+  padding: 0
+
 </style>
