@@ -1,6 +1,13 @@
 <template>
   <v-container grid-list-xl>
-    <!-- TODO: Implement a Widget with User summary Information for selected user header -->
+    <v-flex row layout>
+      <v-flex xs6 class="text-xs-center">
+        <h2>{{username}}</h2>
+      </v-flex>
+      <v-flex xs6 class="text-xs-center">
+        <h2>{{groupname}}</h2>
+      </v-flex>
+    </v-flex>
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -14,56 +21,60 @@
         :start-angle="0"
         insert-mode="append"
         :thickness="12"
-        :show-percent="false">
-        <img src="/img/Eden-4.png" width="80%"/>
+        :show-percent="false"
+      >
+        <img src="/img/Eden-4.png" width="80%" />
       </vue-circle>
     </div>
     <div v-else>
-      <v-flex row layout>
-        <v-flex xs6 class="text-xs-center"><h2>{{username}}</h2></v-flex>
-        <v-flex xs6 class="text-xs-center"><h2>{{groupname}}</h2></v-flex>
-      </v-flex>
       <template>
         <v-tabs dark v-model="articleTab" color="primary" grow>
           <v-tabs-slider color="yellow"></v-tabs-slider>
           <v-tab
             v-for="article in getUserSummaryData"
             :key="article.articleNo + '-article'"
+            :href="'#' + article.articleNo + '-article'"
           >{{ article.articleTitle }}</v-tab>
         </v-tabs>
       </template>
       <v-tabs-items dark v-model="articleTab">
         <v-tab-item
-          v-for="article in getUserSummaryData"
-          :key="article.articleNo + '-articlecontent'"
+          v-for="(article, index) in getUserSummaryData"
+          :key="article.articleNo + '-article'"
+          :value="article.articleNo + '-article'"
         >
           <v-card flat>
-            <v-tabs v-model="sectionTab" color="#00a38a" grow>
+            <v-tabs v-model="sectionTab[index]" color="#00a38a" grow>
               <v-tabs-slider color="red"></v-tabs-slider>
 
               <v-tab
                 v-for="section in article.sections"
                 :key="article.articleNo + '_' + section.sectionNo + '-section'"
+                :href="'#' + article.articleNo + '_' + section.sectionNo + '-section'"
               >{{ section.section }}</v-tab>
             </v-tabs>
-            <v-tabs-items v-model="sectionTab">
+            <v-tabs-items v-model="sectionTab[index]">
               <v-tab-item
-                v-for="section in article.sections"
-                :key="article.articleNo + '_' + section.sectionNo + '-sectioncontent'"
+                v-for="(section, iindex) in article.sections"
+                :key="article.articleNo + '_' + section.sectionNo + '-section'"
+                :value="article.articleNo + '_' + section.sectionNo + '-section'"
               >
                 <v-card flat>
-                  <v-tabs v-model="dateTab" color="#47bbe9" grow> <!-- -->
+                  <v-tabs v-model="dateTab[iindex]" color="#47bbe9" grow>
+                    <!-- -->
                     <v-tabs-slider color="green"></v-tabs-slider>
 
                     <v-tab
-                      v-for="(dateItem, index) in section.dates"
-                      :key="article.articleNo + '_' + section.sectionNo + '-' + index + '-' + dateItem.date + '-date'"
-                    >{{ dateItem.date | formatDateOnly }}</v-tab>
+                      v-for="(dateItem, iiindex) in section.dates"
+                      :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"
+                      :href="'#' + iiindex + '-' + '-date'"
+                    >{{ dateItem.date | formatDateOnly }} - {{iiindex}}</v-tab>
                   </v-tabs>
-                  <v-tabs-items v-model="dateTab">
+                  <v-tabs-items v-model="dateTab[iindex]">
                     <v-tab-item
-                      v-for="(dateItem, index) in section.dates"
-                      :key="article.articleNo + '_' + section.sectionNo + '-' + index + '-' + dateItem.date + '-datecontent'"
+                      v-for="(dateItem, iiindex) in section.dates"
+                      :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"
+                      :value="iiindex + '-' + '-date'"
                     >
                       <v-card flat v-if="!isGroupView">
                         <template>
@@ -78,13 +89,31 @@
                               class="elevation-1"
                               light
                             >
-                              <template v-slot:items="props" >
-                                <td class="pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.article }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.created | formatDate }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.title }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.description }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.value }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.id }}</td>
+                              <template v-slot:items="props">
+                                <td
+                                  class="pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.article }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.created | formatDate }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.title }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.description }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.value }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.id }}</td>
                               </template>
                             </v-data-table>
                           </div>
@@ -103,15 +132,23 @@
                               class="elevation-1"
                               light
                             >
-                              <template v-slot:items="props" >
-                                <td class="pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.article }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.created | formatDate }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.title }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.description }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.value }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUser.userName }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUser.age }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.forUser.postCode }}</td>
+                              <template v-slot:items="props">
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.created | formatDate }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.title }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.description }}</td>
+                                <td
+                                  class="text-xs-right pointer-cursor"
+                                  @click="showAnswerLayout(props.item.id)"
+                                >{{ props.item.value }}</td>
                               </template>
                             </v-data-table>
                           </div>
@@ -138,8 +175,9 @@
           :start-angle="0"
           insert-mode="append"
           :thickness="12"
-          :show-percent="false">
-          <img src="/img/Eden-4.png" width="80%"/>
+          :show-percent="false"
+        >
+          <img src="/img/Eden-4.png" width="80%" />
         </vue-circle>
       </div>
       <v-stepper v-model="hStepper" v-else>
@@ -152,7 +190,10 @@
               :color="$vuetify.theme.subheading1"
               editable
             >
-              <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} <span class="dev-hint">(Section)</span></span>
+              <span :style="{ color: $vuetify.theme.subheading1 }">
+                {{step.section}}
+                <span class="dev-hint">(Section)</span>
+              </span>
             </v-stepper-step>
           </template>
         </v-stepper-header>
@@ -165,36 +206,65 @@
           >
             <v-card>
               <v-stepper vertical v-model="vStepper">
-                <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
-                  <v-stepper-step 
-                    editable 
+                <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
+                  <v-stepper-step
+                    editable
                     v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
-                    :key="stepl.subsectionNo + '-sub-step'" 
-                    :color="$vuetify.theme.subheading2">
+                    :key="stepl.subsectionNo + '-sub-step'"
+                    :color="$vuetify.theme.subheading2"
+                  >
                     <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
                     <!-- <SectionPartStepper
                       v-if="sectionPartHead(stepl.items).type == 'SectionPart'"
                       :id="compId('SectionPart-H-', sectionPartHead(stepl.items).id)"
                       :title="sectionPartHead(stepl.items).title"
-                    /> -->
-
+                    />-->
                   </v-stepper-step>
 
                   <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
                     <v-card class="mb-5">
                       <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
-                      <v-form v-model="form1Valid" >
-                        <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
-                          <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :text="a.text" @updateValue="updateComponentValue" :disabled="true" />
-                          <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :value="a.value" :disabled="true" @updateValue="updateComponentValue"/>
+                      <v-form v-model="form1Valid">
+                        <div
+                          class="row"
+                          v-for="a in stepl.items"
+                          :key="a.id"
+                          v-if="a.isConditionQuestionMet"
+                        >
+                          <components
+                            v-if="a.question.useText && a.isConditionQuestionMet"
+                            :is="a.question.type"
+                            :id="compId(a.question.type, a.question.id)"
+                            :title="a.question.title"
+                            :useText="a.question.useText"
+                            :questionId="a.question.id"
+                            :answerId="a.answerId"
+                            :length="a.question.length"
+                            :items="a.question.items"
+                            :text="a.text"
+                            @updateValue="updateComponentValue"
+                            :disabled="true"
+                          />
+                          <components
+                            v-if="!a.question.useText && a.isConditionQuestionMet"
+                            :is="a.question.type"
+                            :id="compId(a.question.type, a.question.id)"
+                            :title="a.question.title"
+                            :useText="a.question.useText"
+                            :questionId="a.question.id"
+                            :answerId="a.answerId"
+                            :length="a.question.length"
+                            :items="a.question.items"
+                            :value="a.value"
+                            :disabled="true"
+                            @updateValue="updateComponentValue"
+                          />
                         </div>
                       </v-form>
                       <v-btn
                         color="primary"
                         @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
-                      >
-                        Continue
-                      </v-btn>
+                      >Continue</v-btn>
                       <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                     </v-card>
                   </v-stepper-content>
@@ -202,12 +272,7 @@
               </v-stepper>
             </v-card>
 
-            <v-btn
-              color="primary"
-              @click="nextHorizontalStep"
-            >
-              Continue
-            </v-btn>
+            <v-btn color="primary" @click="nextHorizontalStep">Continue</v-btn>
             <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
           </v-stepper-content>
         </v-stepper-items>
@@ -218,9 +283,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import moment from 'moment';
-import VueCircle from 'vue2-circle-progress';
-import components from '../../components/questionLayout'
+import moment from "moment";
+import VueCircle from "vue2-circle-progress";
+import components from "../../components/questionLayout";
 
 export default {
   name: "AdminSummary",
@@ -234,90 +299,85 @@ export default {
     hStepper: 1,
     vStepper: 1,
     form1Valid: null,
-    fill : { gradient: ["#48cba2", "#47bbe9"] },
-    
+    fill: { gradient: ["#48cba2", "#47bbe9"] },
+
     results: [],
 
     isLoading: true,
     isAnswerLoading: false,
 
     articleTab: null,
-    sectionTab: null,
-    dateTab: null,
-    headers: [{
-      text: "Article",
-      align: "center",
-      sortable: false,
-      value: "article"
-    }, { 
-      text: "Created", 
-      align: "center", 
-      value: "created" 
-    }, { 
-      text: "Title", 
-      align: "center", 
-      value: "title" 
-    }, { 
-      text: "Description", 
-      align: "center", 
-      value: "description" 
-    }, { 
-      text: "Value", 
-      align: "center", 
-      value: "value" 
-    }, { 
-      text: "Action", 
-      align: "center", 
-      value: "Id" 
-    }],
-    groupHeaders: [{
-      text: "Article",
-      align: "center",
-      sortable: false,
-      value: "article"
-    }, { 
-      text: "Created", 
-      align: "center", 
-      value: "created" 
-    }, { 
-      text: "Title", 
-      align: "center", 
-      value: "title" 
-    }, { 
-      text: "Description", 
-      align: "center", 
-      value: "description" 
-    }, { 
-      text: "Value", 
-      align: "center", 
-      value: "value" 
-    }, { 
-      text: "Username", 
-      align: "center", 
-      value: "username" 
-    }, { 
-      text: "Age", 
-      align: "center", 
-      value: "age" 
-    }, { 
-      text: "Postcode", 
-      align: "center", 
-      value: "postcode" 
-    },],
-    isGroupView: false,
+    sectionTab: [],
+    dateTab: [],
+    headers: [
+      {
+        text: "Article",
+        align: "center",
+        sortable: false,
+        value: "article"
+      },
+      {
+        text: "Created",
+        align: "center",
+        value: "created"
+      },
+      {
+        text: "Title",
+        align: "center",
+        value: "title"
+      },
+      {
+        text: "Description",
+        align: "center",
+        value: "description"
+      },
+      {
+        text: "Value",
+        align: "center",
+        value: "value"
+      },
+      {
+        text: "Action",
+        align: "center",
+        value: "Id"
+      }
+    ],
+    groupHeaders: [
+      {
+        text: "Created",
+        align: "center",
+        value: "created"
+      },
+      {
+        text: "Title",
+        align: "center",
+        value: "title"
+      },
+      {
+        text: "Description",
+        align: "center",
+        value: "description"
+      },
+      {
+        text: "Value",
+        align: "center",
+        value: "value"
+      }
+    ],
+    isGroupView: false
   }),
   filters: {
     formatDate(date) {
-      return moment(date).format('YYYY-MM-DD hh:mm:ss');
+      return moment(date).format("YYYY-MM-DD hh:mm:ss");
     },
     formatDateOnly(date) {
-      return moment(date).format('YYYY-MM-DD');
-    },
+      return moment(date).format("YYYY-MM-DD");
+    }
   },
   computed: {
     ...mapGetters("app", {
       getUserSummaryData: "getUserSummaryData",
-      getAnswersData: "getSummaryAnswersData",
+      getAnswersData: "getSummaryAnswersData"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -329,7 +389,7 @@ export default {
       this.groupname = newQuery.groupName ? newQuery.groupName : "";
       this.username = newQuery.user ? newQuery.user : "";
       this.getSummary(newQuery);
-    },
+    }
     // articleTab (newQuery, oldQuery) {
     //   if (newQuery != oldQuery) {
     //     this.isLoading = true;
@@ -343,7 +403,7 @@ export default {
     ...mapActions("app", {
       _getUserSummaryData: "getUserSummaryData",
       _getSummaryData: "getAnswersData",
-      _getGroupSummaryData: "getGroupSummaryData",
+      _getGroupSummaryData: "getGroupSummaryData"
     }),
     compId(type, id) {
       return "comp" + type + id;
@@ -351,7 +411,7 @@ export default {
 
     nameId(type, row, col) {
       return `${type}_${row}x${col}`;
-    }, 
+    },
 
     showAnswerLayout(summaryId) {
       console.log(summaryId);
@@ -366,33 +426,30 @@ export default {
       });
     },
 
-    updateComponentValue() {
+    updateComponentValue() {},
 
-    },
-
-    sectionPartHead(list)
-    {
+    sectionPartHead(list) {
       //traverse stepl.items[1] to find the SectionPart for the label
-        var item = list.find(x => x.question.type == 'SectionPart');
-        //console.log("Question Item", item);
-        if (item) 
-          return item.question;
-        else
-          return undefined;
-
+      var item = list.find(x => x.question.type == "SectionPart");
+      //console.log("Question Item", item);
+      if (item) return item.question;
+      else return undefined;
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       if (this.vStepper < verticalMaxSteps) {
-        this.vStepper ++;
+        this.vStepper++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper ++;
+          this.hStepper++;
         }
         this.vStepper = 1;
       }
     },
     nextHorizontalStep() {
-      this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
+      this.hStepper =
+        this.hStepper < this.questions.horizontal.length
+          ? this.hStepper + 1
+          : this.hStepper;
       this.vStepper = 1;
     },
     prevVerticalStep() {
@@ -406,7 +463,7 @@ export default {
       this.isLoading = true;
       if (this.$route.query.type == "user") {
         let data = {
-            params: "?userId=" + this.$route.query.userId
+          params: "?userId=" + this.$route.query.userId
         };
         this._getUserSummaryData(data).then(data => {
           this.isLoading = false;
@@ -414,7 +471,7 @@ export default {
         });
       } else if (this.$route.query.type == "group") {
         let data = {
-            params: "?groupId=" + this.$route.query.groupId             //  &featureUserId=dd
+          params: "?groupId=" + this.$route.query.groupId //  &featureUserId=dd
         };
         this._getGroupSummaryData(data).then(data => {
           this.isLoading = false;
@@ -444,6 +501,6 @@ export default {
 }
 
 >>>.pointer-cursor {
-  cursor pointer
+  cursor: pointer;
 }
 </style>
