@@ -39,6 +39,9 @@
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
+          <v-card class="text-xs-right" v-if="isMobile">
+            <h3>{{stepp.section}}  {{stepp.sectionNo + 1}} of {{getSymptomHorizontalData.length}}</h3>
+          </v-card>
           <v-card>
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
@@ -258,13 +261,19 @@ export default {
         console.log(data)
       });
   }
-
   
 }
 </script>
 
 <style lang="stylus" scoped>
+
 >>>.v-stepper__content
   padding 0
   margin-right 0
+
+.v-stepper__header
+  @media (max-width: 500px) {
+    display none
+  }
+
 </style>

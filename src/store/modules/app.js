@@ -393,15 +393,15 @@ const mutations = {
   },
 
   setSymptomLastAnswered: (state, data) => {
-    state.symptomAnswers.lastAnswered = Object.assign({}, data);
+    state.symptomAnswers.firstAnswered = Object.assign({}, data);
   },
 
   setDiagnosticLastAnswered: (state, data) => {
-    state.diagnosticAnswers.lastAnswered = Object.assign({}, data);
+    state.diagnosticAnswers.firstAnswered = Object.assign({}, data);
   },
 
   setDecisionLastAnswered: (state, data) => {
-    state.decisionAnswers.lastAnswered = Object.assign({}, data);
+    state.decisionAnswers.firstAnswered = Object.assign({}, data);
   },
 
   // EXAMPLES
