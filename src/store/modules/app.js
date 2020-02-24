@@ -198,7 +198,8 @@ const actions = {
   },
 
   getGroupSummaryData: ({ commit }, data) => {
-    return API.get(`api/group/summary/layout${data.params}`)
+    return API.get(`api/group/summary/layoutV2${data.params}`)
+    // return API.get(`api/group/summary/layout${data.params}`)
       .then(result => {
         commit("setUserSummaryData", result['data']);
         return result['data'];

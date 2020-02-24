@@ -67,7 +67,7 @@
                 :key="article.articleNo + '_' + section.sectionNo + '-section'"
                 :value="article.articleNo + '_' + section.sectionNo + '-section'"
               >
-                <v-card flat>
+                <v-card flat v-if="!isGroupView">
                   <v-tabs v-model="dateTab[iindex]" color="#47bbe9" grow>
                     <!-- -->
                     <v-tabs-slider color="green"></v-tabs-slider>
@@ -84,7 +84,7 @@
                       :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"
                       :value="iiindex + '-' + '-date'"
                     >
-                      <v-card flat v-if="!isGroupView">
+                      <v-card flat>
                         <template>
                           <div
                             v-for="(result, resultIndex) in dateItem.results"
@@ -127,62 +127,116 @@
                           </div>
                         </template>
                       </v-card>
-                      <v-card  flat v-else >
-                        <v-flex class="groupview-card" row layout>
-                          <v-flex xs6 class="pa-0">
-                            <div class="result-group">
-                              <h3 class="text-xs-center">{{dateItem['results'][0]['items'][0]['forUser']['userName']}}</h3>
-                              <h4 class="text-xs-center">{{dateItem['results'][0]['items'][0]['forUser']['age']}} {{dateItem['results'][0]['items'][0]['forUser']['gender']}}  {{dateItem['results'][0]['items'][0]['forUser']['postCode']}}</h4>
-                              <v-data-table
-                                :headers="groupHeaders"
-                                :items="dateItem['results'][0]['items']"
-                                class="elevation-1"
-                                light
-                              >
-                                <template v-slot:items="props">
-                                  <td
-                                    class="text-xs-right pointer-cursor"
-                                    @click="showAnswerLayout(props.item.id)"
-                                  >{{ props.item.title }}</td>
-                                  <td
-                                    class="text-xs-right pointer-cursor"
-                                    @click="showAnswerLayout(props.item.id)"
-                                  >{{ props.item.value }}</td>
-                                </template>
-                              </v-data-table>
-                            </div>    
-                          </v-flex>
-                          <v-flex xs6 class="groupview">
-                            <div
-                              v-for="(result, resultIndex) in dateItem.results"
-                              :key="resultIndex + '-result-' + result.forUserId"
-                              class="result-group"
-                            >
-                              <h3 class="text-xs-center">{{dateItem['results'][resultIndex]['items'][0]['forUser']['userName']}}</h3>
-                              <h4 class="text-xs-center">{{dateItem['results'][resultIndex]['items'][0]['forUser']['age']}} {{dateItem['results'][resultIndex]['items'][0]['forUser']['gender']}}  {{dateItem['results'][resultIndex]['items'][0]['forUser']['postCode']}}</h4>
-                              <v-data-table
-                                :headers="groupHeaders"
-                                :items="result['items']"
-                                class="elevation-1"
-                                light
-                              >
-                                <template v-slot:items="props">
-                                  <td
-                                    class="text-xs-right pointer-cursor"
-                                    @click="showAnswerLayout(props.item.id)"
-                                  >{{ props.item.title }}</td>
-                                  <td
-                                    class="text-xs-right pointer-cursor"
-                                    @click="showAnswerLayout(props.item.id)"
-                                  >{{ props.item.value }}</td>
-                                </template>
-                              </v-data-table>
-                            </div>
-                          </v-flex>
-                        </v-flex>
-                      </v-card>
                     </v-tab-item>
                   </v-tabs-items>
+                </v-card>
+                <v-card flat v-else-if="isGroupView && !featureUserId">
+                  <v-flex class="groupview-card" row layout>
+                    <!-- <v-flex xs6 class="pa-0">
+                      <div class="result-group">
+                        <h3 class="text-xs-center">{{section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId)[0]['items'][0]['forUser']['userName']}}</h3>
+                        <h4 class="text-xs-center">{{section['results'][0]['items'][0]['forUser']['age']}} {{section['results'][0]['items'][0]['forUser']['gender']}}  {{section['results'][0]['items'][0]['forUser']['postCode']}}</h4>
+                        <v-data-table
+                          :headers="groupHeaders"
+                          :items="section['results'][0]['items']"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.title }}</td>
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.value }}</td>
+                          </template>
+                        </v-data-table>
+                      </div>    
+                    </v-flex> -->
+                    <v-flex xs12 class="groupview">
+                      <div
+                        v-for="(result, resultIndex) in section.results"
+                        :key="resultIndex + '-result-' + result.forUserId"
+                        class="result-group"
+                      >
+                        <h3 class="text-xs-center">{{result['items'][0]['forUser']['userName']}}</h3>
+                        <h4 class="text-xs-center">{{result['items'][0]['forUser']['age']}} {{result['items'][0]['forUser']['gender']}}  {{result['items'][0]['forUser']['postCode']}}</h4>
+                        <v-data-table
+                          :headers="groupHeaders"
+                          :items="result['items']"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.title }}</td>
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.value }}</td>
+                          </template>
+                        </v-data-table>
+                      </div>
+                    </v-flex>
+                  </v-flex>
+                </v-card>
+                <v-card flat v-else-if="isGroupView && featureUserId">
+                  <v-flex class="groupview-card" row layout>
+                    <v-flex xs6 class="pa-0">
+                      <div class="result-group" v-if="section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId).length > 0">
+                        <h3 class="text-xs-center">{{section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId)[0]['items'][0]['forUser']['userName']}}</h3>
+                        <h4 class="text-xs-center">{{section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId)[0]['items'][0]['forUser']['age']}} {{section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId)[0]['items'][0]['forUser']['gender']}}  {{section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId)[0]['items'][0]['forUser']['postCode']}}</h4>
+                        <v-data-table
+                          :headers="groupHeaders"
+                          :items="section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId)[0]['items']"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.title }}</td>
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.value }}</td>
+                          </template>
+                        </v-data-table>
+                      </div>    
+                    </v-flex>
+                    <v-flex xs6 class="groupview">
+                      <div
+                        v-for="(result, resultIndex) in section.results.filter(item => item['items'][0]['forUser']['id'] != featureUserId)"
+                        :key="resultIndex + '-result-' + result.forUserId"
+                        class="result-group"
+                      >
+                        <h3 class="text-xs-center">{{result['items'][0]['forUser']['userName']}}</h3>
+                        <h4 class="text-xs-center">{{result['items'][0]['forUser']['age']}} {{result['items'][0]['forUser']['gender']}}  {{result['items'][0]['forUser']['postCode']}}</h4>
+                        <v-data-table
+                          :headers="groupHeaders"
+                          :items="result['items']"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.title }}</td>
+                            <td
+                              class="text-xs-right pointer-cursor"
+                              @click="showAnswerLayout(props.item.id)"
+                            >{{ props.item.value }}</td>
+                          </template>
+                        </v-data-table>
+                      </div>
+                    </v-flex>
+                  </v-flex>
                 </v-card>
               </v-tab-item>
             </v-tabs-items>
@@ -324,6 +378,7 @@ export default {
     alert: true,
     username: "",
     groupname: "",
+    featureUserId: null,
     hStepper: 1,
     vStepper: 1,
     form1Valid: null,
@@ -500,6 +555,16 @@ export default {
       } else if (this.$route.query.type == "group") {
         let data = {
           params: "?groupId=" + this.$route.query.groupId //  &featureUserId=dd
+        };
+        this._getGroupSummaryData(data).then(data => {
+          this.isLoading = false;
+          console.log(data);
+          this.questions = data;
+        });
+      } else if (this.$route.query.type == "groupuser") {
+        this.featureUserId = this.$route.query.userId;
+        let data = {
+          params: `?groupId=${this.$route.query.groupId}&featureUserId=${this.$route.query.userId}` //  &featureUserId=dd
         };
         this._getGroupSummaryData(data).then(data => {
           this.isLoading = false;

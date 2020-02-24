@@ -224,7 +224,20 @@ export default {
     switchUser(item) {
       this._clearAnswersData();
       console.log(item);
-      this.$router.push({ name: 'AdminSummary', query: { groupName: item.groupName, userId: item.id, user: item.fullName, type: 'user', lastCompleted: item.lastCompleted } })
+
+      if (this.messageFilters.groupId) {
+        let index;
+        for (let i = 0; i < this.getGroupData.length; i ++) {
+          const element = this.getGroupData[i];
+          if (element['title'] == this.messageFilters.groupId) {
+            index = element['id'];
+          }
+        }
+        this.$router.push({ name: 'AdminSummary', query: { groupName: item.groupName, groupId: index, userId: item.id, user: item.fullName, type: 'groupuser', lastCompleted: item.lastCompleted } })
+      } else {
+        this.$router.push({ name: 'AdminSummary', query: { groupName: item.groupName, userId: item.id, user: item.fullName, type: 'user', lastCompleted: item.lastCompleted } })
+      }
+
 
       /*this.getMessagesForUser(item.userId)(data => {
          this.message_thread = data.items;
