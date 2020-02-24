@@ -8,12 +8,12 @@
     <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck"></v-checkbox>
     <v-toolbar-items>
       <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
-        <v-btn icon flat slot="activator" @click="navigateToFeedback()">
+        <!--v-btn icon flat slot="activator" @click="navigateToFeedback()">
           <v-badge color="red" overlap >
             <span slot="badge" v-if="getDataUserProfile.unreadReceivedMessages > 0">{{getDataUserProfile.unreadReceivedMessages}}</span>
             <v-icon medium>notifications</v-icon>
           </v-badge>
-        </v-btn>
+        </v-btn-->
         <!--notification-list></notification-list-->
       </v-menu>
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">

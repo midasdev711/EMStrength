@@ -5,6 +5,7 @@ import azureBlob from '../store/modules/azureBlob';
 import { IncomingMessage } from 'http';
 
 const API_URL = 'https://em-api.azurewebsites.net/';
+//** STAGING  const API_URL = 'https://em-staging.azurewebsites.net/';
 //const API_URL = 'http://localhost:5005/';
 //const API_URL = 'http://localhost:51278/';
 const blob_uri = 'https://ctmdevblobstore.blob.core.windows.net';

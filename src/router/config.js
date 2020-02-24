@@ -148,15 +148,8 @@ export const protectedRoute = [
     path: "/",
     component: DefaultLayout,
     meta: { title: "Home", group: "apps", icon: "" },
-    redirect: "/dashboard",
+    redirect: "/recovery",
     children: [
-      {
-        path: "/dashboard",
-        name: "Dashboard",
-        meta: { title: "Dashboard", group: "apps", icon: "dashboard", requiresAuth: true },
-        component: () => import(/* webpackChunkName: "dashboard" */ "@/views/Dashboard.vue")
-      },
-
       {
         path: "/403",
         name: "Forbidden",

@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer class="app--drawer" :mini-variant.sync="mini" app v-model="inputValue" width="250">
     <v-toolbar color="primary darken-1" dark>
-      <img src="/img/logo.png" height="36" alt="NuStrength" />
+      <img src="/img/logo.png" height="36" alt="EM" />
     </v-toolbar>
     <vue-perfect-scrollbar class="drawer-menu--scroll" :settings="scrollSettings">
       <v-list dense expand>

@@ -1,12 +1,5 @@
 const Menu = [
   {
-    title: "Dashboard",
-    icon: "filter_vintage",
-    name: "Dashboard",
-    key: "key-Dashboard"
-  },
-
-  {
     title: "Recovery",
     icon: "filter_vintage",
     name: "Recovery",
@@ -59,7 +52,7 @@ const Menu = [
     title: "Energy Health",
     icon: "shopping_basket",
     name: "EnergyHealth_shop",
-    href: "https://EnergyHealth.myshopify.com/",
+    href: "https://coaching.site.com.au/",
     key: "key-EnergyHealth"
   }
 ]
