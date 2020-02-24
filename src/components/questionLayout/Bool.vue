@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs10>
+  <v-flex xs12 sm10>
     <span>{{title}}</span>
     <v-radio-group v-model="valueStatus" :disabled="disabled" row>
       <v-radio

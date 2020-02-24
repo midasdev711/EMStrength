@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs10>
+  <v-flex xs12 sm10>
     <v-text-field
       v-bind:name="id"
       v-bind:label="title"

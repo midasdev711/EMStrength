@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs10>
+  <v-flex xs12 sm10>
     <span class="caption">{{title}}</span>
 
     <v-slider

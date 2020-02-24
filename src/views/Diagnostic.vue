@@ -60,6 +60,9 @@
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
+          <v-card  v-if="isMobile">
+            <h3>{{stepp.section}} <span class="right"> {{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span></h3>
+          </v-card>
           <v-card>
             <v-stepper vertical v-model="vStepper">
               <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
@@ -75,6 +78,9 @@
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
+                  <v-card v-if="isMobile">
+                    <h3>{{$vuetify.theme.step.charAt(stepl.subsectionNo)}} <span class="right"> {{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span></h3>
+                  </v-card>
                   <v-card class="mb-5">
                     <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                     <v-form v-model="form1Valid" >
@@ -298,6 +304,8 @@ export default {
 
   },
   mounted() {
+    if (window.innerWidth < 500 && window.innerWidth > 0) this.isMobile = true;
+    else this.isMobile = false;
     this.loadSubheading(0);
     /*let data = {
       params: "?Article=Diagnostic",
@@ -316,4 +324,18 @@ export default {
 <style lang="stylus" scoped>
 >>>.v-stepper__content
   padding 0
+  margin-right 0
+  @media (max-width: 500px) {
+    margin 0
+  }
+
+.v-stepper__header
+  @media (max-width: 500px) {
+    display none
+  }
+
+.v-stepper--vertical .v-stepper__step
+  @media (max-width: 500px) {
+    display none
+  }
 </style>

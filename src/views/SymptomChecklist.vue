@@ -39,8 +39,8 @@
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
-          <v-card class="text-xs-right" v-if="isMobile">
-            <h3>{{stepp.section}}  {{stepp.sectionNo + 1}} of {{getSymptomHorizontalData.length}}</h3>
+          <v-card  v-if="isMobile">
+            <h3>{{stepp.section}} <span class="right"> {{stepp.sectionNo + 1}} of {{getSymptomHorizontalData.length}}</span></h3>
           </v-card>
           <v-card>
             <v-stepper vertical v-model="vStepper">
@@ -56,6 +56,9 @@
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.subsectionNo + 1" :key="stepl.subsectionNo + '-sub-content'">
+                  <v-card v-if="isMobile">
+                    <h3>{{$vuetify.theme.step.charAt(stepl.subsectionNo)}} <span class="right"> {{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span></h3>
+                  </v-card>
                   <v-card class="mb-5">
                     <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                     <v-form v-model="form1Valid" >
@@ -270,10 +273,17 @@ export default {
 >>>.v-stepper__content
   padding 0
   margin-right 0
+  @media (max-width: 500px) {
+    margin 0
+  }
 
 .v-stepper__header
   @media (max-width: 500px) {
     display none
   }
 
+.v-stepper--vertical .v-stepper__step
+  @media (max-width: 500px) {
+    display none
+  }
 </style>
