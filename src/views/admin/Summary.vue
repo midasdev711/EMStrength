@@ -127,31 +127,21 @@
                 </v-card>
                 <v-card flat v-else-if="isGroupView && !featureUserId">
                   <v-flex class="groupview-card" row layout>
-                    <!-- <v-flex xs6 class="pa-0">
+                    <v-flex xs12 class="groupview">
                       <div class="result-group">
-                        <h3 class="text-xs-center">{{section['results'].filter(item => item['items'][0]['forUserId'] == featureUserId)[0]['items'][0]['forUser']['userName']}}</h3>
-                        <h4 class="text-xs-center">{{section['results'][0]['items'][0]['forUser']['age']}} {{section['results'][0]['items'][0]['forUser']['gender']}}  {{section['results'][0]['items'][0]['forUser']['postCode']}}</h4>
                         <v-data-table
-                          :headers="groupHeaders"
-                          :items="section['results'][0]['items']"
+                          :headers="mockHeader"
+                          :items="mockData"
                           class="elevation-1"
                           light
                         >
                           <template v-slot:items="props">
-                            <td
-                              class="text-xs-right pointer-cursor"
-                              @click="showAnswerLayout(props.item.id)"
-                            >{{ props.item.title }}</td>
-                            <td
-                              class="text-xs-right pointer-cursor"
-                              @click="showAnswerLayout(props.item.id)"
-                            >{{ props.item.value }}</td>
+                            <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.users" :key="user.id">{{ user.value }}</td>
                           </template>
                         </v-data-table>
-                      </div>    
-                    </v-flex>-->
-                    <v-flex xs12 class="groupview">
-                      <div
+                      </div>
+                      <!-- <div
                         v-for="(result, resultIndex) in section.results"
                         :key="resultIndex + '-result-' + result.forUserId"
                         class="result-group"
@@ -171,7 +161,7 @@
                             <td class="text-xs-right pointer-cursor">{{ props.item.value }}</td>
                           </template>
                         </v-data-table>
-                      </div>
+                      </div> -->
                     </v-flex>
                   </v-flex>
                 </v-card>
@@ -310,6 +300,124 @@ export default {
         value: "value"
       }
     ],
+    mockHeader: [{
+      text: "Title",
+      align: "center",
+      value: "title"
+    }, {
+      text: "mock user 1",
+      align: "center",
+      value: "value"
+    }, {
+      text: "mock user 2",
+      align: "center",
+      value: "value"
+    }, {
+      text: "mock user 3",
+      align: "center",
+      value: "value"
+    }, {
+      text: "mock user 4",
+      align: "center",
+      value: "value"
+    }],
+    mockData: [{
+      title: 'symptom 1 - 1 Total',
+      users: [{
+        id: '4hkj3h4jk5h3kj4h',
+        username: 'mock user 1',
+        email: 'mock@user1.com',
+        value: 4
+      }, {
+        id: '4hkj3h4jk545656h',
+        username: 'mock user 2',
+        email: 'mock@user2.com',
+        value: 2
+      }, {
+        id: '4hkj3h4jk5h3564h',
+        username: 'mock user 3',
+        email: 'mock@user3.com',
+        value: 7
+      }, {
+        id: '4hkj3h4jk5h78j4h',
+        username: 'mock user 4',
+        email: 'mock@user4.com',
+        value: 6
+      }],
+      createdAt: "2020-02-23T00:00:00+00:00"
+    }, {
+      title: 'symptom 1 - 2 Total',
+      users: [{
+        id: '2hkj3h4jk5h3kj4h',
+        username: 'mock user 1',
+        email: 'mock@user1.com',
+        value: 3
+      }, {
+        id: '24hkj3h4jk545656h',
+        username: 'mock user 2',
+        email: 'mock@user2.com',
+        value: 4
+      }, {
+        id: '2hkj3h4jk5h3564h',
+        username: 'mock user 3',
+        email: 'mock@user3.com',
+        value: 3
+      }, {
+        id: '2hkj3h4jk5h78j4h',
+        username: 'mock user 4',
+        email: 'mock@user4.com',
+        value: 2
+      }],
+      createdAt: "2020-02-24T00:00:00+00:00"
+    }, {
+      title: 'symptom 1 - 3 Total',
+      users: [{
+        id: '5hkj3h4jk5h3kj4h',
+        username: 'mock user 1',
+        email: 'mock@user1.com',
+        value: 1
+      }, {
+        id: '5hkj3h4jk545656h',
+        username: 'mock user 2',
+        email: 'mock@user2.com',
+        value: 4
+      }, {
+        id: '5hkj3h4jk5h3564h',
+        username: 'mock user 3',
+        email: 'mock@user3.com',
+        value: 2
+      }, {
+        id: '5hkj3h4jk5h78j4h',
+        username: 'mock user 4',
+        email: 'mock@user4.com',
+        value: 3
+      }],
+      createdAt: "2020-02-23T00:00:00+00:00"
+    }, {
+      title: 'symptom 1 - 4 Total',
+      users: [{
+        id: '4hkj3h4342kj4h',
+        username: 'mock user 1',
+        email: 'mock@user1.com',
+        value: 4
+      }, {
+        id: '4hkj3h4j2344656h',
+        username: 'mock user 2',
+        email: 'mock@user2.com',
+        value: 2
+      }, {
+        id: '4hkj32345h3564h',
+        username: 'mock user 3',
+        email: 'mock@user3.com',
+        value: 7
+      }, {
+        id: '4hk2344jk5h78j4h',
+        username: 'mock user 4',
+        email: 'mock@user4.com',
+        value: 6
+      }],
+      createdAt: "2020-02-23T00:00:00+00:00"
+    }],
     isGroupView: false
   }),
   filters: {
@@ -403,7 +511,7 @@ export default {
   margin: 0 !important;
 
   .result-group {
-    width: 33.33%;
+    width: 100%;
   }
 }
 
