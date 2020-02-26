@@ -283,7 +283,7 @@ export default {
     }
   },
   mounted() {
-    if (window.innerWidth < 500 && window.innerWidth > 0) this.isMobile = true;
+    if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
     let params = {
       params: "?Article=Decision",
@@ -303,17 +303,17 @@ export default {
 >>>.v-stepper__content
   padding 0
   margin-right 0
-  @media (max-width: 500px) {
+  @media (max-width: 768px) {
     margin 0
   }
 
 .v-stepper__header
-  @media (max-width: 500px) {
+  @media (max-width: 768px) {
     display none
   }
 
 .v-stepper--vertical .v-stepper__step
-  @media (max-width: 500px) {
+  @media (max-width: 768px) {
     display none
   }
 </style>
