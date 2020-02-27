@@ -42,7 +42,66 @@
           </v-card>
           <v-card>
             <v-stepper vertical v-model="vStepper">
-              <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
+              <div v-for="vStepNum in stepp.vertical.length" :key="`${stepp.sectionNo}-${vStepNum}`">
+                <v-stepper-step
+                  editable
+                  v-bind:step="$vuetify.theme.step.charAt(vStepNum-1)"
+                  :key="vStepNum + '-sub-step'"
+                  :color="$vuetify.theme.subheading2">
+
+                  <SectionPartStepper :data="stepp.vertical[vStepNum-1].items"/>
+
+                </v-stepper-step>
+
+                <v-stepper-content
+                  v-bind:step="vStepNum"
+                  :key="vStepNum + '-sub-content'"
+                >
+                  <v-card v-if="isMobile">
+                    <h3>{{$vuetify.theme.step.charAt(vStepNum-1)}} <span class="right"> {{vStepNum}} of {{stepp.vertical.length}}</span></h3>
+                  </v-card>
+                  <v-card class="mb-5">
+                    <span class="dev-hint">P {{vStepNum-1}} (SS No)</span>
+                    <v-form v-model="form1Valid">
+                      <div class="row" v-for="a in stepp.vertical[vStepNum-1].items" :key="a.id" v-if="a.isConditionQuestionMet">
+                        <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
+                        <components
+                          v-if="a.question.useText"
+                          :is="a.question.type"
+                          :id="compId(a.question.type, a.question.id)"
+                          :title="a.question.title"
+                          :useText="a.question.useText"
+                          :questionId="a.question.id"
+                          :answerId="a.answerId"
+                          :length="a.question.length"
+                          :items="a.question.items"
+                          :text="a.text"
+                          @updateValue="updateComponentValue"
+                        />
+                        <components
+                          v-else
+                          :is="a.question.type"
+                          :id="compId(a.question.type, a.question.id)"
+                          :title="a.question.title"
+                          :useText="a.question.useText"
+                          :questionId="a.question.id"
+                          :answerId="a.answerId"
+                          :length="a.question.length"
+                          :items="a.question.items"
+                          :value="a.value"
+                          @updateValue="updateComponentValue"
+                        />
+                      </div>
+                    </v-form>
+                    <v-btn
+                      color="primary"
+                      @click="nextVerticalStep(stepp.vertical.length, getDecisionHorizontalData.length)"
+                    >Continue</v-btn>
+                    <v-btn flat v-if="vStepNum-1 > 0" @click="prevVerticalStep">Back</v-btn>
+                  </v-card>
+                </v-stepper-content>
+              </div>
+              <!-- <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
                 <v-stepper-step
                   editable
                   v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
@@ -64,7 +123,6 @@
                     <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                     <v-form v-model="form1Valid">
                       <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
-                        <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
                         <components
                           v-if="a.question.useText"
                           :is="a.question.type"
@@ -100,7 +158,7 @@
                     <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                   </v-card>
                 </v-stepper-content>
-              </div>
+              </div> -->
             </v-stepper>
           </v-card>
 

@@ -154,39 +154,6 @@ export default {
     articleTab: null,
     sectionTab: [],
     dateTab: [],
-    headers: [
-      {
-        text: "Article",
-        align: "center",
-        sortable: false,
-        value: "article"
-      },
-      {
-        text: "Created",
-        align: "center",
-        value: "created"
-      },
-      {
-        text: "Title",
-        align: "center",
-        value: "title"
-      },
-      {
-        text: "Description",
-        align: "center",
-        value: "description"
-      },
-      {
-        text: "Value",
-        align: "center",
-        value: "value"
-      },
-      {
-        text: "Action",
-        align: "center",
-        value: "Id"
-      }
-    ],
     isGroupView: false
   }),
   filters: {
@@ -237,7 +204,8 @@ export default {
       let header = [{
         text: "Title",
         align: "center",
-        value: "title"
+        value: "title",
+        fixed: true
       }]
       for(let i = 0; i < results[0].userResults.length; i ++) {
         const element = results[0].userResults[i]
@@ -254,7 +222,8 @@ export default {
       let header = [{
         text: "Title",
         align: "center",
-        value: "title"
+        value: "title",
+        fixed: true
       }]
       for(let i = 0; i < results[0].userResults.length; i ++) {
         const element = results[0].userResults[i]
