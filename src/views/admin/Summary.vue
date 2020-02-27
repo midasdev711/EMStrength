@@ -63,7 +63,7 @@
                 :value="article.articleNo + '_' + section.sectionNo + '-section'"
               >
                 <v-card flat v-if="!isGroupView">
-                  <v-tabs v-model="dateTab[iindex]" color="#47bbe9" grow>
+                  <v-tabs v-model="dateTab[index + '-' + iindex]" color="#47bbe9" grow>
                     <!-- -->
                     <v-tabs-slider color="green"></v-tabs-slider>
 
@@ -73,7 +73,7 @@
                       :href="'#' + iiindex + '-' + '-date'"
                     >{{ dateItem.date | formatDateOnly }} - {{iiindex}}</v-tab>
                   </v-tabs>
-                  <v-tabs-items v-model="dateTab[iindex]">
+                  <v-tabs-items v-model="dateTab[index + '-' + iindex]">
                     <v-tab-item
                       v-for="(dateItem, iiindex) in section.dates"
                       :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"

@@ -49,43 +49,33 @@
                 :key="section.sectionNo + '-sectioncontent'"
               >
                 <v-card flat>
-                  <v-tabs v-model="dateTab[iindex]" color="#47bbe9" grow> <!-- -->
-                    <v-tabs-slider color="blue"></v-tabs-slider>
+                  <v-tabs v-model="dateTab[index + '-' + iindex]" color="#47bbe9" grow>
+                    <v-tabs-slider color="green"></v-tabs-slider>
 
                     <v-tab
-                      v-for="(dateItem, index) in section.dates"
-                      :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-date'"
-                    >{{ dateItem.date | formatDateOnly }}</v-tab>
+                      v-for="(dateItem, iiindex) in section.dates"
+                      :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-datekey'"
+                      :href="'#' + iiindex + '-' + '-date'"
+                    >{{ dateItem.date | formatDateOnly }} - {{iiindex}}</v-tab>
                   </v-tabs>
-                  <v-tabs-items v-model="dateTab[iindex]">
+                  <v-tabs-items v-model="dateTab[index + '-' + iindex]">
                     <v-tab-item
-                      v-for="(dateItem, index) in section.dates"
-                      :key="section.sectionNo + '-' + index + '-' + dateItem.date + '-datecontent'"
+                      v-for="(dateItem, iiindex) in section.dates"
+                      :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"
+                      :value="iiindex + '-' + '-date'"
                     >
                       <v-card flat>
-                        <template>
-                          <div
-                            v-for="(result, resultIndex) in dateItem.results"
-                            :key="resultIndex + '-result-' + result.forUserId"
-                            class="result"
-                          >
-                            <v-data-table
-                              :headers="headers"
-                              :items="result['items']"
-                              class="elevation-1"
-                              light
-                            >
-                              <template v-slot:items="props" >
-                                <td class="pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.article }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.created | formatDate }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.title }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.description }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.value }}</td>
-                                <td class="text-xs-right pointer-cursor" @click="showAnswerLayout(props.item.id)">{{ props.item.id }}</td>
-                              </template>
-                            </v-data-table>
-                          </div>
-                        </template>
+                        <v-data-table
+                          :headers="generateUserHeader(dateItem.results)"
+                          :items="dateItem.results"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
+                            <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
+                          </template>
+                        </v-data-table>
                       </v-card>
                     </v-tab-item>
                   </v-tabs-items>
@@ -95,95 +85,6 @@
           </v-card>
         </v-tab-item>
       </v-tabs-items>
-      <div class="text-xs-center mt-2" v-if="isAnswerLoading">
-        <vue-circle
-          :progress="100"
-          :size="300"
-          :reverse="false"
-          line-cap="round"
-          :fill="fill"
-          empty-fill="rgba(200, 200, 200, .8)"
-          :animation="{ duration: 1000, easing: 'circleProgressEasing' }"
-          :animation-start-value="0.0"
-          :start-angle="0"
-          insert-mode="append"
-          :thickness="12"
-          :show-percent="false">
-          <img src="/img/Eden-4.png" width="80%"/>
-        </vue-circle>
-      </div>
-      <v-stepper v-model="hStepper" v-else>
-        <v-stepper-header>
-          <template v-for="step in getAnswersData">
-            <v-stepper-step
-              :key="`${step.sectionNo}-step`"
-              :complete="hStepper > (step.sectionNo + 1)"
-              :step="step.sectionNo + 1"
-              :color="$vuetify.theme.subheading1"
-              editable
-            >
-              <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} 
-                <!--span class="dev-hint">(Section)</span-->
-              </span>
-            </v-stepper-step>
-          </template>
-        </v-stepper-header>
-
-        <v-stepper-items>
-          <v-stepper-content
-            v-for="stepp in getAnswersData"
-            :key="`${stepp.sectionNo}-content`"
-            :step="stepp.sectionNo + 1"
-          >
-            <v-card>
-              <v-stepper vertical v-model="vStepper">
-                <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
-                  <v-stepper-step 
-                    editable 
-                    v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
-                    :key="stepl.subsectionNo + '-sub-step'" 
-                    :color="$vuetify.theme.subheading2">
-                    <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
-                    <!-- <SectionPartStepper
-                      v-if="sectionPartHead(stepl.items).type == 'SectionPart'"
-                      :id="compId('SectionPart-H-', sectionPartHead(stepl.items).id)"
-                      :title="sectionPartHead(stepl.items).title"
-                    /> -->
-
-                  </v-stepper-step>
-
-                  <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
-                    <v-card class="mb-5">
-                      <!--span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span-->
-                      <v-form v-model="form1Valid" >
-                        <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
-                          <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :text="a.text" @updateValue="updateComponentValue" :disabled="true" />
-                          <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :value="a.value" :disabled="true" @updateValue="updateComponentValue"/>
-                        </div>
-                      </v-form>
-                      <v-btn
-                        color="primary"
-                        @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
-                      >
-                        Continue
-                      </v-btn>
-                      <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
-                    </v-card>
-                  </v-stepper-content>
-                </div>
-              </v-stepper>
-            </v-card>
-
-            <v-btn
-              color="primary"
-              @click="nextHorizontalStep"
-            >
-              Continue
-            </v-btn>
-            <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
-          </v-stepper-content>
-        </v-stepper-items>
-      </v-stepper>
     </div>
   </v-container>
 </template>
@@ -250,6 +151,24 @@ export default {
       _getUserSummaryData: "getUserSummaryData",
       _getSummaryData: "getAnswersData",
     }),
+
+    generateUserHeader(results) {
+      let header = [{
+        text: "Title",
+        align: "center",
+        value: "title",
+        fixed: true
+      }]
+      for(let i = 0; i < results[0].userResults.length; i ++) {
+        const element = results[0].userResults[i]
+        header.push({
+          text: moment(element.created).format("YYYY-MM-DD hh:mm:ss"),
+          align: "center",
+          value: "value"
+        })
+      }
+      return header
+    },
 
     compId(type, id) {
       return "comp" + type + id;
