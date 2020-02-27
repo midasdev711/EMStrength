@@ -29,7 +29,7 @@
         <h3>allow up to 15 mins to complete</h3>
       </v-container>
     </v-card>
-    <v-card color="" class="black--text mt-2" v-if="getSymptomUpdated & topNotification & getRecoveryData.length > 0">
+    <v-card color="" class="black--text mt-2" v-if="getSymptomUpdated != null & topNotification & getRecoveryData.length > 0">
      
       <v-card-title primary-title>
         <div>
@@ -40,7 +40,7 @@
         <v-btn flat @click="topNotification = false">Got it!</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card dark v-bind:color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getSymptomUpdated & getRecoveryData.length > 0" class="question-box mb-2 mt-2">
+    <v-card dark v-bind:color="questions.rating | shadeBackgroundColor(colorRating)" v-for="questions in getRecoveryData" v-if="getSymptomUpdated != null & getRecoveryData.length > 0" class="question-box mb-2 mt-2">
       <v-card-title>
         <span class="title">{{questions.category}}</span>
         <v-layout align-center justify-end>          

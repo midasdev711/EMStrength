@@ -158,26 +158,19 @@ export default {
       this.hStepper = this.getDecisionLastAnswered.sectionNo ? this.getDecisionLastAnswered.sectionNo + 1 : 1;
       this.vStepper = this.getDecisionLastAnswered.subsectionNo ? this.getDecisionLastAnswered.subsectionNo + 1 : 1;
 
-      let pageHolder = this.getAnswersData[this.getDecisionLastAnswered.sectionNo];
-      if (pageHolder != undefined)
-      {
-        let page = pageHolder.vertical;
-        if (page != undefined)
-        {
-          //this.goToLastStep(page.length, this.getDecisionHorizontalData.length);
-        }
+      if (this.getDecisionLastAnswered.sectionNo != null && this.getDecisionLastAnswered.subsectionNo != null) {
+        let {vStep, hStep} = this.goToLastStep(this.getDecisionHorizontalData[this.getDecisionLastAnswered.sectionNo || 0].vertical.length, this.getDecisionHorizontalData.length);
+        // this.hStepper = hStep;
+        // this.vStepper = vStep;
+        console.log(vStep, hStep);
       }
-
-
-      //if (this.getDecisionLastAnswered.sectionNo != null && this.getDecisionLastAnswered.subsectionNo != null) {
-      //  this.goToLastStep(this.getDecisionHorizontalData[this.getDecisionLastAnswered.sectionNo || 0].vertical.length, this.getDecisionHorizontalData.length);
-      //}
     }
   },
   methods: {
     ...mapActions("app", {
       _getQuestionsAnswers: "getAnswersData",
-      _saveAnswers: "saveAnswers"
+      _saveAnswers: "saveAnswers",
+      _setDecisionLastAnswered: "setDecisionLastAnswered"
     }),
     compId(type, id) {
       return "comp" + type + id;
@@ -205,14 +198,18 @@ export default {
       this.answers.push(tmp);
     },
     goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper < verticalMaxSteps) {
-        this.vStepper ++;
+      let vStep, hStep;
+      vStep = this.vStepper;
+      hStep = this.hStepper;
+      if (vStep < verticalMaxSteps) {
+        vStep ++;
       } else {
-        if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper ++;
+        if (hStep < horizontalMaxSteps) {
+          hStep ++;
         }
-        this.vStepper = 1;
+        vStep = 1;
       }
+      return {vStep, hStep};
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
@@ -268,8 +265,8 @@ export default {
         answers: this.answers,
         complete: currentTime,
         article: "Decision",
-        nextSectionNo: nextSectionNo - 1,
-        nextSubsectionNo: nextSubsectionNo - 1
+        nextSectionNo: nextSectionNo,
+        nextSubsectionNo: nextSubsectionNo
       };
 
       return this._saveAnswers(answerData)

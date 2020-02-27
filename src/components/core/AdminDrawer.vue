@@ -120,7 +120,6 @@ export default {
         const filtered = this.getUserData.filter(d => d.fullName.toLowerCase().includes(search) && d.archived == null);
         return filtered;
       }
-      console.log(this.getUserData);
       return this.getUserData;
     },
 
@@ -153,10 +152,13 @@ export default {
       getgroups: "getgroups",
       getusers: "getusers"
     }),
+
     ...mapActions("app", {
       _clearAnswersData: "clearAnswersData",
     }),
+
     ...mapMutations("admin", ["setDrawer", "toggleDrawer"]),
+
     getGroupList() {
       this.loading = true;
 
@@ -175,7 +177,6 @@ export default {
       
     },
 
-    //getUserData
     getUserList() {
       this.loading = true;
 
@@ -186,7 +187,6 @@ export default {
           Sort: "",
         };
       return this.getusers(params).then(res => {
-        console.log(res);
         return res;
       })
       .catch(e => {
@@ -194,7 +194,6 @@ export default {
       });
       
     },
-
 
     messageFilter(items, messageFilters, filter) {
       var filteredItems = items.filter(item => true);
@@ -223,8 +222,6 @@ export default {
 
     switchUser(item) {
       this._clearAnswersData();
-      console.log(item);
-
       if (this.messageFilters.groupId) {
         let index;
         for (let i = 0; i < this.getGroupData.length; i ++) {
@@ -237,11 +234,6 @@ export default {
       } else {
         this.$router.push({ name: 'AdminSummary', query: { groupName: item.groupName, userId: item.id, user: item.fullName, type: 'user', lastCompleted: item.lastCompleted } })
       }
-
-
-      /*this.getMessagesForUser(item.userId)(data => {
-         this.message_thread = data.items;
-      });*/
 
       EventBus.$emit('admin-drawer-switch-user', item);
     },

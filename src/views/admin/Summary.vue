@@ -80,52 +80,22 @@
                       :value="iiindex + '-' + '-date'"
                     >
                       <v-card flat>
-                        <template>
-                          <div
-                            v-for="(result, resultIndex) in dateItem.results"
-                            :key="article.articleNo + '_' + section.sectionNo + '-' + index + '-' + dateItem.date + resultIndex + '-result-' + result.forUserId"
-                            class="result"
-                          >
-                            <v-data-table
-                              :headers="headers"
-                              :items="result['items']"
-                              class="elevation-1"
-                              light
-                            >
-                              <template v-slot:items="props">
-                                <td
-                                  class="pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.article }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.created | formatDate }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.title }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.description }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.value }}</td>
-                                <td
-                                  class="text-xs-right pointer-cursor"
-                                  @click="showAnswerLayout(props.item.id)"
-                                >{{ props.item.id }}</td>
-                              </template>
-                            </v-data-table>
-                          </div>
-                        </template>
+                        <v-data-table
+                          :headers="generateUserHeader(dateItem.results)"
+                          :items="dateItem.results"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
+                            <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
+                          </template>
+                        </v-data-table>
                       </v-card>
                     </v-tab-item>
                   </v-tabs-items>
                 </v-card>
-                <v-card flat v-else-if="isGroupView && !featureUserId">
+                <v-card flat v-else>
                   <v-flex class="groupview-card" row layout>
                     <v-flex xs12 class="groupview">
                       <div class="result-group">
@@ -137,26 +107,7 @@
                         >
                           <template v-slot:items="props">
                             <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
-                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value }}</td>
-                          </template>
-                        </v-data-table>
-                      </div>
-                    </v-flex>
-                  </v-flex>
-                </v-card>
-                <v-card flat v-else-if="isGroupView && featureUserId">
-                  <v-flex class="groupview-card" row layout>
-                    <v-flex xs12 class="groupview">
-                      <div class="result-group">
-                        <v-data-table
-                          :headers="generateHeader(section.results)"
-                          :items="section.results"
-                          class="elevation-1"
-                          light
-                        >
-                          <template v-slot:items="props">
-                            <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
-                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value }}</td>
+                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
                       </div>
@@ -236,18 +187,6 @@ export default {
         value: "Id"
       }
     ],
-    groupHeaders: [
-      {
-        text: "Title",
-        align: "center",
-        value: "title"
-      },
-      {
-        text: "Value",
-        align: "center",
-        value: "value"
-      }
-    ],
     isGroupView: false
   }),
   filters: {
@@ -276,7 +215,7 @@ export default {
       this.getSummary(newQuery);
     },
     getUserSummaryData(newProps, oldProps) {
-      if (newProps != oldProps) {
+      if (newProps != oldProps && this.isGroupView) {
         let users = {}
         for (let i = 0; i < newProps[0].users.length; i ++) {
           const user = newProps[0].users[i]
@@ -293,6 +232,23 @@ export default {
       _getSummaryData: "getAnswersData",
       _getGroupSummaryData: "getGroupSummaryData"
     }),
+
+    generateUserHeader(results) {
+      let header = [{
+        text: "Title",
+        align: "center",
+        value: "title"
+      }]
+      for(let i = 0; i < results[0].userResults.length; i ++) {
+        const element = results[0].userResults[i]
+        header.push({
+          text: moment(element.created).format("YYYY-MM-DD hh:mm:ss"),
+          align: "center",
+          value: "value"
+        })
+      }
+      return header
+    },
 
     generateHeader(results) {
       let header = [{
@@ -327,7 +283,6 @@ export default {
         };
         this._getGroupSummaryData(data).then(data => {
           this.isLoading = false;
-          console.log(data);
           this.questions = data;
         });
       } else if (this.$route.query.type == "groupuser") {
@@ -337,7 +292,6 @@ export default {
         };
         this._getGroupSummaryData(data).then(data => {
           this.isLoading = false;
-          console.log(data);
           this.questions = data;
         });
       }
