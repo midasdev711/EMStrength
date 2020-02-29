@@ -66,13 +66,27 @@
                     >
                       <v-card flat>
                         <v-data-table
-                          :headers="generateUserHeader(dateItem.results)"
+                          :headers="titleHeader"
+                          :pagination.sync="pagination"
+                          :rows-per-page-items="pagination.rowsPerPageItems"
                           :items="dateItem.results"
+                          hide-actions
                           class="elevation-1"
                           light
                         >
                           <template v-slot:items="props">
                             <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                          </template>
+                        </v-data-table>
+                        <v-data-table
+                          :headers="generateUserHeader(dateItem.results)"
+                          :pagination.sync="pagination"
+                          :rows-per-page-items="pagination.rowsPerPageItems"
+                          :items="dateItem.results"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
                             <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -115,19 +129,19 @@ export default {
     articleTab: null,
     sectionTab: [],
     dateTab: [],
-    headers: [
-      {
-        text: "Article",
-        align: "center",
-        sortable: false,
-        value: "article"
-      },
-      { text: "Created", align: "center", value: "created" },
-      { text: "Title", align: "center", value: "title" },
-      { text: "Description", align: "center", value: "description" },
-      { text: "Value", align: "center", value: "value" },
-      { text: "Action", align: "center", value: "Id" }
-    ]
+    titleHeader: [{
+      text: "Title",
+      align: "center",
+      value: "title",
+      sortable: false,
+      fixed: true
+    }],
+    pagination: {
+      page: 1,
+      rowsPerPage: 5,
+      rowsPerPageItems: [1, 5, 10, 15],
+      totalItems: 0,
+    },
   }),
   filters: {
     formatDate(date) {
@@ -153,30 +167,18 @@ export default {
     }),
 
     generateUserHeader(results) {
-      let header = [{
-        text: "Title",
-        align: "center",
-        value: "title",
-        fixed: true
-      }]
+      let header = []
       for(let i = 0; i < results[0].userResults.length; i ++) {
         const element = results[0].userResults[i]
         header.push({
           text: moment(element.created).format("YYYY-MM-DD hh:mm:ss"),
           align: "center",
-          value: "value"
+          value: "value",
+          sortable: false
         })
       }
       return header
     },
-
-    compId(type, id) {
-      return "comp" + type + id;
-    },
-
-    nameId(type, row, col) {
-      return `${type}_${row}x${col}`;
-    }, 
 
     showAnswerLayout(summaryId) {
       let data = {
@@ -189,42 +191,6 @@ export default {
       });
     },
 
-    updateComponentValue() {
-
-    },
-
-    sectionPartHead(list)
-    {
-      //traverse stepl.items[1] to find the SectionPart for the label
-        var item = list.find(x => x.question.type == 'SectionPart');
-        //console.log("Question Item", item);
-        if (item) 
-          return item.question;
-        else
-          return undefined;
-
-    },
-    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper < verticalMaxSteps) {
-        this.vStepper ++;
-      } else {
-        if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper ++;
-        }
-        this.vStepper = 1;
-      }
-    },
-    nextHorizontalStep() {
-      this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
-      this.vStepper = 1;
-    },
-    prevVerticalStep() {
-      this.vStepper = this.vStepper > 1 ? this.vStepper - 1 : this.vStepper;
-    },
-    prevHorizontalStep() {
-      this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
-      this.vStepper = 1;
-    }
   },
   mounted() {
     let data = {
@@ -251,5 +217,14 @@ export default {
 
 >>>.pointer-cursor {
   cursor pointer
+}
+
+>>>.elevation-1 {
+  width 80%
+  float left 
+}
+
+>>>.elevation-1:first-child {
+  width: 20%
 }
 </style>
