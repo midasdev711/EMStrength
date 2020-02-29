@@ -81,13 +81,27 @@
                     >
                       <v-card flat>
                         <v-data-table
-                          :headers="generateUserHeader(dateItem.results)"
+                          :headers="titleHeader"
+                          :pagination.sync="pagination"
+                          :rows-per-page-items="pagination.rowsPerPageItems"
                           :items="dateItem.results"
+                          hide-actions
                           class="elevation-1"
                           light
                         >
                           <template v-slot:items="props">
                             <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                          </template>
+                        </v-data-table>
+                        <v-data-table
+                          :headers="generateUserHeader(dateItem.results)"
+                          :items="dateItem.results"
+                          :pagination.sync="pagination"
+                          :rows-per-page-items="pagination.rowsPerPageItems"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
                             <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -100,13 +114,27 @@
                     <v-flex xs12 class="groupview">
                       <div class="result-group">
                         <v-data-table
-                          :headers="generateHeader(section.results)"
+                          :headers="titleHeader"
+                          :pagination.sync="pagination"
+                          :rows-per-page-items="pagination.rowsPerPageItems"
                           :items="section.results"
+                          hide-actions
                           class="elevation-1"
                           light
                         >
                           <template v-slot:items="props">
                             <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                          </template>
+                        </v-data-table>
+                        <v-data-table
+                          :headers="generateHeader(section.results)"
+                          :items="section.results"
+                          :pagination.sync="pagination"
+                          :rows-per-page-items="pagination.rowsPerPageItems"
+                          class="elevation-1"
+                          light
+                        >
+                          <template v-slot:items="props">
                             <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -154,7 +182,20 @@ export default {
     articleTab: null,
     sectionTab: [],
     dateTab: [],
-    isGroupView: false
+    isGroupView: false,
+    pagination: {
+      page: 1,
+      rowsPerPage: 5,
+      rowsPerPageItems: [1, 5, 10, 15],
+      totalItems: 0,
+    },
+    titleHeader: [{
+      text: "Title",
+      align: "center",
+      value: "title",
+      sortable: false,
+      fixed: true
+    }],
   }),
   filters: {
     formatDate(date) {
@@ -201,36 +242,28 @@ export default {
     }),
 
     generateUserHeader(results) {
-      let header = [{
-        text: "Title",
-        align: "center",
-        value: "title",
-        fixed: true
-      }]
+      let header = []
       for(let i = 0; i < results[0].userResults.length; i ++) {
         const element = results[0].userResults[i]
         header.push({
           text: moment(element.created).format("YYYY-MM-DD hh:mm:ss"),
           align: "center",
-          value: "value"
+          value: "value",
+          sortable: false
         })
       }
       return header
     },
 
     generateHeader(results) {
-      let header = [{
-        text: "Title",
-        align: "center",
-        value: "title",
-        fixed: true
-      }]
+      let header = []
       for(let i = 0; i < results[0].userResults.length; i ++) {
         const element = results[0].userResults[i]
         header.push({
           text: this.userList[element.forUserId].userName,
           align: "center",
-          value: "value"
+          value: "value",
+          sortable: false
         })
       }
       return header
@@ -309,5 +342,20 @@ export default {
 
 >>>.padding-0 {
   padding: 0;
+}
+
+>>>.elevation-1 {
+  width 80%
+  float left 
+  @media (max-width: 768px) {
+    width 60%
+  }
+}
+
+>>>.elevation-1:first-child {
+  width: 20%
+  @media (max-width: 768px) {
+    width 40%
+  }
 }
 </style>

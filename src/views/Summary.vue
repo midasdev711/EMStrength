@@ -222,9 +222,15 @@ export default {
 >>>.elevation-1 {
   width 80%
   float left 
+  @media (max-width: 768px) {
+    width 60%
+  }
 }
 
 >>>.elevation-1:first-child {
   width: 20%
+  @media (max-width: 768px) {
+    width 40%
+  }
 }
 </style>
