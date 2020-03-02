@@ -14,8 +14,9 @@
         :start-angle="0"
         insert-mode="append"
         :thickness="12"
-        :show-percent="false">
-        <img src="/img/Eden-4.png" width="80%"/>
+        :show-percent="false"
+      >
+        <img src="/img/Eden-4.png" width="80%" />
       </vue-circle>
     </div>
     <v-stepper v-model="hStepper" v-else>
@@ -37,33 +38,43 @@
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
-          <v-card  v-if="isMobile">
-            <h3>{{stepp.section}} <span class="right"> {{stepp.sectionNo + 1}} of {{getDecisionHorizontalData.length}}</span></h3>
+          <v-card v-if="isMobile">
+            <h3>
+              {{stepp.section}}
+              <span class="right">{{stepp.sectionNo + 1}} of {{getDecisionHorizontalData.length}}</span>
+            </h3>
           </v-card>
           <v-card>
             <v-stepper vertical v-model="vStepper">
-              <div v-for="vStepNum in stepp.vertical.length" :key="`${stepp.sectionNo}-${vStepNum}`">
+              <div
+                v-for="vStepNum in stepp.vertical.length"
+                :key="`${stepp.sectionNo}-${vStepNum}`"
+              >
                 <v-stepper-step
                   editable
                   v-bind:step="$vuetify.theme.step.charAt(vStepNum-1)"
                   :key="vStepNum + '-sub-step'"
-                  :color="$vuetify.theme.subheading2">
-
-                  <SectionPartStepper :data="stepp.vertical[vStepNum-1].items"/>
-
+                  :color="$vuetify.theme.subheading2"
+                >
+                  <SectionPartStepper :data="stepp.vertical[vStepNum-1].items" />
                 </v-stepper-step>
 
-                <v-stepper-content
-                  v-bind:step="vStepNum"
-                  :key="vStepNum + '-sub-content'"
-                >
-                  <v-card v-if="isMobile">
-                    <h3>{{$vuetify.theme.step.charAt(vStepNum-1)}} <span class="right"> {{vStepNum}} of {{stepp.vertical.length}}</span></h3>
+                <v-stepper-content v-bind:step="vStepNum" :key="vStepNum + '-sub-content'">
+                  <v-card v-if="isMobile && stepp.vertical.length > 1">
+                    <h3>
+                      {{$vuetify.theme.step.charAt(vStepNum-1)}}
+                      <span class="right">{{vStepNum}} of {{stepp.vertical.length}}</span>
+                    </h3>
                   </v-card>
                   <v-card class="mb-5">
                     <span class="dev-hint">P {{vStepNum-1}} (SS No)</span>
                     <v-form v-model="form1Valid">
-                      <div class="row" v-for="a in stepp.vertical[vStepNum-1].items" :key="a.id" v-if="a.isConditionQuestionMet">
+                      <div
+                        class="row"
+                        v-for="a in stepp.vertical[vStepNum-1].items"
+                        :key="a.id"
+                        v-if="a.isConditionQuestionMet"
+                      >
                         <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
                         <components
                           v-if="a.question.useText"
@@ -158,7 +169,7 @@
                     <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                   </v-card>
                 </v-stepper-content>
-              </div> -->
+              </div>-->
             </v-stepper>
           </v-card>
 
@@ -171,8 +182,7 @@
 </template>
 
 <script>
-
-import VueCircle from 'vue2-circle-progress'
+import VueCircle from "vue2-circle-progress";
 import moment from "moment";
 import { mapActions, mapGetters } from "vuex";
 import debounce from "debounce";
@@ -193,7 +203,7 @@ export default {
       questions: [],
       answers: [],
       isLoading: true,
-      fill : { gradient: ["#48cba2", "#47bbe9"] },
+      fill: { gradient: ["#48cba2", "#47bbe9"] }
     };
   },
   filters: {
@@ -207,17 +217,29 @@ export default {
     ...mapGetters("app", {
       getAnswersData: "getDecisionAnswersData",
       getDecisionHorizontalData: "getDecisionHorizontalData",
-      getDecisionLastAnswered: "getDecisionLastAnswered",
+      getDecisionLastAnswered: "getDecisionLastAnswered"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),
     getLastAnswered() {
-      this.hStepper = this.getDecisionLastAnswered.sectionNo ? this.getDecisionLastAnswered.sectionNo + 1 : 1;
-      this.vStepper = this.getDecisionLastAnswered.subsectionNo ? this.getDecisionLastAnswered.subsectionNo + 1 : 1;
+      this.hStepper = this.getDecisionLastAnswered.sectionNo
+        ? this.getDecisionLastAnswered.sectionNo + 1
+        : 1;
+      this.vStepper = this.getDecisionLastAnswered.subsectionNo
+        ? this.getDecisionLastAnswered.subsectionNo + 1
+        : 1;
 
-      if (this.getDecisionLastAnswered.sectionNo != null && this.getDecisionLastAnswered.subsectionNo != null) {
-        let {vStep, hStep} = this.goToLastStep(this.getDecisionHorizontalData[this.getDecisionLastAnswered.sectionNo || 0].vertical.length, this.getDecisionHorizontalData.length);
+      if (
+        this.getDecisionLastAnswered.sectionNo != null &&
+        this.getDecisionLastAnswered.subsectionNo != null
+      ) {
+        let { vStep, hStep } = this.goToLastStep(
+          this.getDecisionHorizontalData[
+            this.getDecisionLastAnswered.sectionNo || 0
+          ].vertical.length,
+          this.getDecisionHorizontalData.length
+        );
         // this.hStepper = hStep;
         // this.vStepper = vStep;
         console.log(vStep, hStep);
@@ -260,14 +282,14 @@ export default {
       vStep = this.vStepper;
       hStep = this.hStepper;
       if (vStep < verticalMaxSteps) {
-        vStep ++;
+        vStep++;
       } else {
         if (hStep < horizontalMaxSteps) {
-          hStep ++;
+          hStep++;
         }
         vStep = 1;
       }
-      return {vStep, hStep};
+      return { vStep, hStep };
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
@@ -315,7 +337,6 @@ export default {
       this.vStepper = 1;
     },
     saveAnswers(nextSectionNo, nextSubsectionNo) {
-     
       let currentTime = new Date().toISOString();
       console.log(currentTime);
       let answerData = {
@@ -355,20 +376,24 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
->>>.v-stepper__content
-  padding 0
-  margin-right 0
-  @media (max-width: 768px) {
-    margin 0
-  }
+>>>.v-stepper__content {
+  padding: 0;
+  margin-right: 0;
 
-.v-stepper__header
   @media (max-width: 768px) {
-    display none
+    margin: 0;
   }
+}
 
-.v-stepper--vertical .v-stepper__step
+.v-stepper__header {
   @media (max-width: 768px) {
-    display none
+    display: none;
   }
+}
+
+.v-stepper--vertical .v-stepper__step {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
 </style>

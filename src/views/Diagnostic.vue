@@ -1,24 +1,13 @@
 <template>
   <v-container grid-list-xl>
     {{getLastAnswered}}
-    <v-tabs dark color="primary"
-      v-model="activeMeasurement"
-      :hide-slider="false">
-      <v-tabs-slider :color="$vuetify.theme.subheading2">
-      </v-tabs-slider>
-      <v-tab @click="loadSubheading(0)">
-        Stress Measurement
-      </v-tab>
+    <v-tabs dark color="primary" v-model="activeMeasurement" :hide-slider="false">
+      <v-tabs-slider :color="$vuetify.theme.subheading2"></v-tabs-slider>
+      <v-tab @click="loadSubheading(0)">Stress Measurement</v-tab>
 
-
-      <v-tab @click="loadSubheading(1)">
-        Recovery Measurement
-      </v-tab>
-
+      <v-tab @click="loadSubheading(1)">Recovery Measurement</v-tab>
     </v-tabs>
-    <p>
-      &nbsp;
-    </p>
+    <p>&nbsp;</p>
 
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
@@ -33,8 +22,9 @@
         :start-angle="90"
         insert-mode="append"
         :thickness="12"
-        :show-percent="false">
-        <img src="/img/Eden-4.png" width="80%"/>
+        :show-percent="false"
+      >
+        <img src="/img/Eden-4.png" width="80%" />
       </vue-circle>
     </div>
     <v-stepper v-model="hStepper" v-else>
@@ -47,7 +37,8 @@
             :color="$vuetify.theme.subheading1"
             editable
           >
-            <span :style="{ color: $vuetify.theme.subheading1 }">{{step.section}} 
+            <span :style="{ color: $vuetify.theme.subheading1 }">
+              {{step.section}}
               <!--span class="dev-hint">(Section)</span-->
             </span>
           </v-stepper-step>
@@ -60,41 +51,74 @@
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
-          <v-card  v-if="isMobile">
-            <h3>{{stepp.section}} <span class="right"> {{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span></h3>
+          <v-card v-if="isMobile">
+            <h3>
+              {{stepp.section}}
+              <span class="right">{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
+            </h3>
           </v-card>
           <v-card>
             <v-stepper vertical v-model="vStepper">
-              <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'" >
-                <v-stepper-step 
-                  editable 
+              <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
+                <v-stepper-step
+                  editable
                   v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
-                  :key="stepl.subsectionNo + '-sub-step'" 
-                  :color="$vuetify.theme.subheading2">
+                  :key="stepl.subsectionNo + '-sub-step'"
+                  :color="$vuetify.theme.subheading2"
+                >
                   <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
 
-                  <SectionPartStepper :data="stepl.items"/>
-
+                  <SectionPartStepper :data="stepl.items" />
                 </v-stepper-step>
 
                 <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
-                  <v-card v-if="isMobile">
-                    <h3>{{$vuetify.theme.step.charAt(stepl.subsectionNo)}} <span class="right"> {{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span></h3>
+                  <v-card v-if="isMobile && stepp.vertical.length > 1">
+                    <h3>
+                      {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
+                      <span class="right">{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
+                    </h3>
                   </v-card>
                   <v-card class="mb-5">
                     <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
-                    <v-form v-model="form1Valid" >
-                      <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
-                        <components v-if="a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :text="a.text" @updateValue="updateComponentValue" />
-                        <components v-if="!a.question.useText && a.isConditionQuestionMet" :is="a.question.type" :id="compId(a.question.type, a.question.id)" :title="a.question.title" :useText="a.question.useText" :questionId="a.question.id" :answerId="a.answerId" :length="a.question.length" :items="a.question.items" :value="a.value" @updateValue="updateComponentValue"/>
+                    <v-form v-model="form1Valid">
+                      <div
+                        class="row"
+                        v-for="a in stepl.items"
+                        :key="a.id"
+                        v-if="a.isConditionQuestionMet"
+                      >
+                        <components
+                          v-if="a.question.useText && a.isConditionQuestionMet"
+                          :is="a.question.type"
+                          :id="compId(a.question.type, a.question.id)"
+                          :title="a.question.title"
+                          :useText="a.question.useText"
+                          :questionId="a.question.id"
+                          :answerId="a.answerId"
+                          :length="a.question.length"
+                          :items="a.question.items"
+                          :text="a.text"
+                          @updateValue="updateComponentValue"
+                        />
+                        <components
+                          v-if="!a.question.useText && a.isConditionQuestionMet"
+                          :is="a.question.type"
+                          :id="compId(a.question.type, a.question.id)"
+                          :title="a.question.title"
+                          :useText="a.question.useText"
+                          :questionId="a.question.id"
+                          :answerId="a.answerId"
+                          :length="a.question.length"
+                          :items="a.question.items"
+                          :value="a.value"
+                          @updateValue="updateComponentValue"
+                        />
                       </div>
                     </v-form>
                     <v-btn
                       color="primary"
                       @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
-                    >
-                      Continue
-                    </v-btn>
+                    >Continue</v-btn>
                     <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                   </v-card>
                 </v-stepper-content>
@@ -102,12 +126,7 @@
             </v-stepper>
           </v-card>
 
-          <v-btn
-            color="primary"
-            @click="nextHorizontalStep"
-          >
-            Continue
-          </v-btn>
+          <v-btn color="primary" @click="nextHorizontalStep">Continue</v-btn>
           <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
         </v-stepper-content>
       </v-stepper-items>
@@ -116,9 +135,8 @@
 </template>
 
 <script>
-
-import VueCircle from 'vue2-circle-progress'
-import components from '../components/questionLayout'
+import VueCircle from "vue2-circle-progress";
+import components from "../components/questionLayout";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -139,26 +157,31 @@ export default {
 
     isLoading: true,
     saved: false,
-    fill : { gradient: ["#48cba2", "#47bbe9"] },
+    fill: { gradient: ["#48cba2", "#47bbe9"] }
   }),
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getDiagnosticAnswersData",
-      getDiagnosticLastAnswered: "getDiagnosticLastAnswered",
+      getDiagnosticLastAnswered: "getDiagnosticLastAnswered"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),
     getLastAnswered() {
-      if (this.getDiagnosticLastAnswered.sectionNo == undefined) this.getDiagnosticLastAnswered.sectionNo = 0; 
-      this.hStepper = this.getDiagnosticLastAnswered.sectionNo ? this.getDiagnosticLastAnswered.sectionNo + 1 : 1;
-      this.vStepper = this.getDiagnosticLastAnswered.subsectionNo ? this.getDiagnosticLastAnswered.subsectionNo + 1 : 1;
-      let pageHolder = this.getAnswersData[this.getDiagnosticLastAnswered.sectionNo];
-      if (pageHolder != undefined)
-      {
+      if (this.getDiagnosticLastAnswered.sectionNo == undefined)
+        this.getDiagnosticLastAnswered.sectionNo = 0;
+      this.hStepper = this.getDiagnosticLastAnswered.sectionNo
+        ? this.getDiagnosticLastAnswered.sectionNo + 1
+        : 1;
+      this.vStepper = this.getDiagnosticLastAnswered.subsectionNo
+        ? this.getDiagnosticLastAnswered.subsectionNo + 1
+        : 1;
+      let pageHolder = this.getAnswersData[
+        this.getDiagnosticLastAnswered.sectionNo
+      ];
+      if (pageHolder != undefined) {
         let page = pageHolder.vertical;
-        if (page != undefined)
-        {
+        if (page != undefined) {
           //this.goToLastStep(page.length, this.getAnswersData.length);
         }
       }
@@ -168,35 +191,31 @@ export default {
     ...mapActions("app", {
       //_getUser: "getUser",
       _getQuestions: "getQuestions",
-      _getQuestionsAnswers: "getAnswersData",  //getAnswersData ? make dynmaic
-      _saveAnswers: "saveAnswers",
+      _getQuestionsAnswers: "getAnswersData", //getAnswersData ? make dynmaic
+      _saveAnswers: "saveAnswers"
     }),
 
-    compId(type, id)
-    {
-      return "comp"+type+id;
+    compId(type, id) {
+      return "comp" + type + id;
     },
 
-    nameId(type, row, col)
-    {
+    nameId(type, row, col) {
       return `${type}_${row}x${col}`;
     },
 
-    nextStep(step)
-    {
+    nextStep(step) {
       this.saveAnswers();
       //this.hStepper = step + 1;
-
     },
-    
 
     updateComponentValue(value, questionId, answerId, useText) {
-      for (let i = 0; i < this.answers.length; i ++) {
+      for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
           if (useText) {
             this.answers[i].text = value;
           } else {
-            this.answers[i].value = value == true ? 1 : (value == false ? 0 : value);
+            this.answers[i].value =
+              value == true ? 1 : value == false ? 0 : value;
           }
           return;
         }
@@ -204,15 +223,14 @@ export default {
       let tmp = {
         answerId: answerId,
         questionId: questionId,
-        value: useText ? null : value == true ? 1 : (value == false ? 0 : value),
+        value: useText ? null : value == true ? 1 : value == false ? 0 : value,
         text: useText ? value : ""
-      }
+      };
 
       this.answers.push(tmp);
     },
 
     saveAnswers(nextSectionNo, nextSubsectionNo) {
-     
       let currentTime = new Date().toISOString();
       console.log(currentTime);
       let answerData = {
@@ -235,10 +253,10 @@ export default {
     },
     goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
       if (this.vStepper < verticalMaxSteps) {
-        this.vStepper ++;
+        this.vStepper++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper ++;
+          this.hStepper++;
         }
         this.vStepper = 1;
       }
@@ -275,7 +293,10 @@ export default {
         });
     },
     nextHorizontalStep() {
-      this.hStepper = this.hStepper < this.questions.horizontal.length ? this.hStepper + 1 : this.hStepper;
+      this.hStepper =
+        this.hStepper < this.questions.horizontal.length
+          ? this.hStepper + 1
+          : this.hStepper;
       this.vStepper = 1;
     },
     prevVerticalStep() {
@@ -286,46 +307,47 @@ export default {
       this.vStepper = 1;
     },
 
-    loadSubheading(activeMeasurement)
-    {
+    loadSubheading(activeMeasurement) {
       console.log(activeMeasurement);
       this.isLoading = true;
       let data = {
         params: `?Article=Diagnostic&ArticleSubheading=${activeMeasurement}`,
         article: "Diagnostic"
-      }
-      this._getQuestionsAnswers(data)
-        .then(data => {
-          this.isLoading = false;
-          this.questions = data;
-          console.log(data)
-        });
+      };
+      this._getQuestionsAnswers(data).then(data => {
+        this.isLoading = false;
+        this.questions = data;
+        console.log(data);
+      });
     }
-
   },
   mounted() {
     if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
     this.loadSubheading(0);
-  } 
-}
+  }
+};
 </script>
 
 <style lang="stylus" scoped>
->>>.v-stepper__content
-  padding 0
-  margin-right 0
-  @media (max-width: 768px) {
-    margin 0
-  }
+>>>.v-stepper__content {
+  padding: 0;
+  margin-right: 0;
 
-.v-stepper__header
   @media (max-width: 768px) {
-    display none
+    margin: 0;
   }
+}
 
-.v-stepper--vertical .v-stepper__step
+.v-stepper__header {
   @media (max-width: 768px) {
-    display none
+    display: none;
   }
+}
+
+.v-stepper--vertical .v-stepper__step {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
 </style>
