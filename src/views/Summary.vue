@@ -14,8 +14,9 @@
         :start-angle="0"
         insert-mode="append"
         :thickness="12"
-        :show-percent="false">
-        <img src="/img/Eden-4.png" width="80%"/>
+        :show-percent="false"
+      >
+        <img src="/img/Eden-4.png" width="80%" />
       </vue-circle>
     </div>
     <div v-else>
@@ -87,7 +88,11 @@
                           light
                         >
                           <template v-slot:items="props">
-                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
+                            <td
+                              class="text-xs-center pointer-cursor"
+                              v-for="user in props.item.userResults"
+                              :key="user.id"
+                            >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
                       </v-card>
@@ -105,9 +110,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import moment from 'moment';
-import VueCircle from 'vue2-circle-progress';
-import components from '../components/questionLayout'
+import moment from "moment";
+import VueCircle from "vue2-circle-progress";
+import components from "../components/questionLayout";
 
 export default {
   name: "Summary",
@@ -119,8 +124,8 @@ export default {
     hStepper: 1,
     vStepper: 1,
     form1Valid: null,
-    fill : { gradient: ["#48cba2", "#47bbe9"] },
-    
+    fill: { gradient: ["#48cba2", "#47bbe9"] },
+
     results: [],
 
     isLoading: true,
@@ -129,32 +134,34 @@ export default {
     articleTab: null,
     sectionTab: [],
     dateTab: [],
-    titleHeader: [{
-      text: "Title",
-      align: "center",
-      value: "title",
-      sortable: false,
-      fixed: true
-    }],
+    titleHeader: [
+      {
+        text: "Title",
+        align: "center",
+        value: "title",
+        sortable: false,
+        fixed: true
+      }
+    ],
     pagination: {
       page: 1,
       rowsPerPage: 5,
       rowsPerPageItems: [1, 5, 10, 15],
-      totalItems: 0,
-    },
+      totalItems: 0
+    }
   }),
   filters: {
     formatDate(date) {
-      return moment(date).format('YYYY-MM-DD hh:mm:ss');
+      return moment(date).format("YYYY-MM-DD hh:mm:ss");
     },
     formatDateOnly(date) {
-      return moment(date).format('YYYY-MM-DD');
-    },
+      return moment(date).format("YYYY-MM-DD");
+    }
   },
   computed: {
     ...mapGetters("app", {
       getUserSummaryData: "getUserSummaryData",
-      getAnswersData: "getSummaryAnswersData",
+      getAnswersData: "getSummaryAnswersData"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -163,21 +170,21 @@ export default {
   methods: {
     ...mapActions("app", {
       _getUserSummaryData: "getUserSummaryData",
-      _getSummaryData: "getAnswersData",
+      _getSummaryData: "getAnswersData"
     }),
 
     generateUserHeader(results) {
-      let header = []
-      for(let i = 0; i < results[0].userResults.length; i ++) {
-        const element = results[0].userResults[i]
+      let header = [];
+      for (let i = 0; i < results[0].userResults.length; i++) {
+        const element = results[0].userResults[i];
         header.push({
           text: moment(element.created).format("YYYY-MM-DD hh:mm:ss"),
           align: "center",
           value: "value",
           sortable: false
-        })
+        });
       }
-      return header
+      return header;
     },
 
     showAnswerLayout(summaryId) {
@@ -189,13 +196,11 @@ export default {
       return this._getSummaryData(data).then(res => {
         this.isAnswerLoading = false;
       });
-    },
-
+    }
   },
   mounted() {
     let data = {
       params: "?Article="
-      
     };
     this._getUserSummaryData(data).then(data => {
       this.isLoading = false;
@@ -216,21 +221,23 @@ export default {
 }
 
 >>>.pointer-cursor {
-  cursor pointer
+  cursor: pointer;
 }
 
 >>>.elevation-1 {
-  width 80%
-  float left 
+  width: 80%;
+  float: left;
+
   @media (max-width: 768px) {
-    width 60%
+    width: 60%;
   }
 }
 
 >>>.elevation-1:first-child {
-  width: 20%
+  width: 20%;
+
   @media (max-width: 768px) {
-    width 40%
+    width: 40%;
   }
 }
 </style>

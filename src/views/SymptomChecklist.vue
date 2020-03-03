@@ -197,8 +197,8 @@ export default {
           if (useText) {
             this.answers[i].text = value;
           } else {
-            this.answers[i].value =
-              value == true ? 1 : value == false ? 0 : value;
+            this.answers[i].value = 
+              value === true ? 1 : value === false ? 0 : value;
           }
           return;
         }
@@ -283,7 +283,6 @@ export default {
     },
     saveAnswers(nextSectionNo, nextSubsectionNo) {
       let currentTime = new Date().toISOString();
-      console.log(currentTime);
       let answerData = {
         userId: this.getDataUserProfile.id,
         answers: this.answers,
@@ -295,7 +294,6 @@ export default {
 
       return this._saveAnswers(answerData)
         .then(res => {
-          console.log(res);
           return res;
         })
         .catch(err => {
@@ -341,5 +339,9 @@ export default {
   @media (max-width: 768px) {
     display: none;
   }
+}
+
+.v-stepper.v-stepper--vertical.theme--light {
+  overflow visible
 }
 </style>

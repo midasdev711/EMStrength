@@ -60,6 +60,9 @@ export default {
         this.$router.push({ name: 'Account' });
       }
     }
+  },
+  mounted() {
+    window.scrollTo(0,0);
   }
 }
 </script>

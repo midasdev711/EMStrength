@@ -1,6 +1,6 @@
 <template>
   <v-container grid-list-xl>
-    <v-alert v-model="alert" dismissible outline color="info">
+    <v-alert v-model="alert" dismissible color="info">
       <v-flex row layout>
         <v-flex xs6 class="text-xs-center">
           <h2>{{username}}</h2>
@@ -102,7 +102,11 @@
                           light
                         >
                           <template v-slot:items="props">
-                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
+                            <td
+                              class="text-xs-center pointer-cursor"
+                              v-for="user in props.item.userResults"
+                              :key="user.id"
+                            >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
                       </v-card>
@@ -135,7 +139,11 @@
                           light
                         >
                           <template v-slot:items="props">
-                            <td class="text-xs-center pointer-cursor" v-for="user in props.item.userResults" :key="user.id">{{ user.value == null ? 'N/A' : user.value }}</td>
+                            <td
+                              class="text-xs-center pointer-cursor"
+                              v-for="user in props.item.userResults"
+                              :key="user.id"
+                            >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
                       </div>
@@ -187,15 +195,17 @@ export default {
       page: 1,
       rowsPerPage: 5,
       rowsPerPageItems: [1, 5, 10, 15],
-      totalItems: 0,
+      totalItems: 0
     },
-    titleHeader: [{
-      text: "Title",
-      align: "center",
-      value: "title",
-      sortable: false,
-      fixed: true
-    }],
+    titleHeader: [
+      {
+        text: "Title",
+        align: "center",
+        value: "title",
+        sortable: false,
+        fixed: true
+      }
+    ]
   }),
   filters: {
     formatDate(date) {
@@ -212,8 +222,7 @@ export default {
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
-    }),
-    
+    })
   },
   watch: {
     "$route.query"(newQuery, oldQuery) {
@@ -224,10 +233,10 @@ export default {
     },
     getUserSummaryData(newProps, oldProps) {
       if (newProps != oldProps && this.isGroupView) {
-        let users = {}
-        for (let i = 0; i < newProps[0].users.length; i ++) {
-          const user = newProps[0].users[i]
-          users[user.id] = user
+        let users = {};
+        for (let i = 0; i < newProps[0].users.length; i++) {
+          const user = newProps[0].users[i];
+          users[user.id] = user;
         }
         this.userList = Object.assign({}, users);
         console.log(this.userList);
@@ -242,31 +251,31 @@ export default {
     }),
 
     generateUserHeader(results) {
-      let header = []
-      for(let i = 0; i < results[0].userResults.length; i ++) {
-        const element = results[0].userResults[i]
+      let header = [];
+      for (let i = 0; i < results[0].userResults.length; i++) {
+        const element = results[0].userResults[i];
         header.push({
           text: moment(element.created).format("YYYY-MM-DD hh:mm:ss"),
           align: "center",
           value: "value",
           sortable: false
-        })
+        });
       }
-      return header
+      return header;
     },
 
     generateHeader(results) {
-      let header = []
-      for(let i = 0; i < results[0].userResults.length; i ++) {
-        const element = results[0].userResults[i]
+      let header = [];
+      for (let i = 0; i < results[0].userResults.length; i++) {
+        const element = results[0].userResults[i];
         header.push({
           text: this.userList[element.forUserId].userName,
           align: "center",
           value: "value",
           sortable: false
-        })
+        });
       }
-      return header
+      return header;
     },
 
     getSummary(index) {
@@ -345,17 +354,19 @@ export default {
 }
 
 >>>.elevation-1 {
-  width 80%
-  float left 
+  width: 80%;
+  float: left;
+
   @media (max-width: 768px) {
-    width 60%
+    width: 60%;
   }
 }
 
 >>>.elevation-1:first-child {
-  width: 20%
+  width: 20%;
+
   @media (max-width: 768px) {
-    width 40%
+    width: 40%;
   }
 }
 </style>
