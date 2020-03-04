@@ -54,7 +54,9 @@
           <v-card v-if="isMobile">
             <h3>
               {{stepp.section}}
-              <span class="right">{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
+              <span
+                class="right"
+              >{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
             </h3>
           </v-card>
           <v-card>
@@ -75,7 +77,9 @@
                   <v-card v-if="isMobile && stepp.vertical.length > 1">
                     <h3>
                       {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
-                      <span class="right">{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
+                      <span
+                        class="right"
+                      >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                     </h3>
                   </v-card>
                   <v-card class="mb-5">
