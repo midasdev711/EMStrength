@@ -106,6 +106,7 @@
                               class="text-xs-center pointer-cursor"
                               v-for="user in props.item.userResults"
                               :key="user.id"
+                              @click="showAnswerLayout(user.id)"
                             >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -155,7 +156,137 @@
           </v-card>
         </v-tab-item>
       </v-tabs-items>
+      <div class="text-xs-center mt-2" v-if="isAnswerLoading">
+        <vue-circle
+          :progress="100"
+          :size="300"
+          :reverse="false"
+          line-cap="round"
+          :fill="fill"
+          empty-fill="rgba(200, 200, 200, .8)"
+          :animation="{ duration: 1500, easing: 'circleProgressEasing' }"
+          :animation-start-value="0.0"
+          :start-angle="0"
+          insert-mode="append"
+          :thickness="12"
+          :show-percent="false"
+        >
+          <img src="/img/Eden-4.png" width="80%" />
+        </vue-circle>
+      </div>
+      <div v-else>
+        <v-stepper v-model="hStepper">
+          <v-stepper-header>
+            <template v-for="step in getAnswersData">
+              <v-stepper-step
+                :key="`${step.sectionNo}-step`"
+                :complete="hStepper > (step.sectionNo + 1)"
+                :step="step.sectionNo + 1"
+                :color="$vuetify.theme.subheading1"
+                editable
+              >
+                <span :style="{ color: $vuetify.theme.subheading1 }">
+                  {{step.section}}
+                  <span class="dev-hint">(Section)</span>
+                </span>
+              </v-stepper-step>
+            </template>
+          </v-stepper-header>
+
+          <v-stepper-items>
+            <v-stepper-content
+              v-for="stepp in getAnswersData"
+              :key="`${stepp.sectionNo}-content`"
+              :step="stepp.sectionNo + 1"
+            >
+              <v-card v-if="isMobile">
+                <h3>
+                  {{stepp.section}}
+                  <span class="right">{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
+                </h3>
+              </v-card>
+              <v-card>
+                <v-stepper vertical v-model="vStepper">
+                  <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
+                    <!--stepl.subsectionNo + 1-->
+                    <v-stepper-step
+                      editable
+                      v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
+                      :key="stepl.subsectionNo + '-sub-step'"
+                      :color="$vuetify.theme.subheading2"
+                    >
+                      <SectionPartStepper :data="stepl.items" />
+                    </v-stepper-step>
+
+                    <v-stepper-content
+                      v-bind:step="stepl.subsectionNo + 1"
+                      :key="stepl.subsectionNo + '-sub-content'"
+                    >
+                      <v-card v-if="isMobile && stepp.vertical.length > 1">
+                        <h3>
+                          {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
+                          <span class="right">{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
+                        </h3>
+                      </v-card>
+                      <v-card class="mb-5">
+                        <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
+                        <v-form v-model="form1Valid">
+                          <div
+                            class="row"
+                            v-for="a in stepl.items"
+                            :key="a.id"
+                            v-if="a.isConditionQuestionMet"
+                          >
+                            <!--{{a.question.type}}-->
+                            <components
+                              v-if="a.question.useText"
+                              :is="a.question.type"
+                              :id="'comp' + a.question.type + a.question.id"
+                              :title="a.question.title"
+                              :useText="a.question.useText"
+                              :questionId="a.question.id"
+                              :answerId="a.answerId"
+                              :length="a.question.length"
+                              :items="a.question.items"
+                              :text="a.text"
+                              :diabled="true"
+                              @updateValue="updateComponentValue"
+                            />
+                            <components
+                              v-if="!a.question.useText"
+                              :is="a.question.type"
+                              :id="'comp' + a.question.type + a.question.id"
+                              :title="a.question.title"
+                              :useText="a.question.useText"
+                              :questionId="a.question.id"
+                              :answerId="a.answerId"
+                              :length="a.question.length"
+                              :items="a.question.items"
+                              :value="a.value"
+                              :diabled="true"
+                              @updateValue="updateComponentValue"
+                            />
+                          </div>
+                        </v-form>
+                        <!-- <v-btn
+                          color="primary"
+                          @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
+                        >Continue</v-btn> -->
+                        <!-- <v-btn flat v-if="stepl.sectionNo > 0" @click="prevVerticalStep">Back</v-btn> -->
+                      </v-card>
+                    </v-stepper-content>
+                  </div>
+                </v-stepper>
+              </v-card>
+
+              <!-- <v-btn color="primary" @click="nextHorizontalStep">Continue</v-btn> -->
+              <!-- <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn> -->
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </div>
     </div>
+    
   </v-container>
 </template>
 
@@ -186,6 +317,7 @@ export default {
 
     isLoading: true,
     isAnswerLoading: false,
+    isMobile: null,
 
     articleTab: null,
     sectionTab: [],
@@ -239,7 +371,6 @@ export default {
           users[user.id] = user;
         }
         this.userList = Object.assign({}, users);
-        console.log(this.userList);
       }
     }
   },
@@ -264,6 +395,8 @@ export default {
       return header;
     },
 
+    updateComponentValue() {},
+
     generateHeader(results) {
       let header = [];
       for (let i = 0; i < results[0].userResults.length; i++) {
@@ -276,6 +409,18 @@ export default {
         });
       }
       return header;
+    },
+
+    showAnswerLayout(summaryId) {
+      let data = {
+        params: `?Article=Symptom&AnswerSummaryId=${summaryId}`,
+        article: "Summary"
+      };
+      this.isAnswerLoading = true;
+      return this._getSummaryData(data).then(res => {
+        this.isAnswerLoading = false;
+        console.log(res);
+      });
     },
 
     getSummary(index) {
@@ -309,6 +454,8 @@ export default {
     }
   },
   mounted() {
+    if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
+    else this.isMobile = false;
     var routeQuery = this.$route.query;
     this.isGroupView = routeQuery.groupId ? true : false;
     this.groupname = routeQuery.groupName ? routeQuery.groupName : "";
@@ -369,4 +516,29 @@ export default {
     width: 40%;
   }
 }
+
+// >>>.v-stepper__content {
+//   padding: 0;
+//   margin-right: 0;
+
+//   @media (max-width: 768px) {
+//     margin: 0;
+//   }
+// }
+
+// .v-stepper__header {
+//   @media (max-width: 768px) {
+//     display: none;
+//   }
+// }
+
+// .v-stepper--vertical .v-stepper__step {
+//   @media (max-width: 768px) {
+//     display: none;
+//   }
+// }
+
+// .v-stepper.v-stepper--vertical.theme--light {
+//   overflow visible
+// }
 </style>
