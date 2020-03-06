@@ -18,7 +18,7 @@
                   <v-text-field
                     append-icon="person"
                     name="login"
-                    label="Login"
+                    label="User Code"
                     type="text"
                     v-model="userCode"
                   ></v-text-field>

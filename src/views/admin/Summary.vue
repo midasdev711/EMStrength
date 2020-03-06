@@ -204,7 +204,9 @@
               <v-card v-if="isMobile">
                 <h3>
                   {{stepp.section}}
-                  <span class="right">{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
+                  <span
+                    class="right"
+                  >{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
                 </h3>
               </v-card>
               <v-card>
@@ -226,7 +228,9 @@
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
                         <h3>
                           {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
-                          <span class="right">{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
+                          <span
+                            class="right"
+                          >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
                       <v-card class="mb-5">
@@ -273,13 +277,11 @@
                   </div>
                 </v-stepper>
               </v-card>
-
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
       </div>
     </div>
-    
   </v-container>
 </template>
 
@@ -433,7 +435,7 @@ export default {
         this._getGroupSummaryData(data).then(res => {
           this.isLoading = false;
           this.questions = res;
-          console.log(res)
+          console.log(res);
         });
       } else if (this.$route.query.type == "groupuser") {
         this.featureUserId = this.$route.query.userId;
@@ -443,7 +445,7 @@ export default {
         this._getGroupSummaryData(data).then(res => {
           this.isLoading = false;
           this.questions = res;
-          console.log(res)
+          console.log(res);
         });
       }
     }
@@ -534,14 +536,14 @@ export default {
 }
 
 .v-stepper.v-stepper--vertical.theme--light {
-  overflow visible
+  overflow: visible;
 }
 
 .clear-fix {
-  clear: both
+  clear: both;
 }
 
 .mt-2 {
-  margin-top 1em
+  margin-top: 1em;
 }
 </style>
