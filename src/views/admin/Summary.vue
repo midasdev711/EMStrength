@@ -106,7 +106,7 @@
                               class="text-xs-center pointer-cursor"
                               v-for="user in props.item.userResults"
                               :key="user.id"
-                              @click="showAnswerLayout(user.id)"
+                              @click="showAnswerLayout(user.id);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
                             >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -144,6 +144,7 @@
                               class="text-xs-center pointer-cursor"
                               v-for="user in props.item.userResults"
                               :key="user.id"
+                              @click="showAnswerLayout(user.id);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
                             >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -174,7 +175,8 @@
           <img src="/img/Eden-4.png" width="80%" />
         </vue-circle>
       </div>
-      <div v-else>
+      <div class="mt-2" v-if="!isAnswerLoading && getAnswersData.length > 0">
+        <div class="clear-fix"></div>
         <v-stepper v-model="hStepper">
           <v-stepper-header>
             <template v-for="step in getAnswersData">
@@ -208,7 +210,6 @@
               <v-card>
                 <v-stepper vertical v-model="vStepper">
                   <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
-                    <!--stepl.subsectionNo + 1-->
                     <v-stepper-step
                       editable
                       v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
@@ -237,7 +238,6 @@
                             :key="a.id"
                             v-if="a.isConditionQuestionMet"
                           >
-                            <!--{{a.question.type}}-->
                             <components
                               v-if="a.question.useText"
                               :is="a.question.type"
@@ -268,19 +268,12 @@
                             />
                           </div>
                         </v-form>
-                        <!-- <v-btn
-                          color="primary"
-                          @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
-                        >Continue</v-btn> -->
-                        <!-- <v-btn flat v-if="stepl.sectionNo > 0" @click="prevVerticalStep">Back</v-btn> -->
                       </v-card>
                     </v-stepper-content>
                   </div>
                 </v-stepper>
               </v-card>
 
-              <!-- <v-btn color="primary" @click="nextHorizontalStep">Continue</v-btn> -->
-              <!-- <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn> -->
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
@@ -316,7 +309,7 @@ export default {
     results: [],
 
     isLoading: true,
-    isAnswerLoading: false,
+    isAnswerLoading: null,
     isMobile: null,
 
     articleTab: null,
@@ -437,18 +430,20 @@ export default {
         let data = {
           params: "?groupId=" + this.$route.query.groupId //  &featureUserId=dd
         };
-        this._getGroupSummaryData(data).then(data => {
+        this._getGroupSummaryData(data).then(res => {
           this.isLoading = false;
-          this.questions = data;
+          this.questions = res;
+          console.log(res)
         });
       } else if (this.$route.query.type == "groupuser") {
         this.featureUserId = this.$route.query.userId;
         let data = {
           params: `?groupId=${this.$route.query.groupId}&featureUserId=${this.$route.query.userId}` //  &featureUserId=dd
         };
-        this._getGroupSummaryData(data).then(data => {
+        this._getGroupSummaryData(data).then(res => {
           this.isLoading = false;
-          this.questions = data;
+          this.questions = res;
+          console.log(res)
         });
       }
     }
@@ -517,28 +512,36 @@ export default {
   }
 }
 
-// >>>.v-stepper__content {
-//   padding: 0;
-//   margin-right: 0;
+>>>.v-stepper__content {
+  padding: 0;
+  margin-right: 0;
 
-//   @media (max-width: 768px) {
-//     margin: 0;
-//   }
-// }
+  @media (max-width: 768px) {
+    margin: 0;
+  }
+}
 
-// .v-stepper__header {
-//   @media (max-width: 768px) {
-//     display: none;
-//   }
-// }
+.v-stepper__header {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
 
-// .v-stepper--vertical .v-stepper__step {
-//   @media (max-width: 768px) {
-//     display: none;
-//   }
-// }
+.v-stepper--vertical .v-stepper__step {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
 
-// .v-stepper.v-stepper--vertical.theme--light {
-//   overflow visible
-// }
+.v-stepper.v-stepper--vertical.theme--light {
+  overflow visible
+}
+
+.clear-fix {
+  clear: both
+}
+
+.mt-2 {
+  margin-top 1em
+}
 </style>
