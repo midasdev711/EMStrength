@@ -46,7 +46,9 @@
           <v-card v-if="isMobile">
             <h3>
               {{stepp.section}}
-              <span class="right">{{stepp.sectionNo + 1}} of {{getSymptomHorizontalData.length}}</span>
+              <span
+                class="right"
+              >{{stepp.sectionNo + 1}} of {{getSymptomHorizontalData.length}}</span>
             </h3>
           </v-card>
           <v-card>
@@ -69,7 +71,9 @@
                   <v-card v-if="isMobile && stepp.vertical.length > 1">
                     <h3>
                       {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
-                      <span class="right">{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
+                      <span
+                        class="right"
+                      >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                     </h3>
                   </v-card>
                   <v-card class="mb-5">
@@ -197,7 +201,7 @@ export default {
           if (useText) {
             this.answers[i].text = value;
           } else {
-            this.answers[i].value = 
+            this.answers[i].value =
               value === true ? 1 : value === false ? 0 : value;
           }
           return;
@@ -342,6 +346,6 @@ export default {
 }
 
 .v-stepper.v-stepper--vertical.theme--light {
-  overflow visible
+  overflow: visible;
 }
 </style>

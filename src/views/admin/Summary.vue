@@ -144,7 +144,7 @@
                               class="text-xs-center pointer-cursor"
                               v-for="user in props.item.userResults"
                               :key="user.id"
-                              @click="showAnswerLayout(user.id);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
+                              @click="showAnswerLayout(user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
                             >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -406,9 +406,9 @@ export default {
       return header;
     },
 
-    showAnswerLayout(summaryId) {
+    showAnswerLayout(summaryId, article = "Symptom") {
       let data = {
-        params: `?Article=Symptom&AnswerSummaryId=${summaryId}`,
+        params: `?Article=${article}&AnswerSummaryId=${summaryId}`,
         article: "Summary"
       };
       this.isAnswerLoading = true;

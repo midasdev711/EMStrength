@@ -47,33 +47,33 @@
         </v-card-actions>
       </v-card>
       <template v-if="getSymptomUpdated != null & getRecoveryData.length > 0">
-      <v-card
-        dark
-        v-bind:color="questions.rating | shadeBackgroundColor(colorRating)"
-        v-for="(questions, index) in getRecoveryData"
-        :key="index + '-recoverysection'"
-        class="question-box mb-2 mt-2"
-      >
-        <v-card-title>
-          <span class="title">{{questions.category}}</span>
-          <v-layout align-center justify-end>
-            <v-icon
-              large
-              @click="showHelpDialog(questions.category, questions.rating, questions.lastCompleted)"
-            >help</v-icon>
-          </v-layout>
-        </v-card-title>
-        <v-container fluid>
-          <v-checkbox
-            :key="question.recoveryId"
-            v-model="question.done"
-            v-if="(question.done ? true : false) | !getRecoveryCheck"
-            :label="question.remedy"
-            v-for="question in questions.items"
-            @change="updateComponentValue(question.recoveryId, question.done)"
-          ></v-checkbox>
-        </v-container>
-      </v-card>
+        <v-card
+          dark
+          v-bind:color="questions.rating | shadeBackgroundColor(colorRating)"
+          v-for="(questions, index) in getRecoveryData"
+          :key="index + '-recoverysection'"
+          class="question-box mb-2 mt-2"
+        >
+          <v-card-title>
+            <span class="title">{{questions.category}}</span>
+            <v-layout align-center justify-end>
+              <v-icon
+                large
+                @click="showHelpDialog(questions.category, questions.rating, questions.lastCompleted)"
+              >help</v-icon>
+            </v-layout>
+          </v-card-title>
+          <v-container fluid>
+            <v-checkbox
+              :key="question.recoveryId"
+              v-model="question.done"
+              v-if="(question.done ? true : false) | !getRecoveryCheck"
+              :label="question.remedy"
+              v-for="question in questions.items"
+              @change="updateComponentValue(question.recoveryId, question.done)"
+            ></v-checkbox>
+          </v-container>
+        </v-card>
       </template>
 
       <v-dialog v-model="dialog" max-width="290">
