@@ -1,16 +1,17 @@
 <template>
-  <v-navigation-drawer class="app--drawer" :mini-variant.sync="mini" app v-model="inputValue" width="300">
+  <v-navigation-drawer
+    class="app--drawer"
+    :mini-variant.sync="mini"
+    app
+    v-model="inputValue"
+    width="300"
+  >
     <v-toolbar color="primary darken-1" dark>
       <img src="/img/logo.png" height="36" alt="EnergyHealth" />
     </v-toolbar>
-    <v-tabs
-      v-model="active"
-      :hide-slider="true">
+    <v-tabs v-model="active" :hide-slider="true">
       <v-container pt-0 pb-0 ml-0 mr-0>
-        <v-tab>
-          SUBMISSIONS
-        </v-tab>
-        
+        <v-tab>SUBMISSIONS</v-tab>
       </v-container>
 
       <v-tab-item>
@@ -31,33 +32,38 @@
             v-model="messageFilters.groupId"
             @change="selectGroup"
             clearable
-            label="Group">
-          </v-select>
+            label="Group"
+          ></v-select>
         </v-container>
         <v-data-table
           :items="activeUsers"
           :search="messageFilters"
           :custom-filter="messageFilter"
-          hide-actions>
+          hide-actions
+        >
           <template v-slot:items="props">
-            <td @click="switchUser(props.item)">{{ props.item.lastCompleted | fromNow }}<br/>@ {{ props.item.lastCompleted | hour }}</td>
-            <td @click="switchUser(props.item)">{{ props.item.fullName }} {{ props.item.age }}yo <br> {{ props.item.occupation }} ({{ props.item.groupName }})</td>
+            <td @click="switchUser(props.item)">
+              {{ props.item.lastCompleted | fromNow }}
+              <br />
+              @ {{ props.item.lastCompleted | hour }}
+            </td>
+            <td @click="switchUser(props.item)">
+              {{ props.item.fullName }} {{ props.item.age }}yo
+              <br />
+              {{ props.item.occupation }} ({{ props.item.groupName }})
+            </td>
           </template>
         </v-data-table>
-        
       </v-tab-item>
-
     </v-tabs>
-
   </v-navigation-drawer>
 </template>
 <script>
-
 import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
-import { EventBus } from '../../util/event-bus';
-import store from '@/store'
+import { EventBus } from "../../util/event-bus";
+import store from "@/store";
 
-import moment from 'moment'
+import moment from "moment";
 
 export default {
   name: "AdminDrawer",
@@ -70,57 +76,71 @@ export default {
       active: null,
       group: null,
       filters: {
-        group: ''
+        group: ""
       },
-      groups: ['Group', 'Group A', 'Group B', 'Group C'],
+      groups: ["Group", "Group A", "Group B", "Group C"],
       headers: [
         {
-          text: '',
-          value: 'group'
+          text: "",
+          value: "group"
         }
       ],
       items: [],
-      users: [{
-        uuid: "",
-        name: "",
-        email: "",
-        username: "",
-        userType: '',
-        groupName: '',
-        dateJoined: '',
-        jobTitle: "",
-        phone: "",
-        avatar: "",
-        checkbox: false
-      }],
+      users: [
+        {
+          uuid: "",
+          name: "",
+          email: "",
+          username: "",
+          userType: "",
+          groupName: "",
+          dateJoined: "",
+          jobTitle: "",
+          phone: "",
+          avatar: "",
+          checkbox: false
+        }
+      ],
       reviewCount: 0,
       bottom: false,
       left: false,
       overlap: false,
       loading: false,
-      group_sel: '', //TODO: there should be single dropdown in the UI
+      group_sel: "", //TODO: there should be single dropdown in the UI
       group_sel2: null,
-      
+
       message_thread: [],
       messageFilters: {
         userName: "",
         groupId: ""
       }
-    }
+    };
   },
   computed: {
     ...mapGetters("admin", {
       getGroupData: "getGroupData",
-      getUserData: "getUserData",
+      getUserData: "getUserData"
     }),
     ...mapState("admin", ["color"]),
     activeUsers() {
       if (this.search !== null) {
         let search = this.search.toString().toLowerCase();
-        const filtered = this.getUserData.filter(d => d.fullName.toLowerCase().includes(search) && d.archived == null);
+        const filtered = this.getUserData.filter(
+          d =>
+            d.fullName.toLowerCase().includes(search) &&
+            d.archived == null &&
+            (d.symptomCompleted != null ||
+              d.recoveryCompleted != null ||
+              d.decisionCompleted != null)
+        );
         return filtered;
       }
-      return this.getUserData;
+      return this.getUserData.filter(
+        d =>
+          d.symptomCompleted != null ||
+          d.recoveryCompleted != null ||
+          d.decisionCompleted != null
+      );
     },
 
     inputValue: {
@@ -136,14 +156,14 @@ export default {
     fromNow(time) {
       const date = moment(time);
       return date.fromNow();
-    },  
+    },
     hour(time) {
       const date = moment(time);
       return date.format("HH:mm");
-    }  
+    }
   },
   watch: {
-    group_sel(newValue, oldValue){
+    group_sel(newValue, oldValue) {
       var x = newValue;
     }
   },
@@ -154,7 +174,7 @@ export default {
     }),
 
     ...mapActions("app", {
-      _clearAnswersData: "clearAnswersData",
+      _clearAnswersData: "clearAnswersData"
     }),
 
     ...mapMutations("admin", ["setDrawer", "toggleDrawer"]),
@@ -163,47 +183,54 @@ export default {
       this.loading = true;
 
       var params = {
-          Count: 999,
-          Page: 1,
-          Search: "",
-          Sort: "",
-        };
-      return this.getgroups(params).then(res => {
-        return res;
-      })
-      .catch(e => {
-        return e;
-      });
-      
+        Count: 999,
+        Page: 1,
+        Search: "",
+        Sort: ""
+      };
+      return this.getgroups(params)
+        .then(res => {
+          return res;
+        })
+        .catch(e => {
+          return e;
+        });
     },
 
     getUserList() {
       this.loading = true;
 
       var params = {
-          Count: 999,
-          Page: 1,
-          Search: "",
-          Sort: "",
-        };
-      return this.getusers(params).then(res => {
-        return res;
-      })
-      .catch(e => {
-        return e;
-      });
-      
+        Count: 999,
+        Page: 1,
+        Search: "",
+        Sort: ""
+      };
+      return this.getusers(params)
+        .then(res => {
+          return res;
+        })
+        .catch(e => {
+          return e;
+        });
     },
 
     messageFilter(items, messageFilters, filter) {
       var filteredItems = items.filter(item => true);
-      var userNameFilter = !messageFilters.userName ? "" : messageFilters.userName.trim().toLowerCase();
-      filteredItems = userNameFilter === "" 
-                        ? filteredItems 
-                        : filteredItems.filter(item => item.fullName.toLowerCase().includes(userNameFilter));
+      var userNameFilter = !messageFilters.userName
+        ? ""
+        : messageFilters.userName.trim().toLowerCase();
+      filteredItems =
+        userNameFilter === ""
+          ? filteredItems
+          : filteredItems.filter(item =>
+              item.fullName.toLowerCase().includes(userNameFilter)
+            );
       var groupId = messageFilters.groupId;
-      filteredItems = (!groupId || groupId.length === 0)
-                      ? filteredItems : filteredItems.filter(item => item.groupName === groupId);
+      filteredItems =
+        !groupId || groupId.length === 0
+          ? filteredItems
+          : filteredItems.filter(item => item.groupName === groupId);
 
       return filteredItems;
     },
@@ -211,37 +238,63 @@ export default {
     selectGroup() {
       this._clearAnswersData();
       let index;
-      for (let i = 0; i < this.getGroupData.length; i ++) {
+      for (let i = 0; i < this.getGroupData.length; i++) {
         const element = this.getGroupData[i];
-        if (element['title'] == this.messageFilters.groupId) {
-          index = element['id'];
+        if (element["title"] == this.messageFilters.groupId) {
+          index = element["id"];
         }
       }
-      this.$router.push({ name: 'AdminSummary', query: { groupName: this.messageFilters.groupId, groupId: index, type: 'group' } })
+      this.$router.push({
+        name: "AdminSummary",
+        query: {
+          groupName: this.messageFilters.groupId,
+          groupId: index,
+          type: "group"
+        }
+      });
     },
 
     switchUser(item) {
       this._clearAnswersData();
       if (this.messageFilters.groupId) {
         let index;
-        for (let i = 0; i < this.getGroupData.length; i ++) {
+        for (let i = 0; i < this.getGroupData.length; i++) {
           const element = this.getGroupData[i];
-          if (element['title'] == this.messageFilters.groupId) {
-            index = element['id'];
+          if (element["title"] == this.messageFilters.groupId) {
+            index = element["id"];
           }
         }
-        this.$router.push({ name: 'AdminSummary', query: { groupName: item.groupName, groupId: index, userId: item.id, user: item.fullName, type: 'groupuser', lastCompleted: item.lastCompleted } })
+        this.$router.push({
+          name: "AdminSummary",
+          query: {
+            groupName: item.groupName,
+            groupId: index,
+            userId: item.id,
+            user: item.fullName,
+            type: "groupuser",
+            lastCompleted: item.lastCompleted
+          }
+        });
       } else {
-        this.$router.push({ name: 'AdminSummary', query: { groupName: item.groupName, userId: item.id, user: item.fullName, type: 'user', lastCompleted: item.lastCompleted } })
+        this.$router.push({
+          name: "AdminSummary",
+          query: {
+            groupName: item.groupName,
+            userId: item.id,
+            user: item.fullName,
+            type: "user",
+            lastCompleted: item.lastCompleted
+          }
+        });
       }
 
-      EventBus.$emit('admin-drawer-switch-user', item);
+      EventBus.$emit("admin-drawer-switch-user", item);
     },
     switchChat(item) {
       //this.$router.push({ name: 'CoachingFeedbackAdmin', query: { userId: item.userId, user: item.fullName, group: item.groupId } })
     }
-  }, 
-  mounted () {
+  },
+  mounted() {
     if (this.getGroupData.length == 0) {
       this.getGroupList();
     }
@@ -277,25 +330,35 @@ export default {
       }
       console.log(this.review_list);
     });*/
-
-  },
-}
+  }
+};
 </script>
 
 <style lang="stylus">
-.app--drawer .v-tabs__wrapper--show-arrows
+.app--drawer .v-tabs__wrapper--show-arrows {
   margin: 0;
-.app--drawer .v-datatable
-  cursor: pointer
-  thead
-    display: none
-  tr:hover td:last-child
-    position: relative
-    &:after
-      content "▸"
-      position absolute
-      right: 10px
-      top: 10px
-.v-tabs__icon
-  display none!important
+}
+
+.app--drawer .v-datatable {
+  cursor: pointer;
+
+  thead {
+    display: none;
+  }
+
+  tr:hover td:last-child {
+    position: relative;
+
+    &:after {
+      content: '▸';
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+  }
+}
+
+.v-tabs__icon {
+  display: none !important;
+}
 </style>
