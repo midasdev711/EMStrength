@@ -58,10 +58,9 @@
           />
         </td>
         <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
-        <td @click="goToAccount(props.item)">{{ props.item.userType }}</td>
-        <td @click="goToAccount(props.item)">{{ props.item.email }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.groupName }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.groupJoined }}</td>
+        <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
       </template>
       <template slot="no-data">
         <div class="text-xs-center"> no matching users in the list</div>
@@ -94,14 +93,13 @@ export default {
           sortable: false,
           value: "checkbox"
         },
-        { text: "Name ", value: "firstName" },
-        { text: "User type ", value: "userType" },
-        { text: "Email address", value: "email" },
-        { text: "Group name ", value: "groupName" },
-        { text: "Date joined", value: "groupJoined" }
+        { text: "User Code", value: "firstName" },
+        { text: "Group Name ", value: "groupName" },
+        { text: "Created", value: "groupJoined" },
+        { text: "User Name", value: "fullName" }
       ],
       pagination: {
-        sortBy: 'email',
+        sortBy: 'fullName',
         rowsPerPage: 10
       },
       filters: {
