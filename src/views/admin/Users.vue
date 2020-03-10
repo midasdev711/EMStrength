@@ -1,6 +1,9 @@
 <template>
   <v-container fluid grid-list-xl class="user-manage-section">
-    <v-btn class="v-btn--back-link" @click="$router.push({ name: 'DashboardAdmin' });">Back to Dashboard</v-btn>
+    <v-btn
+      class="v-btn--back-link"
+      @click="$router.push({ name: 'DashboardAdmin' });"
+    >Back to Dashboard</v-btn>
     <v-layout wrap>
       <!-- <v-flex xs12 lg5>
        
@@ -15,7 +18,7 @@
 <p></p>
         </div>
          <CreateNewUser @switchTab="activeTab = 2" class="mb-4" />
-      </v-flex> -->
+      </v-flex>-->
       <v-flex xs12 lg12>
         <v-tabs v-model="activeTab">
           <v-tab>Users</v-tab>
@@ -25,22 +28,11 @@
             <UserList />
             <v-card>
               <v-layout>
-                <v-flex
-                  xs12
-                  md2
-                >
-                  <v-text-field
-                    v-model="codeCount"
-                    :counter="10"
-                    label="How many"
-                    required
-                  ></v-text-field>
+                <v-flex xs12 md2>
+                  <v-text-field v-model="codeCount" :counter="10" label="How many" required></v-text-field>
                 </v-flex>
 
-                <v-flex
-                  xs12
-                  md3
-                >
+                <v-flex xs12 md3>
                   <v-select
                     :items="getGroupData"
                     item-value="id"
@@ -49,13 +41,9 @@
                     v-model="groupId"
                   ></v-select>
                 </v-flex>
-                <v-flex
-                  xs12
-                  md3
-                >
+                <v-flex xs12 md3>
                   <v-btn color="success" @click="generateUserCode()">Create</v-btn>
                 </v-flex>
-
               </v-layout>
             </v-card>
           </v-tab-item>
@@ -70,11 +58,11 @@
 </template>
 
 <script>
-import CreateNewUser from "@/components/user/CreateNewUser"
-import CreateNewGroup from "@/components/user/CreateNewGroup"
-import CreateUserCodes from "@/components/user/CreateUserCodes"
-import UserList from "@/components/user/UserList"
-import GroupList from "@/components/user/GroupList"
+import CreateNewUser from "@/components/user/CreateNewUser";
+import CreateNewGroup from "@/components/user/CreateNewGroup";
+import CreateUserCodes from "@/components/user/CreateUserCodes";
+import UserList from "@/components/user/UserList";
+import GroupList from "@/components/user/GroupList";
 
 import { mapActions, mapGetters } from "vuex";
 
@@ -94,14 +82,14 @@ export default {
       codeCount: null,
       groupId: null,
       loading: false
-    }
+    };
   },
   methods: {
     ...mapActions("admin", {
       getgroups: "getgroups",
       getusers: "getusers"
     }),
-    
+
     getGroupList() {
       this.loading = true;
 
@@ -136,16 +124,16 @@ export default {
         .catch(e => {
           return e;
         });
-      },
-      generateUserCode(step) {
-        console.log(step)
-      }
+    },
+    generateUserCode(step) {
+      console.log(step);
+    }
   },
   computed: {
     ...mapGetters("admin", {
       getGroupData: "getGroupData",
       getUserData: "getUserData"
-    }),
+    })
   },
   mounted() {
     if (this.getGroupData.length == 0) {
@@ -156,7 +144,7 @@ export default {
       this.getUserList();
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -165,6 +153,4 @@ export default {
     padding-top: 5em;
   }
 }
-
-
 </style>
