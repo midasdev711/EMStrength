@@ -2,7 +2,7 @@
   <v-container fluid grid-list-xl class="user-manage-section">
     <v-btn
       class="v-btn--back-link"
-      @click="$router.push({ name: 'DashboardAdmin' });"
+      @click="$router.push({ name: 'AdminSummary' });"
     >Back to Dashboard</v-btn>
     <v-layout wrap>
       <!-- <v-flex xs12 lg5>

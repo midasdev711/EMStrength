@@ -1,15 +1,9 @@
 <template>
   <v-card>
     <v-btn color="primary right" @click="confirmdialog = true" :loading="loading">Delete selected</v-btn>
-    <v-dialog
-      v-model="confirmdialog"
-      max-width="290"
-    >
+    <v-dialog v-model="confirmdialog" max-width="290">
       <v-card>
-
-        <v-card-text>
-          Are you sure you want to delete {{deleteNumber}} users?
-        </v-card-text>
+        <v-card-text>Are you sure you want to delete {{deleteNumber}} users?</v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -18,25 +12,17 @@
             color="green darken-1"
             flat="flat"
             @click="confirmdialog = false; releaseSelect()"
-          >
-            Cancel
-          </v-btn>
+          >Cancel</v-btn>
 
           <v-btn
             color="green darken-1"
             flat="flat"
             @click="confirmdialog = false;deleteSelected()"
-          >
-            Ok
-          </v-btn>
+          >Ok</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-text-field
-      label="Search"
-      v-model="search"
-      append-icon="search"
-      class="search-text"></v-text-field>
+    <v-text-field label="Search" v-model="search" append-icon="search" class="search-text"></v-text-field>
     <v-data-table
       :headers="headers"
       :items="getUserData"
@@ -47,7 +33,8 @@
       :search="search"
       :custom-filter="userFilter"
       ref="studentsTable"
-      class="table text-xs-center">
+      class="table text-xs-center"
+    >
       <template v-slot:items="props">
         <td>
           <v-checkbox
@@ -59,11 +46,11 @@
         </td>
         <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.groupName }}</td>
-        <td @click="goToAccount(props.item)">{{ props.item.groupJoined }}</td>
+        <td @click="goToAccount(props.item)">{{ props.item.groupJoined | formatDate }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
       </template>
       <template slot="no-data">
-        <div class="text-xs-center"> no matching users in the list</div>
+        <div class="text-xs-center">no matching users in the list</div>
       </template>
     </v-data-table>
     {{getUserData.length}} users in the list
@@ -71,8 +58,8 @@
 </template>
 
 <script>
-
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
+import moment from "moment";
 
 export default {
   name: "UserList",
@@ -99,21 +86,21 @@ export default {
         { text: "User Name", value: "fullName" }
       ],
       pagination: {
-        sortBy: 'fullName',
+        sortBy: "fullName",
         rowsPerPage: 10
       },
       filters: {
-        search: ''
+        search: ""
       },
-      search: '',
+      search: "",
       user_data: [],
       loading: false
-    }
+    };
   },
   computed: {
     ...mapGetters("admin", {
-      getUserData: "getUserData",
-    }),
+      getUserData: "getUserData"
+    })
   },
   methods: {
     ...mapActions("admin", {
@@ -137,20 +124,31 @@ export default {
       });
       this.deleteNumber = delList.length;
       this.loading = true;
-      return this.deleteUser(delList[0].id).then(result => {
-        console.log(result);
-        this.loading = false;
-        this.deleteNumber = 0;
-      }).catch( e => {
-        console.log(e);
-      });
+      return this.deleteUser(delList[0].id)
+        .then(result => {
+          console.log(result);
+          this.loading = false;
+          this.deleteNumber = 0;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     goToAccount(user) {
-      this.$router.push({ name: 'UserAccount', query: { userId: user.id, user: user.fullName } });
+      this.$router.push({
+        name: "AdminSummary",
+        query: {
+          groupName: user.groupName,
+          userId: user.id,
+          user: user.fullName,
+          type: "user",
+          lastCompleted: user.lastCompleted
+        }
+      });
     },
     userFilter(items, search, filter) {
-      search = search.toString().toLowerCase()
-      return items.filter(row => filter(row["fullName"], search))
+      search = search.toString().toLowerCase();
+      return items.filter(row => filter(row["fullName"], search));
     },
     /*deleteSelected() {
       this.$store.state.app.users = this.$store.state.app.users.filter(el => {
@@ -165,28 +163,23 @@ export default {
         this.page = page;
         this.count = rowsPerPage;
         var sorting = "";
-        if (descending == true) 
-        {
-          sorting = "-" + sortBy;          
+        if (descending == true) {
+          sorting = "-" + sortBy;
         } else {
           sorting = sortBy;
         }
         if (this.count == -1) this.count = this.total;
         this.$store
-          .dispatch("admin/getusers", 
-            {
-              Count: this.count,
-              Page: this.page,
-              Search: this.search,
-              Sort: sorting,
-            }
-          )
+          .dispatch("admin/getusers", {
+            Count: this.count,
+            Page: this.page,
+            Search: this.search,
+            Sort: sorting
+          })
           .then(resp => {
             console.log(resp.data);
             let items = resp.data;
             let total = resp.pagination.total;
-            //let items = resp.data.data.multipleResults;
-            //let total = resp.data.data.paginationMetada.total;
             this.loading = false;
             resolve({
               items,
@@ -199,7 +192,15 @@ export default {
           });
       });
     }
-  },  
+  },
+  filters: {
+    formatDate(date) {
+      return moment(date).format("YYYY-MM-DD hh:mm:ss");
+    },
+    formatDateOnly(date) {
+      return moment(date).format("YYYY-MM-DD");
+    }
+  },
   watch: {
     pagination: {
       handler() {
@@ -220,15 +221,12 @@ export default {
     }
   },
   mounted() {
-      
     this.send_request().then(data => {
       this.user_data = data.items;
       this.total = data.total;
-      console.log("Mounted user_data: "+ this.user_data);
+      console.log("Mounted user_data: " + this.user_data);
     });
-      
-  } 
-  
+  }
 };
 </script>
 
@@ -241,14 +239,13 @@ export default {
   width: 50%;
 }
 
-
->>>table.v-table th {
-  padding: 0.5em!important;
-  text-align: center!important;
+>>> table.v-table th {
+  padding: 0.5em !important;
+  text-align: center !important;
 }
 
 table.v-table td {
-  padding: 0.5em!important;
+  padding: 0.5em !important;
   text-align: center;
 }
 
@@ -256,15 +253,16 @@ table.v-table td {
   padding: 0;
 }
 
-.v-input--selection-controls:not(.v-input--hide-details) >>>.v-input__slot {
+.v-input--selection-controls:not(.v-input--hide-details) >>> .v-input__slot {
   margin-bottom: 0;
 }
 
->>>.v-input--selection-controls__ripple {
+>>> .v-input--selection-controls__ripple {
   margin: 0;
 }
 
-.v-input--selection-controls:not(.v-input--hide-details) >>>.v-input--selection-controls__input {
+.v-input--selection-controls:not(.v-input--hide-details)
+  >>> .v-input--selection-controls__input {
   margin: 0;
 }
 </style>
