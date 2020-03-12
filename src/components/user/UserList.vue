@@ -44,7 +44,7 @@
             @change="countSelected()"
           />
         </td>
-        <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
+        <td @click="goToAccount(props.item)">{{ props.item.email }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.groupName }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.groupJoined | formatDate }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
@@ -80,7 +80,7 @@ export default {
           sortable: false,
           value: "checkbox"
         },
-        { text: "User Code", value: "firstName" },
+        { text: "Email", value: "email" },
         { text: "Group Name ", value: "groupName" },
         { text: "Created", value: "groupJoined" },
         { text: "User Name", value: "fullName" }

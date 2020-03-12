@@ -23,6 +23,7 @@ const state = {
   weeklySummary: [],
   selectedUser: "",
   checkinData: [],
+  submissionList: []
 }
 
 // getters
@@ -40,11 +41,27 @@ const getters = {
   getCoachGroups: state => state.group_data,
   getWeeklySummary: state => state.weeklySummary,
   getCheckinData: state => state.checkinData,
-  getSelectedUser: state => state.selectedUser
+  getSelectedUser: state => state.selectedUser,
+  getSubmissionList: state => state.submissionList
 }
 
 // actions
 const actions = {
+
+  getSubmissionFilter: ({ commit }) => {
+    let header = {
+      "Content-Type" : "application/json-patch+json"
+    }
+    return API.post('api/admin/submissions/filter?Count=999&Page=1', {}, header)
+    .then(result => {
+      if(result.data) {
+        commit("setSubmissionList", result.data);
+      }
+      return result;
+    }).catch(err => {
+      throw err
+    });
+  },
   
   createGroup: ({ commit }, data) => {
     return API.post('api/admin/group', data ).then(result => {
@@ -406,6 +423,9 @@ const mutations = {
   updatedMacros: set('macros'),
   passwordResetUser: set('passwordReset'),
   saveCheckinData: set("checkinData"),
+  setSubmissionList: (state, data) => {
+    state.submissionList = Object.assign([], data)
+  },
   addGroup: (state, group) => {
     state.group_data.push(group);
   },

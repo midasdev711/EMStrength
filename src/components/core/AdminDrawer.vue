@@ -22,7 +22,7 @@
             label="Search user"
             clearable
             class="search"
-            v-model="messageFilters.userName"
+            v-model="messageFilters.ForUserName"
           ></v-text-field>
           <v-select
             name="group_2"
@@ -43,12 +43,12 @@
         >
           <template v-slot:items="props">
             <td @click="switchUser(props.item)">
-              {{ props.item.lastCompleted | fromNow }}
+              {{ props.item.Completed | fromNow }}
               <br />
-              @ {{ props.item.lastCompleted | hour }}
+              @ {{ props.item.Completed | hour }}
             </td>
             <td @click="switchUser(props.item)">
-              {{ props.item.fullName }} {{ props.item.age }}yo
+              {{ props.item.ForUserName }} {{ props.item.age }}
               <br />
               {{ props.item.occupation }} ({{ props.item.groupName }})
             </td>
@@ -111,7 +111,7 @@ export default {
 
       message_thread: [],
       messageFilters: {
-        userName: "",
+        ForUserName: "",
         groupId: ""
       }
     };
@@ -119,28 +119,21 @@ export default {
   computed: {
     ...mapGetters("admin", {
       getGroupData: "getGroupData",
-      getUserData: "getUserData"
+      getUserData: "getUserData",
+      getSubmissionList: "getSubmissionList"
     }),
     ...mapState("admin", ["color"]),
     activeUsers() {
       if (this.search !== null) {
         let search = this.search.toString().toLowerCase();
-        const filtered = this.getUserData.filter(
+        const filtered = this.getSubmissionList.filter(
           d =>
-            d.fullName.toLowerCase().includes(search) &&
-            d.archived == null &&
-            (d.symptomCompleted != null ||
-              d.recoveryCompleted != null ||
-              d.decisionCompleted != null)
+            d.ForUserName.toLowerCase().includes(search) &&
+            d.archived == null
         );
         return filtered;
       }
-      return this.getUserData.filter(
-        d =>
-          d.symptomCompleted != null ||
-          d.recoveryCompleted != null ||
-          d.decisionCompleted != null
-      );
+      return this.getSubmissionList;
     },
 
     inputValue: {
@@ -170,7 +163,8 @@ export default {
   methods: {
     ...mapActions("admin", {
       getgroups: "getgroups",
-      getusers: "getusers"
+      getusers: "getusers",
+      getSubmissionFilter: "getSubmissionFilter"
     }),
 
     ...mapActions("app", {
@@ -217,14 +211,14 @@ export default {
 
     messageFilter(items, messageFilters, filter) {
       var filteredItems = items.filter(item => true);
-      var userNameFilter = !messageFilters.userName
+      var userNameFilter = !messageFilters.ForUserName
         ? ""
-        : messageFilters.userName.trim().toLowerCase();
+        : messageFilters.ForUserName.trim().toLowerCase();
       filteredItems =
         userNameFilter === ""
           ? filteredItems
           : filteredItems.filter(item =>
-              item.fullName.toLowerCase().includes(userNameFilter)
+              item.ForUserName.toLowerCase().includes(userNameFilter)
             );
       var groupId = messageFilters.groupId;
       filteredItems =
@@ -269,10 +263,10 @@ export default {
           query: {
             groupName: item.groupName,
             groupId: index,
-            userId: item.id,
-            user: item.fullName,
+            userId: item.ForUserId,
+            user: item.ForUserName,
             type: "groupuser",
-            lastCompleted: item.lastCompleted
+            lastCompleted: item.Completed
           }
         });
       } else {
@@ -280,10 +274,10 @@ export default {
           name: "AdminSummary",
           query: {
             groupName: item.groupName,
-            userId: item.id,
-            user: item.fullName,
+            userId: item.ForUserId,
+            user: item.ForUserName,
             type: "user",
-            lastCompleted: item.lastCompleted
+            lastCompleted: item.Completed
           }
         });
       }
@@ -299,8 +293,8 @@ export default {
       this.getGroupList();
     }
 
-    if (this.getUserData.length == 0) {
-      this.getUserList();
+    if (this.getSubmissionList.length == 0) {
+      this.getSubmissionFilter();
     }
 
     /*let params = {

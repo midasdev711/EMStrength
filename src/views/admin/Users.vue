@@ -6,7 +6,6 @@
     >Back to Dashboard</v-btn>
     <v-layout wrap>
       <v-flex xs12 lg5>
-       
         <CreateNewGroup @switchTab="activeTab = 1" />
         <div>
           <p></p>
@@ -14,10 +13,10 @@
         <CreateUserCodes @switchTab="activeTab = 1" />
         <div>
           <p></p>
-<p></p>
-<p></p>
+          <p></p>
+          <p></p>
         </div>
-         <CreateNewUser @switchTab="activeTab = 2" class="mb-4" />
+        <CreateNewUser @switchTab="activeTab = 2" class="mb-4" />
       </v-flex>
       <v-flex xs12 lg7>
         <v-tabs v-model="activeTab">
