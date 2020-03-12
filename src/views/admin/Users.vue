@@ -5,7 +5,7 @@
       @click="$router.push({ name: 'AdminSummary' });"
     >Back to Dashboard</v-btn>
     <v-layout wrap>
-      <!-- <v-flex xs12 lg5>
+      <v-flex xs12 lg5>
        
         <CreateNewGroup @switchTab="activeTab = 1" />
         <div>
@@ -18,34 +18,14 @@
 <p></p>
         </div>
          <CreateNewUser @switchTab="activeTab = 2" class="mb-4" />
-      </v-flex>-->
-      <v-flex xs12 lg12>
+      </v-flex>
+      <v-flex xs12 lg7>
         <v-tabs v-model="activeTab">
           <v-tab>Users</v-tab>
           <v-tab>Groups</v-tab>
 
           <v-tab-item>
             <UserList />
-            <v-card>
-              <v-layout>
-                <v-flex xs12 md2>
-                  <v-text-field v-model="codeCount" :counter="10" label="How many" required></v-text-field>
-                </v-flex>
-
-                <v-flex xs12 md3>
-                  <v-select
-                    :items="getGroupData"
-                    item-value="id"
-                    item-text="title"
-                    label="For group"
-                    v-model="groupId"
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 md3>
-                  <v-btn color="success" @click="generateUserCode()">Create</v-btn>
-                </v-flex>
-              </v-layout>
-            </v-card>
           </v-tab-item>
 
           <v-tab-item>
