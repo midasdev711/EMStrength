@@ -128,8 +128,7 @@ export default {
         let search = this.search.toString().toLowerCase();
         const filtered = this.getSubmissionList.filter(
           d =>
-            d.ForUserName.toLowerCase().includes(search) &&
-            d.archived == null
+            d.ForUserName.toLowerCase().includes(search) && d.archived == null
         );
         return filtered;
       }

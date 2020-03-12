@@ -50,17 +50,17 @@ const actions = {
 
   getSubmissionFilter: ({ commit }) => {
     let header = {
-      "Content-Type" : "application/json-patch+json"
+      "Content-Type": "application/json-patch+json"
     }
     return API.post('api/admin/submissions/filter?Count=999&Page=1', {}, header)
-    .then(result => {
-      if(result.data) {
-        commit("setSubmissionList", result.data);
-      }
-      return result;
-    }).catch(err => {
-      throw err
-    });
+      .then(result => {
+        if (result.data) {
+          commit("setSubmissionList", result.data);
+        }
+        return result;
+      }).catch(err => {
+        throw err
+      });
   },
   
   createGroup: ({ commit }, data) => {

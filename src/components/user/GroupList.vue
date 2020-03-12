@@ -9,14 +9,11 @@
       :pagination.sync="pagination"
       :total-items="totalGroups"
       ref="groupTable"
-      class="table">
+      class="table"
+    >
       <template v-slot:items="props">
         <td>
-          <v-checkbox
-            background-color="white"
-            color="success"
-            v-model="props.item.checkbox"
-          />
+          <v-checkbox background-color="white" color="success" v-model="props.item.checkbox" />
         </td>
         <td>{{ props.item.title }}</td>
       </template>
@@ -28,8 +25,7 @@
 </template>
 
 <script>
-
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "GroupList",
@@ -51,43 +47,44 @@ export default {
         { text: "Title ", value: "title" }
       ],
       pagination: {
-        sortBy: 'title',
+        sortBy: "title",
         rowsPerPage: 10
       }
     };
   },
   computed: {
     ...mapGetters("admin", {
-      getGroupData: "getGroupData",
-    }),
+      getGroupData: "getGroupData"
+    })
   },
   methods: {
     ...mapActions("admin", {
-      deleteGroup: "deleteGroup",
+      deleteGroup: "deleteGroup"
     }),
     deleteSelected() {
       let delList = this.getGroupData.filter(el => {
         return el.checkbox == true;
       });
-      return this.deleteGroup(delList[0].id).then(result => {
-        return result;
-      }).catch( e => {
-        console.log(e);
-      });
+      return this.deleteGroup(delList[0].id)
+        .then(result => {
+          return result;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
-
-
   }
 };
 </script>
 
 <style lang="stylus" scoped>
+table.v-table {
+  >>>th:first-child {
+    padding: 0;
+  }
 
-table.v-table
-  >>>th:first-child
-    padding 0
-
-  >>>td 
-    padding 0
-
+  >>>td {
+    padding: 0;
+  }
+}
 </style>
