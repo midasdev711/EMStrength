@@ -27,114 +27,134 @@
         <img src="/img/Eden-4.png" width="80%" />
       </vue-circle>
     </div>
-    <v-stepper v-model="hStepper" v-else>
-      <v-stepper-header>
-        <template v-for="step in getAnswersData">
-          <v-stepper-step
-            :key="`${step.sectionNo}-step`"
-            :complete="hStepper > (step.sectionNo + 1)"
-            :step="step.sectionNo + 1"
-            :color="$vuetify.theme.subheading1"
-            editable
+    <template v-else>
+      <v-layout justify-center ma-0>
+        <v-flex sm6 xs12 v-if="notification">
+        <v-card
+            color
+            class="black--text mt-2 col-sm-6"
           >
-            <span :style="{ color: $vuetify.theme.subheading1 }">
-              {{step.section}}
-              <!--span class="dev-hint">(Section)</span-->
-            </span>
-          </v-stepper-step>
-        </template>
-      </v-stepper-header>
-
-      <v-stepper-items>
-        <v-stepper-content
-          v-for="stepp in getAnswersData"
-          :key="`${stepp.sectionNo}-content`"
-          :step="stepp.sectionNo + 1"
-        >
-          <v-card v-if="isMobile">
-            <h3>
-              {{stepp.section}}
-              <span
-                class="right"
-              >{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
-            </h3>
-          </v-card>
-          <v-card>
-            <v-stepper vertical v-model="vStepper">
-              <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
-                <v-stepper-step
-                  editable
-                  v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
-                  :key="stepl.subsectionNo + '-sub-step'"
-                  :color="$vuetify.theme.subheading2"
-                >
-                  <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
-
-                  <SectionPartStepper :data="stepl.items" />
-                </v-stepper-step>
-
-                <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
-                  <v-card v-if="isMobile && stepp.vertical.length > 1">
-                    <h3>
-                      {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
-                      <span
-                        class="right"
-                      >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
-                    </h3>
-                  </v-card>
-                  <v-card class="mb-5">
-                    <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
-                    <v-form v-model="form1Valid">
-                      <div
-                        class="row"
-                        v-for="a in stepl.items"
-                        :key="a.id"
-                        v-if="a.isConditionQuestionMet"
-                      >
-                        <components
-                          v-if="a.question.useText && a.isConditionQuestionMet"
-                          :is="a.question.type"
-                          :id="compId(a.question.type, a.question.id)"
-                          :title="a.question.title"
-                          :useText="a.question.useText"
-                          :questionId="a.question.id"
-                          :answerId="a.answerId"
-                          :length="a.question.length"
-                          :items="a.question.items"
-                          :text="a.text"
-                          @updateValue="updateComponentValue"
-                        />
-                        <components
-                          v-if="!a.question.useText && a.isConditionQuestionMet"
-                          :is="a.question.type"
-                          :id="compId(a.question.type, a.question.id)"
-                          :title="a.question.title"
-                          :useText="a.question.useText"
-                          :questionId="a.question.id"
-                          :answerId="a.answerId"
-                          :length="a.question.length"
-                          :items="a.question.items"
-                          :value="a.value"
-                          @updateValue="updateComponentValue"
-                        />
-                      </div>
-                    </v-form>
-                    <v-btn
-                      color="primary"
-                      @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
-                    >Continue</v-btn>
-                    <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
-                  </v-card>
-                </v-stepper-content>
+            <v-card-title primary-title>
+              <div>
+                <h3>This part of the diagnostic gathers information on factors that can have an impact on decisions and tendencies around self-care and energy management. <br> For each queston, a statement describes a fector in a person's life that might affect decisions of whether or not to push harder, take on more workload, not get enough recovery, or prioritise other things before self-care. These are not necessarily considered negative influences - some of them drive people to achieve great things - so answering the statements is not evaluating you in any way; rather, providing answers simply helps to paint a more accurate picture of what's going on in your world and the potential impact on your energy wellbeing.</h3>
               </div>
-            </v-stepper>
+            </v-card-title>
+            <v-card-actions right>
+              <v-btn flat class="right" @click="notification = false">Got it!</v-btn>
+            </v-card-actions>
           </v-card>
+        </v-flex>
+        <v-stepper v-model="hStepper" v-else>
+          
+          <v-stepper-header>
+            <template v-for="step in getAnswersData">
+              <v-stepper-step
+                :key="`${step.sectionNo}-step`"
+                :complete="hStepper > (step.sectionNo + 1)"
+                :step="step.sectionNo + 1"
+                :color="$vuetify.theme.subheading1"
+                editable
+              >
+                <span :style="{ color: $vuetify.theme.subheading1 }">
+                  {{step.section}}
+                  <!--span class="dev-hint">(Section)</span-->
+                </span>
+              </v-stepper-step>
+            </template>
+          </v-stepper-header>
 
-          <v-btn color="primary" @click="nextHorizontalStep">Continue</v-btn>
-          <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
-        </v-stepper-content>
-      </v-stepper-items>
-    </v-stepper>
+          <v-stepper-items>
+            <v-stepper-content
+              v-for="stepp in getAnswersData"
+              :key="`${stepp.sectionNo}-content`"
+              :step="stepp.sectionNo + 1"
+            >
+              <v-card v-if="isMobile">
+                <h3>
+                  {{stepp.section}}
+                  <span
+                    class="right"
+                  >{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
+                </h3>
+              </v-card>
+              <v-card>
+                <v-stepper vertical v-model="vStepper">
+                  <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
+                    <v-stepper-step
+                      editable
+                      v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
+                      :key="stepl.subsectionNo + '-sub-step'"
+                      :color="$vuetify.theme.subheading2"
+                    >
+                      <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
+
+                      <SectionPartStepper :data="stepl.items" />
+                    </v-stepper-step>
+
+                    <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
+                      <v-card v-if="isMobile && stepp.vertical.length > 1">
+                        <h3>
+                          {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
+                          <span
+                            class="right"
+                          >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
+                        </h3>
+                      </v-card>
+                      <v-card class="mb-5">
+                        <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
+                        <v-form v-model="form1Valid">
+                          <div
+                            class="row"
+                            v-for="a in stepl.items"
+                            :key="a.id"
+                            v-if="a.isConditionQuestionMet"
+                          >
+                            <components
+                              v-if="a.question.useText && a.isConditionQuestionMet"
+                              :is="a.question.type"
+                              :id="compId(a.question.type, a.question.id)"
+                              :title="a.question.title"
+                              :useText="a.question.useText"
+                              :questionId="a.question.id"
+                              :answerId="a.answerId"
+                              :length="a.question.length"
+                              :items="a.question.items"
+                              :text="a.text"
+                              @updateValue="updateComponentValue"
+                            />
+                            <components
+                              v-if="!a.question.useText && a.isConditionQuestionMet"
+                              :is="a.question.type"
+                              :id="compId(a.question.type, a.question.id)"
+                              :title="a.question.title"
+                              :useText="a.question.useText"
+                              :questionId="a.question.id"
+                              :answerId="a.answerId"
+                              :length="a.question.length"
+                              :items="a.question.items"
+                              :value="a.value"
+                              @updateValue="updateComponentValue"
+                            />
+                          </div>
+                        </v-form>
+                        <v-btn
+                          color="primary"
+                          @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
+                        >Continue</v-btn>
+                        <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
+                      </v-card>
+                    </v-stepper-content>
+                  </div>
+                </v-stepper>
+              </v-card>
+
+              <v-btn color="primary" @click="nextHorizontalStep">Continue</v-btn>
+              <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </v-layout>
+    </template>
   </v-container>
 </template>
 
@@ -150,6 +170,7 @@ export default {
     VueCircle
   },
   data: () => ({
+    notification: true,
     activeMeasurement: 0,
 
     hStepper: 1,
@@ -334,6 +355,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 >>>.v-stepper__content {
   padding: 0;
   margin-right: 0;

@@ -112,12 +112,6 @@ export const publicRoute = [
         component: () => import("@/views/admin/Users.vue")
       },
       {
-        path: "codes",
-        name: "ManageCodes",
-        meta: { title: "Manage Codes", requiresAuth: true },
-        component: () => import("@/views/admin/Codes.vue")
-      },
-      {
         path: "account",
         name: "AdminAccount",
         meta: { title: "Account", requiresAuth: true },

@@ -44,10 +44,10 @@
             @change="countSelected()"
           />
         </td>
+        <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.email }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.groupName }}</td>
         <td @click="goToAccount(props.item)">{{ props.item.groupJoined | formatDate }}</td>
-        <td @click="goToAccount(props.item)">{{ props.item.fullName }}</td>
       </template>
       <template slot="no-data">
         <div class="text-xs-center">no matching users in the list</div>
@@ -80,10 +80,10 @@ export default {
           sortable: false,
           value: "checkbox"
         },
+        { text: "User Name", value: "fullName" },
         { text: "Email", value: "email" },
         { text: "Group Name ", value: "groupName" },
-        { text: "Created", value: "groupJoined" },
-        { text: "User Name", value: "fullName" }
+        { text: "Created", value: "groupJoined" }
       ],
       pagination: {
         sortBy: "fullName",

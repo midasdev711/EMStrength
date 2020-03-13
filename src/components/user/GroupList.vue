@@ -78,7 +78,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-table.v-table {
+table.v-table
   >>>th:first-child {
     padding: 0;
   }
@@ -86,5 +86,18 @@ table.v-table {
   >>>td {
     padding: 0;
   }
-}
+
+  .v-input--selection-controls:not(.v-input--hide-details) >>> .v-input__slot {
+    margin-bottom: 0;
+  }
+
+  >>> .v-input--selection-controls__ripple {
+    margin: 0;
+  }
+
+  .v-input--selection-controls:not(.v-input--hide-details)
+    >>> .v-input--selection-controls__input {
+      margin: 0;
+    }
+
 </style>
