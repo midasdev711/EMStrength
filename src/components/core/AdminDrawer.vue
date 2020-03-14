@@ -29,7 +29,7 @@
             :items="getGroupData"
             item-text="title"
             item-value="title"
-            v-model="messageFilters.groupId"
+            v-model="messageFilters.ForUserGroupId"
             @change="selectGroup"
             clearable
             label="Group"
@@ -42,15 +42,15 @@
           hide-actions
         >
           <template v-slot:items="props">
-            <td @click="switchUser(props.item)">
+            <td class="pr-1" @click="switchUser(props.item)">
               {{ props.item.Completed | fromNow }}
               <br />
               @ {{ props.item.Completed | hour }}
             </td>
-            <td @click="switchUser(props.item)">
-              {{ props.item.ForUserName }} {{ props.item.age }}
+            <td class="pr-1 pl-1" @click="switchUser(props.item)">
+              {{ props.item.ForUserName }} {{ props.item.ForUserAge }}
               <br />
-              {{ props.item.occupation }} ({{ props.item.groupName }})
+              {{ props.item.ForUserOccupation }} ({{ props.item.ForUserGroupName }})
             </td>
           </template>
         </v-data-table>
@@ -112,7 +112,7 @@ export default {
       message_thread: [],
       messageFilters: {
         ForUserName: "",
-        groupId: ""
+        ForUserGroupId: ""
       }
     };
   },
@@ -219,11 +219,11 @@ export default {
           : filteredItems.filter(item =>
               item.ForUserName.toLowerCase().includes(userNameFilter)
             );
-      var groupId = messageFilters.groupId;
+      var ForUserGroupId = messageFilters.ForUserGroupId;
       filteredItems =
-        !groupId || groupId.length === 0
+        !ForUserGroupId || ForUserGroupId.length === 0
           ? filteredItems
-          : filteredItems.filter(item => item.groupName === groupId);
+          : filteredItems.filter(item => item.ForUserGroupName === ForUserGroupId);
 
       return filteredItems;
     },
@@ -233,14 +233,14 @@ export default {
       let index;
       for (let i = 0; i < this.getGroupData.length; i++) {
         const element = this.getGroupData[i];
-        if (element["title"] == this.messageFilters.groupId) {
+        if (element["title"] == this.messageFilters.ForUserGroupId) {
           index = element["id"];
         }
       }
       this.$router.push({
         name: "AdminSummary",
         query: {
-          groupName: this.messageFilters.groupId,
+          groupName: this.messageFilters.ForUserGroupId,
           groupId: index,
           type: "group"
         }
@@ -249,18 +249,18 @@ export default {
 
     switchUser(item) {
       this._clearAnswersData();
-      if (this.messageFilters.groupId) {
+      if (this.messageFilters.ForUserGroupId) {
         let index;
         for (let i = 0; i < this.getGroupData.length; i++) {
           const element = this.getGroupData[i];
-          if (element["title"] == this.messageFilters.groupId) {
+          if (element["title"] == this.messageFilters.ForUserGroupId) {
             index = element["id"];
           }
         }
         this.$router.push({
           name: "AdminSummary",
           query: {
-            groupName: item.groupName,
+            groupName: item.ForUserGroupName,
             groupId: index,
             userId: item.ForUserId,
             user: item.ForUserName,
@@ -272,7 +272,7 @@ export default {
         this.$router.push({
           name: "AdminSummary",
           query: {
-            groupName: item.groupName,
+            groupName: item.ForUserGroupName,
             userId: item.ForUserId,
             user: item.ForUserName,
             type: "user",
@@ -295,34 +295,6 @@ export default {
     if (this.getSubmissionList.length == 0) {
       this.getSubmissionFilter();
     }
-
-    /*let params = {
-              Count: this.count,
-              Page: this.page,
-              Search: this.search,
-              Sort: "",
-            };
-    this.getUsers(params).then(data => {
-        this.review_list = data;
-        this.reviewCount = data.length;
-        var routeQuery = this.$route.query;
-        console.log(routeQuery);
-        if (!routeQuery.userId && this.review_list.length > 0) {
-          this.$router.push({ name: 'DashboardAdmin', query: { userId: this.review_list[0].userId, user: this.review_list[0].fullName, weekId: this.review_list[0].weeklyDataId } });
-        }
-        console.log(this.review_list);    
-    });*/
-
-    /*this.getReviewList(this.weekNo, this.groupId).then(data => {
-      this.review_list = data;
-      this.reviewCount = data.length;
-      var routeQuery = this.$route.query;
-      console.log(routeQuery);
-      if (!routeQuery.userId && this.review_list.length > 0) {
-        this.$router.push({ name: 'DashboardAdmin', query: { userId: this.review_list[0].userId, user: this.review_list[0].fullName, weekId: this.review_list[0].weeklyDataId } });
-      }
-      console.log(this.review_list);
-    });*/
   }
 };
 </script>
@@ -353,5 +325,13 @@ export default {
 
 .v-tabs__icon {
   display: none !important;
+}
+
+.pr-1 {
+  padding-right: 10px;
+}
+
+.pl-1 {
+  padding-right: 10px;
 }
 </style>
