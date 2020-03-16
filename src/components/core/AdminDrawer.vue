@@ -293,7 +293,21 @@ export default {
     }
 
     if (this.getSubmissionList.length == 0) {
-      this.getSubmissionFilter();
+      this.getSubmissionFilter().then(res => {
+        if (this.getSubmissionList.length > 0) {
+          let element = this.getSubmissionList[0];
+          this.$router.push({
+            name: "AdminSummary",
+            query: {
+              groupName: element.ForUserGroupName,
+              userId: element.ForUserId,
+              user: element.ForUserName,
+              type: "user",
+              lastCompleted: element.Completed
+            }
+          });
+        }
+      });
     }
   }
 };
