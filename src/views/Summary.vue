@@ -105,7 +105,7 @@
           </v-tab-item>
         </v-tabs-items>
       </template>
-      <div v-else>There is no summary data</div>
+      <div v-else><v-card><v-card-title>There is no summary data</v-card-title></v-card></div>
     </div>
   </v-container>
 </template>

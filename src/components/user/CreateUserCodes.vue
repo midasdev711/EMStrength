@@ -6,17 +6,18 @@
         <v-flex xs12>
           <v-select
             v-model="groupId"
-          
             :items="getGroupData"
             :item-text="'title'"
             :item-value="'id'"
+            v-validate="'required'"
             >
           </v-select>
           <v-text-field
             name="Qty"
             label="Qty"
             v-model="qty"
-            v-validate="'required'"
+            type="number"
+            :rules="rules"
             :error-messages="errors.collect('Qty')"></v-text-field>
         </v-flex>
         <div class="ma-auto">
@@ -35,9 +36,13 @@ export default {
   name: "CreateUserCodes",
   data() {
     return {
-      groupId: "",
+      groupId: null, 
       qty: 1,
-      loading: false
+      loading: false,
+      rules: [
+        v => !!v || 'Required',
+        v => v > 0 || 'Quantity should be bigger than 0',
+      ],
     }
   },
   computed: {
@@ -55,6 +60,17 @@ export default {
         groupId: this.groupId,
         qty: this.qty
       };
+
+      if (this.groupId == null ) {
+        this.$toast.warning("Please select a group");
+        return;
+      }
+
+      if (this.qty < 1) {
+        this.$toast.warning("Please input valid quantity");
+        return;
+      }
+
       this.loading = true;
 
       return this._postGenerateUserCodes(formData).then(result => {
@@ -63,21 +79,8 @@ export default {
         console.log(result);
 
       }).catch( e => {
-        console.log(e);
+        this.$toast.error(e);
       });
-
-      /*return this._postGenerateUserCodes(formData).then(result => {
-        this.loading = false;
-        if(!result.data) {
-          this.postGenerateUserCodesErrorCallback(result.errors);
-          return;
-        }
-        this.$emit('switchTab');
-        this.title = "";
-        this.$toast.success('Generated User codes for group');
-      }).catch( e => {
-        console.log(e);
-      });*/
     },
     postGenerateUserCodesErrorCallback(error) {
       var err = Array.isArray(error) ? error[0] : error;
