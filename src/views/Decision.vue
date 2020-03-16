@@ -23,18 +23,18 @@
       <v-layout justify-center ma-0>
         <v-flex sm6 xs12 v-if="notification">
           <v-card
-              color
-              class="black--text mt-2 col-sm-6"
-            >
-              <v-card-title primary-title>
-                <div>
-                  <h3>This part of the diagnostic gathers information on factors that can have an impact on decisions and tendencies around self-care and energy management. <br> For each queston, a statement describes a fector in a person's life that might affect decisions of whether or not to push harder, take on more workload, not get enough recovery, or prioritise other things before self-care. These are not necessarily considered negative influences - some of them drive people to achieve great things - so answering the statements is not evaluating you in any way; rather, providing answers simply helps to paint a more accurate picture of what's going on in your world and the potential impact on your energy wellbeing.</h3>
-                </div>
-              </v-card-title>
-              <v-card-actions text-align-right>
-                <v-btn flat right @click="notification = false">Got it!</v-btn>
-              </v-card-actions>
-            </v-card>
+            color
+            class="black--text mt-2 col-sm-6"
+          >
+            <v-card-title primary-title>
+              <div>
+                <h3>This part of the diagnostic gathers information on factors that can have an impact on decisions and tendencies around self-care and energy management. <br> For each queston, a statement describes a fector in a person's life that might affect decisions of whether or not to push harder, take on more workload, not get enough recovery, or prioritise other things before self-care. These are not necessarily considered negative influences - some of them drive people to achieve great things - so answering the statements is not evaluating you in any way; rather, providing answers simply helps to paint a more accurate picture of what's going on in your world and the potential impact on your energy wellbeing.</h3>
+              </div>
+            </v-card-title>
+            <v-card-actions text-align-right>
+              <v-btn flat right @click="notification = false">Got it!</v-btn>
+            </v-card-actions>
+          </v-card>
         </v-flex>
         <v-stepper v-model="hStepper" v-else>
           <v-stepper-header>

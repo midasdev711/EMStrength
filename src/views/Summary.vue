@@ -20,7 +20,7 @@
       </vue-circle>
     </div>
     <div v-else>
-      <template>
+      <template v-if="getUserSummaryData.length > 0">
         <v-tabs dark v-model="articleTab" color="primary" grow>
           <v-tabs-slider color="yellow"></v-tabs-slider>
 
@@ -29,81 +29,83 @@
             :key="article.articleNo + '-article'"
           >{{ article.articleTitle }}</v-tab>
         </v-tabs>
+      
+        <v-tabs-items dark v-model="articleTab">
+          <v-tab-item
+            v-for="(article, index) in getUserSummaryData"
+            :key="article.articleNo + '-articlecontent' + article.article"
+          >
+            <v-card flat>
+              <v-tabs v-model="sectionTab[index]" color="#00a38a" grow>
+                <v-tabs-slider color="yellow"></v-tabs-slider>
+
+                <v-tab
+                  v-for="section in article.sections"
+                  :key="section.sectionNo + '-section'"
+                >{{ section.section }}</v-tab>
+              </v-tabs>
+              <v-tabs-items v-model="sectionTab[index]">
+                <v-tab-item
+                  v-for="(section, iindex) in article.sections"
+                  :key="section.sectionNo + '-sectioncontent'"
+                >
+                  <v-card flat>
+                    <v-tabs v-model="dateTab[index + '-' + iindex]" color="#47bbe9" grow>
+                      <v-tabs-slider color="green"></v-tabs-slider>
+
+                      <v-tab
+                        v-for="(dateItem, iiindex) in section.dates"
+                        :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-datekey'"
+                        :href="'#' + iiindex + '-' + '-date'"
+                      >{{ dateItem.date | formatDateOnly }} - {{iiindex}}</v-tab>
+                    </v-tabs>
+                    <v-tabs-items v-model="dateTab[index + '-' + iindex]">
+                      <v-tab-item
+                        v-for="(dateItem, iiindex) in section.dates"
+                        :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"
+                        :value="iiindex + '-' + '-date'"
+                      >
+                        <v-card flat>
+                          <v-data-table
+                            :headers="titleHeader"
+                            :pagination.sync="pagination"
+                            :rows-per-page-items="pagination.rowsPerPageItems"
+                            :items="dateItem.results"
+                            hide-actions
+                            class="elevation-1"
+                            light
+                          >
+                            <template v-slot:items="props">
+                              <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                            </template>
+                          </v-data-table>
+                          <v-data-table
+                            :headers="generateUserHeader(dateItem.results)"
+                            :pagination.sync="pagination"
+                            :rows-per-page-items="pagination.rowsPerPageItems"
+                            :items="dateItem.results"
+                            class="elevation-1"
+                            light
+                          >
+                            <template v-slot:items="props">
+                              <td
+                                class="text-xs-center pointer-cursor"
+                                v-for="user in props.item.userResults"
+                                :key="user.id"
+                              >{{ user.value == null ? 'N/A' : user.value }}</td>
+                            </template>
+                          </v-data-table>
+                        </v-card>
+                      </v-tab-item>
+                    </v-tabs-items>
+                  </v-card>
+                </v-tab-item>
+              </v-tabs-items>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
       </template>
-      <v-tabs-items dark v-model="articleTab">
-        <v-tab-item
-          v-for="(article, index) in getUserSummaryData"
-          :key="article.articleNo + '-articlecontent' + article.article"
-        >
-          <v-card flat>
-            <v-tabs v-model="sectionTab[index]" color="#00a38a" grow>
-              <v-tabs-slider color="yellow"></v-tabs-slider>
-
-              <v-tab
-                v-for="section in article.sections"
-                :key="section.sectionNo + '-section'"
-              >{{ section.section }}</v-tab>
-            </v-tabs>
-            <v-tabs-items v-model="sectionTab[index]">
-              <v-tab-item
-                v-for="(section, iindex) in article.sections"
-                :key="section.sectionNo + '-sectioncontent'"
-              >
-                <v-card flat>
-                  <v-tabs v-model="dateTab[index + '-' + iindex]" color="#47bbe9" grow>
-                    <v-tabs-slider color="green"></v-tabs-slider>
-
-                    <v-tab
-                      v-for="(dateItem, iiindex) in section.dates"
-                      :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-datekey'"
-                      :href="'#' + iiindex + '-' + '-date'"
-                    >{{ dateItem.date | formatDateOnly }} - {{iiindex}}</v-tab>
-                  </v-tabs>
-                  <v-tabs-items v-model="dateTab[index + '-' + iindex]">
-                    <v-tab-item
-                      v-for="(dateItem, iiindex) in section.dates"
-                      :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"
-                      :value="iiindex + '-' + '-date'"
-                    >
-                      <v-card flat>
-                        <v-data-table
-                          :headers="titleHeader"
-                          :pagination.sync="pagination"
-                          :rows-per-page-items="pagination.rowsPerPageItems"
-                          :items="dateItem.results"
-                          hide-actions
-                          class="elevation-1"
-                          light
-                        >
-                          <template v-slot:items="props">
-                            <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
-                          </template>
-                        </v-data-table>
-                        <v-data-table
-                          :headers="generateUserHeader(dateItem.results)"
-                          :pagination.sync="pagination"
-                          :rows-per-page-items="pagination.rowsPerPageItems"
-                          :items="dateItem.results"
-                          class="elevation-1"
-                          light
-                        >
-                          <template v-slot:items="props">
-                            <td
-                              class="text-xs-center pointer-cursor"
-                              v-for="user in props.item.userResults"
-                              :key="user.id"
-                            >{{ user.value == null ? 'N/A' : user.value }}</td>
-                          </template>
-                        </v-data-table>
-                      </v-card>
-                    </v-tab-item>
-                  </v-tabs-items>
-                </v-card>
-              </v-tab-item>
-            </v-tabs-items>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
+      <div v-else>There is no summary data</div>
     </div>
   </v-container>
 </template>

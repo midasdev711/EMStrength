@@ -37,21 +37,33 @@ export default {
     }),
     save() {
       // Validate before submit
+      // if (this.title == "") {
+      //   this.$toast.warning('Group name required')
+      //   return
+      // }
       const formData = {
         title: this.title
       };
-      this.loading = true;
-      return this.createGroup(formData).then(result => {
-        this.loading = false;
-        if(!result.data) {
-          this.createGroupErrorCallback(result.errors);
-          return;
+      this.$validator.validateAll().then((valid) => {
+        if (valid) {
+          this.loading = true;
+          return this.createGroup(formData).then(result => {
+            this.loading = false;
+            if(!result.data) {
+              this.createGroupErrorCallback(result.errors);
+              return;
+            }
+            this.title = "";
+            this.$toast.success('Group added');
+          }).catch( e => {
+            console.log(e);
+          });
         }
-        this.$emit('switchTab');
-        this.title = "";
-        this.$toast.success('Group added');
-      }).catch( e => {
-        console.log(e);
+      }).then(_ => {
+        this.errors.clear();
+      }).catch((error) => {
+        console.log(error);
+        this.$toast.error(error);
       });
     },
     createGroupErrorCallback(error) {

@@ -195,6 +195,9 @@ export default {
   },
   filters: {
     formatDate(date) {
+      if (!date) {
+        return "";
+      }
       return moment(date).format("YYYY-MM-DD hh:mm:ss");
     },
     formatDateOnly(date) {
