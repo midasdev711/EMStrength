@@ -38,7 +38,7 @@
         </v-flex>
         <v-stepper v-model="hStepper" v-else>
           <v-stepper-header>
-            <template v-for="step in getDecisionHorizontalData">
+            <template v-for="step in getFilteredQuestionData">
               <v-stepper-step
                 :key="`${step.sectionNo}-step`"
                 :complete="hStepper > (step.sectionNo + 1)"
@@ -51,7 +51,7 @@
 
           <v-stepper-items>
             <v-stepper-content
-              v-for="stepp in getDecisionHorizontalData"
+              v-for="stepp in getFilteredQuestionData"
               :key="`${stepp.sectionNo}-content`"
               :step="stepp.sectionNo + 1"
             >
@@ -60,7 +60,7 @@
                   {{stepp.section}}
                   <span
                     class="right"
-                  >{{stepp.sectionNo + 1}} of {{getDecisionHorizontalData.length}}</span>
+                  >{{stepp.sectionNo + 1}} of {{getFilteredQuestionData.length}}</span>
                 </h3>
               </v-card>
               <v-card>
@@ -94,7 +94,6 @@
                             class="row"
                             v-for="a in stepp.vertical[vStepNum-1].items"
                             :key="a.id"
-                            v-if="a.isConditionQuestionMet"
                           >
                             <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
                             <components
@@ -131,7 +130,7 @@
                         </v-form>
                         <v-btn
                           color="primary"
-                          @click="nextVerticalStep(stepp.vertical.length, getDecisionHorizontalData.length)"
+                          @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >Continue</v-btn>
                         <v-btn flat v-if="vStepNum-1 > 0" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
@@ -191,6 +190,25 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),
+    getFilteredQuestionData() {
+      let result = []
+      for (let i = 0; i < this.getDecisionHorizontalData.length; i ++) {
+        let stepp = this.getDecisionHorizontalData[i]
+        let newVertical = []
+        for (let j = 0; j < stepp.vertical.length; j ++) {
+          let stepl = stepp.vertical[j]
+          let items = stepl.items.filter( v => v.isConditionQuestionMet)
+          let newStepl = Object.assign({}, stepl)
+          newStepl.items = Object.assign([], items)
+          newVertical.push(newStepl);
+        }
+        let newStepp = Object.assign({}, stepp)
+        newStepp.vertical = Object.assign([], newVertical)
+        result.push(newStepp)
+      }
+      console.log(result)
+      return result
+    },
     getLastAnswered() {
       this.hStepper = this.getDecisionLastAnswered.sectionNo
         ? this.getDecisionLastAnswered.sectionNo + 1
@@ -319,7 +337,6 @@ export default {
 
       return this._saveAnswers(answerData)
         .then(res => {
-          console.log(res);
           return res;
         })
         .catch(err => {

@@ -47,7 +47,7 @@
         <v-stepper v-model="hStepper" v-else>
           
           <v-stepper-header>
-            <template v-for="step in getAnswersData">
+            <template v-for="step in getFilteredQuestionData">
               <v-stepper-step
                 :key="`${step.sectionNo}-step`"
                 :complete="hStepper > (step.sectionNo + 1)"
@@ -65,7 +65,7 @@
 
           <v-stepper-items>
             <v-stepper-content
-              v-for="stepp in getAnswersData"
+              v-for="stepp in getFilteredQuestionData"
               :key="`${stepp.sectionNo}-content`"
               :step="stepp.sectionNo + 1"
             >
@@ -74,7 +74,7 @@
                   {{stepp.section}}
                   <span
                     class="right"
-                  >{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
+                  >{{stepp.sectionNo + 1}} of {{getFilteredQuestionData.length}}</span>
                 </h3>
               </v-card>
               <v-card>
@@ -107,10 +107,9 @@
                             class="row"
                             v-for="a in stepl.items"
                             :key="a.id"
-                            v-if="a.isConditionQuestionMet"
                           >
                             <components
-                              v-if="a.question.useText && a.isConditionQuestionMet"
+                              v-if="a.question.useText"
                               :is="a.question.type"
                               :id="compId(a.question.type, a.question.id)"
                               :title="a.question.title"
@@ -125,7 +124,7 @@
                               @update-value="updateComponentValue"
                             />
                             <components
-                              v-if="!a.question.useText && a.isConditionQuestionMet"
+                              v-if="!a.question.useText"
                               :is="a.question.type"
                               :id="compId(a.question.type, a.question.id)"
                               :title="a.question.title"
@@ -143,7 +142,7 @@
                         </v-form>
                         <v-btn
                           color="primary"
-                          @click="nextVerticalStep(stepp.vertical.length, getAnswersData.length)"
+                          @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >Continue</v-btn>
                         <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
@@ -193,6 +192,24 @@ export default {
       getAnswersData: "getDiagnosticAnswersData",
       getDiagnosticLastAnswered: "getDiagnosticLastAnswered"
     }),
+    getFilteredQuestionData() {
+      let result = []
+      for (let i = 0; i < this.getAnswersData.length; i ++) {
+        let stepp = this.getAnswersData[i]
+        let newVertical = []
+        for (let j = 0; j < stepp.vertical.length; j ++) {
+          let stepl = stepp.vertical[j]
+          let items = stepl.items.filter( v => v.isConditionQuestionMet)
+          let newStepl = Object.assign({}, stepl)
+          newStepl.items = Object.assign([], items)
+          newVertical.push(newStepl);
+        }
+        let newStepp = Object.assign({}, stepp)
+        newStepp.vertical = Object.assign([], newVertical)
+        result.push(newStepp)
+      }
+      return result
+    },
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),

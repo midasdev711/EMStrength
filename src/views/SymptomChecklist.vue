@@ -21,7 +21,7 @@
     </div>
     <v-stepper v-model="hStepper" v-else>
       <v-stepper-header>
-        <template v-for="step in getSymptomHorizontalData">
+        <template v-for="step in getFilteredQuestionData">
           <v-stepper-step
             :key="`${step.sectionNo}-step`"
             :complete="hStepper > (step.sectionNo + 1)"
@@ -39,7 +39,7 @@
 
       <v-stepper-items>
         <v-stepper-content
-          v-for="stepp in getSymptomHorizontalData"
+          v-for="stepp in getFilteredQuestionData"
           :key="`${stepp.sectionNo}-content`"
           :step="stepp.sectionNo + 1"
         >
@@ -48,7 +48,7 @@
               {{stepp.section}}
               <span
                 class="right"
-              >{{stepp.sectionNo + 1}} of {{getSymptomHorizontalData.length}}</span>
+              >{{stepp.sectionNo + 1}} of {{getFilteredQuestionData.length}}</span>
             </h3>
           </v-card>
           <v-card>
@@ -83,7 +83,6 @@
                         class="row"
                         v-for="a in stepl.items"
                         :key="a.id"
-                        v-if="a.isConditionQuestionMet"
                       >
                         <!--{{a.question.type}}-->
                         <components
@@ -120,7 +119,7 @@
                     </v-form>
                     <v-btn
                       color="primary"
-                      @click="nextVerticalStep(stepp.vertical.length, getSymptomHorizontalData.length)"
+                      @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                     >Continue</v-btn>
                     <v-btn flat v-if="stepl.sectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                   </v-card>
@@ -166,7 +165,6 @@ export default {
     decNum(amount) {
       const amt = Number(amount);
       return (amt && amt.toFixed(2)) || "0.00";
-      //return amt && amt.toLocaleString(undefined, {maximumFractionDigits:3}) || '0'
     }
   },
   computed: {
@@ -178,6 +176,24 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),
+    getFilteredQuestionData() {
+      let result = []
+      for (let i = 0; i < this.getSymptomHorizontalData.length; i ++) {
+        let stepp = this.getSymptomHorizontalData[i]
+        let newVertical = []
+        for (let j = 0; j < stepp.vertical.length; j ++) {
+          let stepl = stepp.vertical[j]
+          let items = stepl.items.filter( v => v.isConditionQuestionMet)
+          let newStepl = Object.assign({}, stepl)
+          newStepl.items = Object.assign([], items)
+          newVertical.push(newStepl);
+        }
+        let newStepp = Object.assign({}, stepp)
+        newStepp.vertical = Object.assign([], newVertical)
+        result.push(newStepp)
+      }
+      return result
+    },
     getLastAnswered() {
       this.hStepper = this.getSymptomLastAnswered.sectionNo
         ? this.getSymptomLastAnswered.sectionNo + 1
@@ -237,13 +253,6 @@ export default {
       horizontalMaxSteps,
       isSavingAnswer = true
     ) {
-      console.log(
-        this.hStepper,
-        this.vStepper,
-        verticalMaxSteps,
-        horizontalMaxSteps,
-        isSavingAnswer
-      );
       this.isLoading = true;
       let nextSectionNo = this.hStepper;
       let nextSubsectionNo = this.vStepper;
@@ -259,10 +268,7 @@ export default {
 
         return this.saveAnswers(nextSectionNo, nextSubsectionNo)
           .then(res => {
-          })
-          .then(_ => {
             this.isLoading = false;
-            // this.$forceUpdate();
           })
           .catch(err => {
             console.log(err);
@@ -317,8 +323,6 @@ export default {
     this._getQuestionsAnswers(params).then(data => {
       this.isLoading = false;
       this.questions = data;
-      console.log("QuestionAnswer:");
-      console.log(data);
     });
   }
 };
