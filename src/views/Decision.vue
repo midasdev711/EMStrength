@@ -108,7 +108,9 @@
                               :length="a.question.length"
                               :items="a.question.items"
                               :text="a.text"
-                              @updateValue="updateComponentValue"
+                              :section="stepp.sectionNo + 1"
+                              :subsection="vStepNum"
+                              @update-value="updateComponentValue"
                             />
                             <components
                               v-else
@@ -121,7 +123,9 @@
                               :length="a.question.length"
                               :items="a.question.items"
                               :value="a.value"
-                              @updateValue="updateComponentValue"
+                              :section="stepp.sectionNo + 1"
+                              :subsection="vStepNum"
+                              @update-value="updateComponentValue"
                             />
                           </div>
                         </v-form>
@@ -133,64 +137,6 @@
                       </v-card>
                     </v-stepper-content>
                   </div>
-                  <!-- <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
-                    <v-stepper-step
-                      editable
-                      v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
-                      :key="stepl.subsectionNo + '-sub-step'"
-                      :color="$vuetify.theme.subheading2">
-
-                      <SectionPartStepper :data="stepl.items"/>
-
-                    </v-stepper-step>
-
-                    <v-stepper-content
-                      v-bind:step="stepl.subsectionNo + 1"
-                      :key="stepl.subsectionNo + '-sub-content'"
-                    >
-                      <v-card v-if="isMobile">
-                        <h3>{{$vuetify.theme.step.charAt(stepl.subsectionNo)}} <span class="right"> {{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span></h3>
-                      </v-card>
-                      <v-card class="mb-5">
-                        <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
-                        <v-form v-model="form1Valid">
-                          <div class="row" v-for="a in stepl.items" :key="a.id" v-if="a.isConditionQuestionMet">
-                            <components
-                              v-if="a.question.useText"
-                              :is="a.question.type"
-                              :id="compId(a.question.type, a.question.id)"
-                              :title="a.question.title"
-                              :useText="a.question.useText"
-                              :questionId="a.question.id"
-                              :answerId="a.answerId"
-                              :length="a.question.length"
-                              :items="a.question.items"
-                              :text="a.text"
-                              @updateValue="updateComponentValue"
-                            />
-                            <components
-                              v-else
-                              :is="a.question.type"
-                              :id="compId(a.question.type, a.question.id)"
-                              :title="a.question.title"
-                              :useText="a.question.useText"
-                              :questionId="a.question.id"
-                              :answerId="a.answerId"
-                              :length="a.question.length"
-                              :items="a.question.items"
-                              :value="a.value"
-                              @updateValue="updateComponentValue"
-                            />
-                          </div>
-                        </v-form>
-                        <v-btn
-                          color="primary"
-                          @click="nextVerticalStep(stepp.vertical.length, getDecisionHorizontalData.length)"
-                        >Continue</v-btn>
-                        <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
-                      </v-card>
-                    </v-stepper-content>
-                  </div>-->
                 </v-stepper>
               </v-card>
 
@@ -234,7 +180,6 @@ export default {
     decNum(amount) {
       const amt = Number(amount);
       return (amt && amt.toFixed(2)) || "0.00";
-      //return amt && amt.toLocaleString(undefined, {maximumFractionDigits:3}) || '0'
     }
   },
   computed: {
@@ -264,9 +209,6 @@ export default {
           ].vertical.length,
           this.getDecisionHorizontalData.length
         );
-        // this.hStepper = hStep;
-        // this.vStepper = vStep;
-        console.log(vStep, hStep);
       }
     }
   },
@@ -279,7 +221,7 @@ export default {
     compId(type, id) {
       return "comp" + type + id;
     },
-    updateComponentValue(value, questionId, answerId, useText) {
+    updateComponentValue(value, questionId, answerId, useText, section, subsection) {
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
           if (useText) {
@@ -288,7 +230,6 @@ export default {
             this.answers[i].value =
               value == true ? 1 : value == false ? 0 : value;
           }
-          //console.log(this.answers);
           return;
         }
       }
@@ -296,7 +237,9 @@ export default {
         answerId: answerId,
         questionId: questionId,
         value: useText ? null : value == true ? 1 : value == false ? 0 : value,
-        text: useText ? value : ""
+        text: useText ? value : "",
+        section: section,
+        subsection: subsection
       };
 
       this.answers.push(tmp);
@@ -362,10 +305,12 @@ export default {
     },
     saveAnswers(nextSectionNo, nextSubsectionNo) {
       let currentTime = new Date().toISOString();
-      console.log(currentTime);
+
+      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+
       let answerData = {
         userId: this.getDataUserProfile.id,
-        answers: this.answers,
+        answers: answers,
         complete: currentTime,
         article: "Decision",
         nextSectionNo: nextSectionNo,

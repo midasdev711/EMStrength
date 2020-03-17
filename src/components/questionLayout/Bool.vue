@@ -24,7 +24,9 @@ export default {
     value: Number,
     questionId: String,
     answerId: String,
-    useText: Boolean
+    useText: Boolean,
+    section: Number,
+    subsection: Number
   },
   data () {
     return {
@@ -34,7 +36,7 @@ export default {
   watch: {
     valueStatus(newProps, oldProps) {
       if (newProps != oldProps) {
-        this.$emit('updateValue', newProps, this.questionId, this.answerId, this.useText);
+        this.$emit('update-value', newProps, this.questionId, this.answerId, this.useText, this.section, this.subsection);
       }
     }
   }

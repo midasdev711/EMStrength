@@ -15,7 +15,7 @@
       :items="items"
       :item-text="'title'"
       :item-value="'value'"
-      :change="$emit('updateValue', sliderValue, questionId, answerId, useText)"
+      :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection)"
       :disabled="disabled"
     >
       
@@ -42,7 +42,9 @@ export default {
     },
     questionId: String,
     answerId: String,
-    useText: Boolean
+    useText: Boolean,
+    section: Number,
+    subsection: Number
   },
   data () {
     return {

@@ -120,7 +120,9 @@
                               :length="a.question.length"
                               :items="a.question.items"
                               :text="a.text"
-                              @updateValue="updateComponentValue"
+                              :section="stepp.sectionNo + 1"
+                              :subsection="stepl.subsectionNo + 1"
+                              @update-value="updateComponentValue"
                             />
                             <components
                               v-if="!a.question.useText && a.isConditionQuestionMet"
@@ -133,7 +135,9 @@
                               :length="a.question.length"
                               :items="a.question.items"
                               :value="a.value"
-                              @updateValue="updateComponentValue"
+                              :section="stepp.sectionNo + 1"
+                              :subsection="stepl.subsectionNo + 1"
+                              @update-value="updateComponentValue"
                             />
                           </div>
                         </v-form>
@@ -233,7 +237,7 @@ export default {
       //this.hStepper = step + 1;
     },
 
-    updateComponentValue(value, questionId, answerId, useText) {
+    updateComponentValue(value, questionId, answerId, useText, section, subsection) {
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
           if (useText) {
@@ -249,7 +253,9 @@ export default {
         answerId: answerId,
         questionId: questionId,
         value: useText ? null : value == true ? 1 : value == false ? 0 : value,
-        text: useText ? value : ""
+        text: useText ? value : "",
+        section: section,
+        subsection: subsection
       };
 
       this.answers.push(tmp);
@@ -257,10 +263,12 @@ export default {
 
     saveAnswers(nextSectionNo, nextSubsectionNo) {
       let currentTime = new Date().toISOString();
-      console.log(currentTime);
+
+      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+
       let answerData = {
         userId: this.getDataUserProfile.id,
-        answers: this.answers,
+        answers: answers,
         complete: currentTime,
         article: "Diagnostic",
         nextSectionNo: nextSectionNo - 1,

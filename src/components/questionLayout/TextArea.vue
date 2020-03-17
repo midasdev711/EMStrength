@@ -25,7 +25,9 @@ export default {
     text: String,
     questionId: String,
     answerId: String,
-    useText: Boolean
+    useText: Boolean,
+    section: Number,
+    subsection: Number
   },
   data () {
     return {
@@ -36,7 +38,7 @@ export default {
     updateValue: debounce(function (e) {
       console.log(e);
       this.textValue = e;
-      this.$emit('updateValue', this.textValue, this.questionId, this.answerId, this.useText)
+      this.$emit('update-value', this.textValue, this.questionId, this.answerId, this.useText, this.section, this.subsection)
     }, 500),
   }
 }

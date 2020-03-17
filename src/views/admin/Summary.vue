@@ -254,7 +254,7 @@
                               :items="a.question.items"
                               :text="a.text"
                               :diabled="true"
-                              @updateValue="updateComponentValue"
+                              @update-value="updateComponentValue"
                             />
                             <components
                               v-if="!a.question.useText"
@@ -268,7 +268,7 @@
                               :items="a.question.items"
                               :value="a.value"
                               :diabled="true"
-                              @updateValue="updateComponentValue"
+                              @update-value="updateComponentValue"
                             />
                           </div>
                         </v-form>

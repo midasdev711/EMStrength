@@ -20,7 +20,7 @@
       </vue-circle>
     </div>
     <div v-else>
-      <template v-if="getUserSummaryData.length > 0">
+      <template v-if="getUserSummaryData">
         <v-tabs dark v-model="articleTab" color="primary" grow>
           <v-tabs-slider color="yellow"></v-tabs-slider>
 

@@ -12,7 +12,7 @@
       step="1"
       ticks="always"
       tick-size="7"
-      :change="$emit('updateValue', sliderValue, questionId, answerId, useText)"
+      :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection)"
       :disabled="disabled"
     >
       <template v-slot:thumb-label="props">
@@ -44,7 +44,9 @@ export default {
     },
     questionId: String,
     answerId: String,
-    useText: Boolean
+    useText: Boolean,
+    section: Number,
+    subsection: Number
   },
   data () {
     return {
