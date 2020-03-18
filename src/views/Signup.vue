@@ -45,7 +45,7 @@ export default {
   data() {
       return {
         loading: false,
-        userCode: "Zsk5t2JDH" 
+        userCode: "" 
     }
   },
   methods: {

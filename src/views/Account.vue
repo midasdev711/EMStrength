@@ -94,6 +94,7 @@ export default {
       getUser: "getUser"
     }),
     ...mapActions("auth", {
+      signin: "login",
       _updateUser: "updateUser",
       updateCurrentUserData: "getMe",
       _getUserCode: "getUserCode"
@@ -134,7 +135,21 @@ export default {
           this._postUser(data)
             .then(res => {
               this.$toast.success(`Successfully updated`);
-              this.$router.push({ name: "Recovery" });
+              const formData = new FormData();
+              formData.append("Username", this.user.email);
+              formData.append("Password", "N123456");
+              this.signin(formData)
+                .then(res => {
+                  if (res.status)
+                    this.$router.push("/");
+                  else {
+                    this.$toast.error('Incorrect username or password');
+                    this.loading = false;
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
             })
             .catch(err => {
               console.log("create failed");
