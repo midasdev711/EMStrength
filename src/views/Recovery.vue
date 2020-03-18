@@ -67,7 +67,7 @@
             <v-checkbox
               :key="question.recoveryId"
               v-model="question.done"
-              v-if="(question.done ? true : false) | !getRecoveryCheck"
+              v-if="(question.done == null ? true : false) | !getRecoveryCheck"
               :label="question.remedy"
               v-for="question in questions.items"
               @change="updateComponentValue(question.recoveryId, question.done)"
@@ -162,13 +162,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions('auth', {getMe: "getMe"}),
     ...mapActions("app", {
       resetState: "resetState",
       setRecoveryCheck: "setRecoveryCheck",
       getAllRecovery: "getAllRecovery",
       saveRecovery: "saveRecovery"
     }),
-    commenceQuestionnaire() {},
+    commenceQuestionnaire() {
+      this.isLoading = true;
+      this.getAllRecovery().then(res => {
+        this.isLoading = false;
+        this.firstTime = true;
+      });  
+    },
 
     showHelpDialog(category, rating, lastCompleted) {
       this.dialogData.category = category;
@@ -234,10 +241,13 @@ export default {
     }
   },
   mounted() {
-    this.getAllRecovery().then(res => {
-      this.isLoading = false;
-      this.firstTime = true;
-    });
+    this.getMe().then(res => {
+      this.getAllRecovery().then(res => {
+        this.isLoading = false;
+        this.firstTime = true;
+      });  
+    })
+    
   }
 };
 </script>

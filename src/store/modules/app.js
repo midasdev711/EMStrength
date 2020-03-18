@@ -8,7 +8,7 @@ const state = {
   questions: [],
   answersData: [],
   recoveryData: [],
-  recoveryCheck: false,
+  recoveryCheck: true,
   diagnosticAnswers: [],
   decisionAnswers: {
     horizontal: [{
