@@ -35,7 +35,7 @@
       <v-card
         color
         class="black--text mt-2"
-        v-if="getSymptomUpdated != null & topNotification & getRecoveryData.length > 0"
+        v-if="getSymptomUpdated != null & !getDataUserProfile.recoveryChecked & getRecoveryData.length > 0"
       >
         <v-card-title primary-title>
           <div>
@@ -43,7 +43,7 @@
           </div>
         </v-card-title>
         <v-card-actions>
-          <v-btn flat @click="topNotification = false">Got it!</v-btn>
+          <v-btn flat @click="visitRecovery">Got it!</v-btn>
         </v-card-actions>
       </v-card>
       <template v-if="getSymptomUpdated != null & getRecoveryData.length > 0">
@@ -167,8 +167,15 @@ export default {
       resetState: "resetState",
       setRecoveryCheck: "setRecoveryCheck",
       getAllRecovery: "getAllRecovery",
-      saveRecovery: "saveRecovery"
+      saveRecovery: "saveRecovery",
+      _visitRecovery: "visitRecovery"
     }),
+
+    visitRecovery() {
+      this.topNotification = false
+      this._visitRecovery()
+    },
+
     commenceQuestionnaire() {
       this.isLoading = true;
       this.getAllRecovery().then(res => {

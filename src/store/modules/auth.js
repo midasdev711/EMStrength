@@ -11,7 +11,8 @@ const state = {
     id: "",
     email: "",
     userAccessCode: "",
-    userRoles: []
+    userRoles: [],
+    recoveryChecked: false
   }
 }
 
@@ -124,6 +125,9 @@ const mutations = {
     state.userProfile.gender = data.gender;
     state.userProfile.email = data.email;
     state.userProfile.userType = data.userType;
+  },
+  visitRecovery: (state) => {
+    state.userProfile.recoveryChecked = true;
   }
 }
 

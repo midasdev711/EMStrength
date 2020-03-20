@@ -110,6 +110,17 @@ const getters = {
 
 // actions
 const actions = {
+  visitRecovery: ({commit}) => {
+    return API.get(`api/visitRecovery`)
+      .then(res => {
+        commit("auth/visitRecovery", {root: true});
+        return true;
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
+
   setSymptomLastAnswered: ({commit}, data) => {
     commit("setSymptomLastAnswered", data);
   },
