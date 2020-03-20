@@ -221,12 +221,13 @@ export default {
         this.getDecisionLastAnswered.sectionNo != null &&
         this.getDecisionLastAnswered.subsectionNo != null
       ) {
-        let { vStep, hStep } = this.goToLastStep(
+        this.goToLastStep(
           this.getDecisionHorizontalData[
             this.getDecisionLastAnswered.sectionNo || 0
           ].vertical.length,
           this.getDecisionHorizontalData.length
         );
+        this.notification = false;
       }
     }
   },
@@ -263,18 +264,14 @@ export default {
       this.answers.push(tmp);
     },
     goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
-      let vStep, hStep;
-      vStep = this.vStepper;
-      hStep = this.hStepper;
-      if (vStep < verticalMaxSteps) {
-        vStep++;
+      if (this.vStepper < verticalMaxSteps) {
+        this.vStepper++;
       } else {
-        if (hStep < horizontalMaxSteps) {
-          hStep++;
+        if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper++;
         }
-        vStep = 1;
+        this.vStepper = 1;
       }
-      return { vStep, hStep };
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;

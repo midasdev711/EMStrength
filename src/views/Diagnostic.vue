@@ -214,8 +214,12 @@ export default {
       getDataUserProfile: "getDataUserProfile"
     }),
     getLastAnswered() {
-      if (this.getDiagnosticLastAnswered.sectionNo == undefined)
+      if (this.getDiagnosticLastAnswered.sectionNo == undefined) {
         this.getDiagnosticLastAnswered.sectionNo = 0;
+        this.notification = true;
+      } else {
+        this.notification = false;
+      }
       this.hStepper = this.getDiagnosticLastAnswered.sectionNo
         ? this.getDiagnosticLastAnswered.sectionNo + 1
         : 1;
@@ -228,7 +232,7 @@ export default {
       if (pageHolder != undefined) {
         let page = pageHolder.vertical;
         if (page != undefined) {
-          //this.goToLastStep(page.length, this.getAnswersData.length);
+          this.goToLastStep(page.length, this.getAnswersData.length);
         }
       }
     }
