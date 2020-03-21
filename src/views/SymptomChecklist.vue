@@ -305,7 +305,11 @@ export default {
       this.vStepper = 1;
     },
     prevVerticalStep() {
-      this.vStepper = this.vStepper > 1 ? this.vStepper - 1 : this.vStepper;
+      let lastAnswered = {
+        sectionNo: this.hStepper - 1,
+        subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+      };
+      this._setLastAnswered(lastAnswered);
     },
     prevHorizontalStep() {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;

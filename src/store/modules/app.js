@@ -111,7 +111,11 @@ const getters = {
 // actions
 const actions = {
   visitRecovery: ({commit}) => {
-    return API.get(`api/visitRecovery`)
+    var headers = {
+      'Content-Type': 'application/json-patch+json',
+      'Accept': 'application/json'
+    };
+    return API.post(`api/visitRecovery`, {}, {})
       .then(res => {
         commit("auth/visitRecovery", {root: true});
         return true;
@@ -126,6 +130,7 @@ const actions = {
   },
 
   setDiagnosticLastAnswered: ({commit}, data) => {
+    console.log(data)
     commit("setDiagnosticLastAnswered", data);
   },
 
@@ -187,7 +192,6 @@ const actions = {
       sectionNo: data.nextSectionNo - 1,
       subsectionNo: data.nextSubsectionNo - 1
     };
-    console.log(data);
     var headers = { 'Content-Type': 'application/json-patch+json' };
     return API.patch('api/user/answers', data, headers).then(result => {
       // commit("setAnswers", data);
@@ -409,11 +413,11 @@ const mutations = {
   },
 
   setDiagnosticLastAnswered: (state, data) => {
-    state.diagnosticAnswers.lastAnswered = Object.assign({}, data);
+    state.diagnosticAnswers.firstAnswered = Object.assign({}, data);
   },
 
   setDecisionLastAnswered: (state, data) => {
-    state.decisionAnswers.lastAnswered = Object.assign({}, data);
+    state.decisionAnswers.firstAnswered = Object.assign({}, data);
   },
 
   // EXAMPLES

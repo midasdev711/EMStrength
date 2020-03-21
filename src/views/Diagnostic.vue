@@ -242,7 +242,8 @@ export default {
       //_getUser: "getUser",
       _getQuestions: "getQuestions",
       _getQuestionsAnswers: "getAnswersData", //getAnswersData ? make dynmaic
-      _saveAnswers: "saveAnswers"
+      _saveAnswers: "saveAnswers",
+      _setDiagnosticLastAnswered: "setDiagnosticLastAnswered"
     }),
 
     compId(type, id) {
@@ -354,7 +355,11 @@ export default {
       this.vStepper = 1;
     },
     prevVerticalStep() {
-      this.vStepper = this.vStepper > 1 ? this.vStepper - 1 : this.vStepper;
+      let lastAnswered = {
+        sectionNo: this.hStepper - 1,
+        subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+      };
+      this._setDiagnosticLastAnswered(lastAnswered);
     },
     prevHorizontalStep() {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
@@ -362,7 +367,6 @@ export default {
     },
 
     loadSubheading(activeMeasurement) {
-      console.log(activeMeasurement);
       this.isLoading = true;
       let data = {
         params: `?Article=Diagnostic&ArticleSubheading=${activeMeasurement}`,

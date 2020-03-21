@@ -210,6 +210,11 @@ export default {
       return result
     },
     getLastAnswered() {
+      if (this.getDecisionLastAnswered.sectionNo == null) {
+        this.notification = true;
+      } else {
+        this.notification = false;
+      }
       this.hStepper = this.getDecisionLastAnswered.sectionNo
         ? this.getDecisionLastAnswered.sectionNo + 1
         : 1;
@@ -227,7 +232,6 @@ export default {
           ].vertical.length,
           this.getDecisionHorizontalData.length
         );
-        this.notification = false;
       }
     }
   },
@@ -235,7 +239,7 @@ export default {
     ...mapActions("app", {
       _getQuestionsAnswers: "getAnswersData",
       _saveAnswers: "saveAnswers",
-      _setDecisionLastAnswered: "setDecisionLastAnswered"
+      _setDecisionLastAnswered: "setDecisionLastAnswered",
     }),
     compId(type, id) {
       return "comp" + type + id;
@@ -312,7 +316,11 @@ export default {
       this.vStepper = 1;
     },
     prevVerticalStep() {
-      this.vStepper = this.vStepper > 1 ? this.vStepper - 1 : this.vStepper;
+      let lastAnswered = {
+        sectionNo: this.hStepper - 1,
+        subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+      };
+      this._setDecisionLastAnswered(lastAnswered);
     },
     prevHorizontalStep() {
       this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
