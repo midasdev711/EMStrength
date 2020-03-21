@@ -145,7 +145,7 @@
                 </v-stepper>
               </v-card>
 
-              <v-btn color="primary" @click="nextHorizontalStep">Continue</v-btn>
+              <v-btn color="primary" v-if="stepp.sectionNo + 1 < getFilteredQuestionData.length" @click="nextHorizontalStep">Continue</v-btn>
               <v-btn flat v-if="stepp.sectionNo > 0" @click="prevHorizontalStep">Back</v-btn>
             </v-stepper-content>
           </v-stepper-items>
@@ -298,11 +298,11 @@ export default {
       }
     },
     nextHorizontalStep() {
-      this.hStepper =
-        this.hStepper < this.questions.horizontal.length
-          ? this.hStepper + 1
-          : this.hStepper;
-      this.vStepper = 1;
+      let lastAnswered = {
+        sectionNo: this.hStepper,
+        subsectionNo: -1
+      };
+      this._setLastAnswered(lastAnswered);
     },
     prevVerticalStep() {
       let lastAnswered = {
@@ -312,8 +312,11 @@ export default {
       this._setLastAnswered(lastAnswered);
     },
     prevHorizontalStep() {
-      this.hStepper = this.hStepper > 1 ? this.hStepper - 1 : this.hStepper;
-      this.vStepper = 1;
+      let lastAnswered = {
+        sectionNo: this.hStepper > 2 ? this.hStepper - 2 : 0,
+        subsectionNo: -1
+      };
+      this._setLastAnswered(lastAnswered);
     },
     saveAnswers(nextSectionNo, nextSubsectionNo) {
       let currentTime = new Date().toISOString();
