@@ -376,6 +376,13 @@ export default {
   }
 }
 
+>>>.v-stepper--vertical .v-stepper__content {
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 0;
+  }
+}
+
 .v-stepper__header {
   @media (max-width: 768px) {
     display: none;
