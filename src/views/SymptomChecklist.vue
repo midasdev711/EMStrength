@@ -24,13 +24,22 @@
         <v-flex sm6 xs12 v-if="notification">
           <v-card
             color
-            class="black--text mt-2 col-sm-6"
+            class="black--text mt-2 col-sm-6 notification"
           >
-            <v-card-title primary-title>
-              <div>
-                <h3>This part of the diagnostic gathers information on factors that can have an impact on decisions and tendencies around self-care and energy management. <br> For each queston, a statement describes a fector in a person's life that might affect decisions of whether or not to push harder, take on more workload, not get enough recovery, or prioritise other things before self-care. These are not necessarily considered negative influences - some of them drive people to achieve great things - so answering the statements is not evaluating you in any way; rather, providing answers simply helps to paint a more accurate picture of what's going on in your world and the potential impact on your energy wellbeing.</h3>
-              </div>
-            </v-card-title>
+            <v-card-title class="headline">Energy Health Symptom Checklist</v-card-title>
+            <v-card-text>
+              <p>
+                You have arrived at the first part of the Energy Health Diagnostic, designed to assess the markers of energy imbalance in your life.
+                <br><br>
+                The early signs of mental and physical health conditions, and/or performance challenges often show up in our daily experiences of mild to moderate mental, emotional &amp; physical symptoms. 
+                <br><br>
+                These symptoms are indicators that there is some sort of imbalance in your body. Without an effective response to the symptoms, they will likely stay the same or progressively get worse.
+                <br><br>
+                Some of these symptoms may seem obvious, some are often hidden from awareness. However, many people don’t pay attention to their symptoms until they become significant and/or disruptive to their lives.
+                <br><br>
+                The Symptom Checklist helps you with a quick survey of a range of symptoms that indicate your current Energy Health balance (or imbalance), so that you can take steps to get healthier.
+              </p>
+            </v-card-text>
             <v-card-actions text-align-right>
               <v-btn flat right @click="notification = false">Got it!</v-btn>
             </v-card-actions>
@@ -382,4 +391,26 @@ export default {
 .v-stepper.v-stepper--vertical.theme--light {
   overflow: visible;
 }
+
+>>>.v-card.notification
+  @media (max-width: 500px) {
+    line-height 19px
+    padding 10px
+    
+
+    .v-card__title, .v-card__text {
+      padding 5px
+    }
+
+    .v-card__title {
+      padding-bottom 15px
+    }
+  }
+
+  @media (max-width: 500px) {
+    .v-card__title {
+      padding-bottom 15px
+      font-size 20px!important
+    }
+  }
 </style>

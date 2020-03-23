@@ -20,16 +20,23 @@
     </div>
     <v-flex xs12 sm6 v-else>
       <v-card v-if="getSymptomUpdated == null">
-        <v-card-title>
-          <h2>Your recovery Do list is empty</h2>
-          <img src="/img/Eden-2.png" width="100%" />
+        <v-card-title align-center justify-center>
+          <h2 class="text-center">Building your Energy Health through Recovery</h2>
+          <img src="/img/Eden-2.png" width="60%" />
         </v-card-title>
-        <v-container fluid align-center text-center>
+        <v-container fluid align-center text-center >
           <h3
-            class="text-justified"
-          >To identify imbalances in your life and the ways to recover we will guide you though questions.</h3>
+            class="text-left"
+          >
+            There are 2 essential steps in balancing your Energy Health to sustain Wellbeing and ensure you can Perform at your Best:
+            <br><br>
+            1. Diagnosing your current Energy Health<br>
+            2. Responding to energy imbalances with Increased Recovery
+            <br><br>
+            Get started with the Diagnostic by going through the Energy Health Symptom Checklist, and then kickstart your Energy Wellbeing and Performance with our guided Recovery To DO-List.
+          </h3>
           <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
-          <h3>allow up to 15 mins to complete</h3>
+          <h3>The Energy Health Symptom Checklist typically takes 5-10 minutes to complete.</h3>
         </v-container>
       </v-card>
       <v-card
@@ -39,7 +46,16 @@
       >
         <v-card-title primary-title>
           <div>
-            <h3>Adopt one of these activities each week. When you have mastered it ... Lorem ipsum dolor sit amet</h3>
+            <p>
+              These are Recovery Activity Lists for
+              <br><br>
+              (1) Mental/Emotional Recovery<br>
+              (2) Physical Recovery<br><br>
+
+              The lists are 30 items long, presented 6 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance. 
+              <br><br>
+              Adopt 1-3 activities at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance. If, at any time, your symptoms become concerning or are experienced as unmanageable, consult a physician and other relevant health care providers (e.g. psychologist).
+            </p>
           </div>
         </v-card-title>
         <v-card-actions>
@@ -76,16 +92,17 @@
         </v-card>
       </template>
 
-      <v-dialog v-model="dialog" max-width="290">
+      <v-dialog v-model="dialog">
         <v-card>
           <v-card-title class="headline">{{dialogData.category}} Recovery</v-card-title>
 
           <v-card-text>
-            <v-layout justify-space-around>
-              <v-icon large :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
-              <h4>{{dialogData.rating}}</h4>
+            <v-layout>
+              <v-icon medium :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
+              <span class="pl-10">{{dialogData.rating | ratingFilter}}</span>
             </v-layout>
-            <p>Last assessed {{getSymptomUpdated | daysAgo }}</p>When you feel this aspect of your life has changed, re-run the diagnostic questionnaire
+            <p>Last assessed {{ getSymptomUpdated | daysAgo }}</p>
+            <p v-html="dialogData.content"></p>
           </v-card-text>
 
           <v-card-actions>
@@ -117,7 +134,8 @@ export default {
       dialogData: {
         category: "",
         rating: "",
-        lastCompleted: ""
+        lastCompleted: "",
+        content: ""
       },
       topNotification: true,
       colorRating: {
@@ -132,7 +150,7 @@ export default {
       checkbox2: false,
       hidden: false,
       isLoading: true,
-      fill: { gradient: ["#48cba2", "#47bbe9"] }
+      fill: { gradient: ["#48cba2", "#47bbe9"] },
     };
   },
   components: {
@@ -159,6 +177,15 @@ export default {
     },
     shadeBackgroundColor(rating, colorRating) {
       return colorRating[rating];
+    },
+    ratingFilter(rating) {
+      if (rating == 'CouldBeImproved') {
+        return 'Keep it going'
+      } else if (rating == 'NeedsImproving') {
+        return 'Needs improving'
+      } else if (rating == 'Poor') {
+        return 'Urgent action'
+      }
     }
   },
   methods: {
@@ -188,7 +215,46 @@ export default {
       this.dialogData.category = category;
       this.dialogData.rating = rating;
       this.dialogData.lastCompleted = lastCompleted;
+      if (category == 'Physical' && rating == 'CouldBeImproved') {
+        this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 
+        <br><br>
+        Every time you feel your energy levels change, it is helpful to re-run the diagnostic. If energy is balanced and you want to reach for higher performance, adopt 2-3 extra activities from the Recovery To-DO List.
+        `
+      } else if (category == 'Physical' && rating == 'Poor') {
+        this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a significant energy imbalance. Ensure you have adopted 3-5 activities from the Recovery To-DO List. 
+          <br><br>
+          Also, postpone any demanding activities that are not high priority, and let go of stressors that are beyond your control.
+          <br><br>
+          Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician for any Physical health concerns.
+        `
+      } else if (category == 'Physical' && rating == 'NeedsImproving') {
+        this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a moderate energy imbalance. Ensure you have adopted 1-3 activities from the Recovery To-DO List. 
+          <br><br>
+          Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician for any Physical health concerns.
+        `
+      } else if ((category == 'Mental' || category == 'Emotional') && rating == 'CouldBeImproved') {
+        this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 
+        <br><br>
+        Every time you feel your energy levels change, you can re-run the diagnostic and adopt Recovery Activities to re-establish energy balance. If energy is balanced and you want to reach for higher performance, adopt 2-3 extra activities from the Recovery To-DO List.
+        `
+      } else if ((category == 'Mental' || category == 'Emotional') && rating == 'Poor') {
+        this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a significant energy imbalance. Ensure you have adopted 3-5 activities from the Recovery To-DO List. 
+          <br><br>
+          Also, postpone any demanding activities in your life that are not high priority, and where you can, let go of stressors that are beyond your control.
+          <br><br>
+          Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician and psychologist for any Mental Health concerns.
+        `
+      } else if ((category == 'Mental' || category == 'Emotional') && rating == 'NeedsImproving') {
+        this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a moderate energy imbalance. Ensure you have adopted at least 2-3 activities from the Recovery To-DO List. 
+          <br><br>
+          Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician and psychologist for any Mental Health concerns.
+        `
+      }
+
+      
+      
       this.dialog = true;
+      console.log(category)
     },
 
     hex2(c) {
@@ -269,11 +335,55 @@ export default {
   justify-content: flex-end;
 }
 
+.v-card__title img {
+  margin 0 auto
+}
+
 .text-justified {
   text-align: justify;
+}
+
+.text-left {
+  text-align: left;
 }
 
 .text-center {
   text-align: center;
 }
+
+.justify-center {
+  justify-content: center
+}
+
+.pl-10 {
+  padding-left: 10px;
+}
+
+>>>.v-dialog
+  max-width 50%
+  @media (max-width: 500px) {
+    max-width 90%
+    line-height 18px
+    .v-card {
+      padding 10px
+    }
+
+    .v-card__title, .v-card__text {
+      padding 5px
+    }
+
+    .v-card__title {
+      padding-bottom 15px
+    }
+  }
+
+  @media (max-width: 500px) {
+    max-width 90%
+    line-height 18px
+
+    .v-card__title {
+      padding-bottom 15px
+      font-size 20px!important
+    }
+  }
 </style>

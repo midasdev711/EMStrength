@@ -14,7 +14,7 @@ const Menu = [
   },
 
   {
-    title: "Stress Recovery Diagnostic",
+    title: "Stress Recovery Analysis",
     icon: "healing",
     name: "StressRecovery",
     key: "key-RecoveryDiagnostic"

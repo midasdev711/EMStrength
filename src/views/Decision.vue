@@ -24,13 +24,24 @@
         <v-flex sm6 xs12 v-if="notification">
           <v-card
             color
-            class="black--text mt-2 col-sm-6"
+            class="black--text mt-2 col-sm-6 notification"
           >
-            <v-card-title primary-title>
-              <div>
-                <h3>This part of the diagnostic gathers information on factors that can have an impact on decisions and tendencies around self-care and energy management. <br> For each queston, a statement describes a fector in a person's life that might affect decisions of whether or not to push harder, take on more workload, not get enough recovery, or prioritise other things before self-care. These are not necessarily considered negative influences - some of them drive people to achieve great things - so answering the statements is not evaluating you in any way; rather, providing answers simply helps to paint a more accurate picture of what's going on in your world and the potential impact on your energy wellbeing.</h3>
-              </div>
-            </v-card-title>
+            <v-card-title class="headline">Energy Health Decision Profile</v-card-title>
+            <v-card-text>
+              <p>
+                You have arrived at the part of the Diagnostic within which we gather information to build your Energy Health Decision Profile. 
+                <br><br>
+                The Profile covers the factors that can affect your Energy Health decisions around self-care, from 5 key areas of influence:
+                <br><br>
+                1. Socio-Cultural<br>
+                2. Situational<br>
+                3. People/Relationships<br>
+                4. Personal<br>
+                5. Mental Health
+                <br><br>
+                You are encouraged to provide as much detail as you can, in order to build an accurate Profile. The accuracy will help with developing the most effective responses to manage your Energy Health. Nonetheless, there is no pressure to respond to questions with which you don't feel comfortable.
+              </p>
+            </v-card-text>
             <v-card-actions text-align-right>
               <v-btn flat right @click="notification = false">Got it!</v-btn>
             </v-card-actions>
@@ -390,4 +401,26 @@ export default {
     display: none;
   }
 }
+
+>>>.v-card.notification
+  @media (max-width: 500px) {
+    line-height 19px
+    padding 10px
+    
+
+    .v-card__title, .v-card__text {
+      padding 5px
+    }
+
+    .v-card__title {
+      padding-bottom 15px
+    }
+  }
+
+  @media (max-width: 500px) {
+    .v-card__title {
+      padding-bottom 15px
+      font-size 20px!important
+    }
+  }
 </style>
