@@ -5,7 +5,7 @@
     </v-toolbar-title>
     <div v-if="$vuetify.breakpoint.xsOnly && $route.meta.title" class="title-mobile">{{ $route.meta.title }}</div>
     <v-spacer></v-spacer>
-    <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck"></v-checkbox>
+    <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck" :disabled="getSymptomUpdated == null"></v-checkbox>
     <v-toolbar-items>
       <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
         <!--v-btn icon flat slot="activator" @click="navigateToFeedback()">
@@ -86,7 +86,8 @@ export default {
   },
   computed: {
     ...mapGetters("auth", {
-      getDataUserProfile: "getDataUserProfile"
+      getDataUserProfile: "getDataUserProfile",
+      getSymptomUpdated: "getSymptomUpdated"
     }),
     ...mapGetters("app", {
       getRecoveryCheck: "getRecoveryCheck"
