@@ -130,7 +130,6 @@ const actions = {
   },
 
   setDiagnosticLastAnswered: ({commit}, data) => {
-    console.log(data)
     commit("setDiagnosticLastAnswered", data);
   },
 

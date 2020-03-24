@@ -168,7 +168,7 @@ export const protectedRoute = [
         path: "/stress_recovery",
         name: "StressRecovery",
         component: () => import(`@/views/Diagnostic.vue`),
-        meta: { title: "Stress Recovery Diagnostic", icon: "checklist", requiresAuth: true }
+        meta: { title: "Stress Recovery Analysis", icon: "checklist", requiresAuth: true }
       },
 
       {

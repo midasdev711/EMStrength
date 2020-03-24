@@ -204,11 +204,7 @@ export default {
     },
 
     commenceQuestionnaire() {
-      this.isLoading = true;
-      this.getAllRecovery().then(res => {
-        this.isLoading = false;
-        this.firstTime = true;
-      });  
+      this.$router.push({name: "StressRecovery", params: {title: this.dialogData.category}})
     },
 
     showHelpDialog(category, rating, lastCompleted) {

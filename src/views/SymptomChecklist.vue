@@ -230,7 +230,6 @@ export default {
       this.vStepper = this.getSymptomLastAnswered.subsectionNo
         ? this.getSymptomLastAnswered.subsectionNo + 1
         : 1;
-      console.log(this.getSymptomLastAnswered)
       if (this.getSymptomLastAnswered.sectionNo != null && this.getSymptomLastAnswered.subsectionNo != null) {
         this.notification = false;
         this.goToLastStep(this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo].vertical.length, this.getSymptomHorizontalData.length);
@@ -249,6 +248,7 @@ export default {
     updateComponentValue(value, questionId, answerId, useText, section, subsection) {
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
+          
           if (useText) {
             this.answers[i].text = value;
           } else {

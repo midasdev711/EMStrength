@@ -187,17 +187,15 @@ export default {
   data: () => ({
     notification: true,
     activeMeasurement: 0,
-
     hStepper: 1,
     vStepper: 1,
     form1Valid: false,
-
     questions: [],
     answers: [],
-
     isLoading: true,
     saved: false,
-    fill: { gradient: ["#48cba2", "#47bbe9"] }
+    fill: { gradient: ["#48cba2", "#47bbe9"] },
+    selectedSection: null
   }),
   computed: {
     ...mapGetters("app", {
@@ -390,7 +388,44 @@ export default {
       this._getQuestionsAnswers(data).then(data => {
         this.isLoading = false;
         this.questions = data;
-        console.log(data);
+        if (this.selectedSection.title) {
+          let lastAnswered;
+          switch (this.selectedSection.title) {
+            case 'Physical':
+              lastAnswered = {
+                sectionNo: 1,
+                subsectionNo: -1
+              };
+              break;
+            case 'Mental':
+              lastAnswered = {
+                sectionNo: 0,
+                subsectionNo: -1
+              };
+              break;
+            case 'Emotional':
+              lastAnswered = {
+                sectionNo: 0,
+                subsectionNo: -1
+              };
+              break;
+            case 'Social':
+              lastAnswered = {
+                sectionNo: 2,
+                subsectionNo: -1
+              };
+              break;
+            case 'Environmental':
+              lastAnswered = {
+                sectionNo: 3,
+                subsectionNo: -1
+              };
+              break;
+            default:
+              break;
+          }
+          this._setDiagnosticLastAnswered(lastAnswered);
+        }
       });
     }
   },
@@ -398,6 +433,7 @@ export default {
     if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
     this.loadSubheading(0);
+    this.selectedSection = this.$router.currentRoute.params
   }
 };
 </script>
