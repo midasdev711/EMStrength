@@ -115,9 +115,9 @@ const actions = {
       'Content-Type': 'application/json-patch+json',
       'Accept': 'application/json'
     };
-    return API.post(`api/visitRecovery`, {}, {})
+    return API.get(`api/user/recovery/recoveryChecked`, headers)
       .then(res => {
-        commit("auth/visitRecovery", {root: true});
+        commit("auth/visitRecovery", {}, {root: true});
         return true;
       })
       .catch(err => {
