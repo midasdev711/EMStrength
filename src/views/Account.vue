@@ -25,7 +25,7 @@
 
       <v-btn :disabled="!valid" color="white" @click="submit">{{isUserDataExist? 'Update' : 'Done'}}</v-btn>
     </v-form>
-    <v-dialog v-model="dialog" class="notification-dialog">
+    <v-dialog v-model="getNotification" class="notification-dialog">
       <v-card>
         <v-card-title class="headline">The Energy Health Diagnostic</v-card-title>
         <v-card-text>
@@ -44,7 +44,7 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn color="green darken-1" flat="flat" @click="dialog = false">OK</v-btn>
+          <v-btn color="green darken-1" flat="flat" @click="dialog = false;_disableNotification();">OK</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -95,7 +95,8 @@ export default {
   components: {},
   methods: {
     ...mapActions("app", {
-      _postUser: "postUser"
+      _postUser: "postUser",
+      _disableNotification: "disableNotification"
     }),
     ...mapActions("admin", {
       getUser: "getUser"
@@ -105,7 +106,6 @@ export default {
       _updateUser: "updateUser",
       updateCurrentUserData: "getMe",
       _getUserCode: "getUserCode",
-      _disableNotification: "disableNotification"
     }),
     reset() {
       this.$refs.form.reset();
@@ -180,7 +180,18 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
       getCurrentUserCode: "getCurrentUserCode"
-    })
+    }),
+    ...mapGetters("app", {
+      getNotificationStatus: "getNotificationStatus"
+    }),
+    getNotification: {
+      get() {
+        return this.dialog | this.getNotificationStatus
+      },
+      set(val) {
+        
+      }
+    }
   },
   mounted() {
     this.isLoading = true;

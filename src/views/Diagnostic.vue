@@ -51,8 +51,8 @@
 
               </p>
             </v-card-text>
-            <v-card-actions text-align-right>
-              <v-btn flat right @click="notification = false;_disableNotification();">Got it!</v-btn>
+            <v-card-actions>
+              <v-btn flat @click="notification = false;_disableNotification();">Got it!</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -468,6 +468,11 @@ export default {
   @media (max-width: 768px) {
     display: none;
   }
+}
+
+>>>.v-card__actions {
+  display flex
+  justify-content flex-end
 }
 
 >>>.v-card.notification

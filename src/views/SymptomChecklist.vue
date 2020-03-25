@@ -40,8 +40,8 @@
                 The Symptom Checklist helps you with a quick survey of a range of symptoms that indicate your current Energy Health balance (or imbalance), so that you can take steps to get healthier.
               </p>
             </v-card-text>
-            <v-card-actions text-align-right>
-              <v-btn flat right @click="notification = false;_disableNotification();">Got it!</v-btn>
+            <v-card-actions>
+              <v-btn flat @click="notification = false;_disableNotification();">Got it!</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -399,6 +399,11 @@ export default {
 
 .v-stepper.v-stepper--vertical.theme--light {
   overflow: visible;
+}
+
+>>>.v-card__actions {
+  display flex
+  justify-content flex-end
 }
 
 >>>.v-card.notification

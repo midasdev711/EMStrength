@@ -2,6 +2,14 @@
   <v-app class="">
     <v-toolbar color="primary darken-1" dark>
       <img src="/img/logo.png" height="36" alt="EnergyHealth" />
+      <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
+          <v-btn icon large flat slot="activator" @click="enableNotification">
+            <img src="/img/information.png" alt="" width="30px" />
+          </v-btn>
+        </v-menu>
+      </v-toolbar-items>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
@@ -16,10 +24,16 @@
 </template>
 
 <script>
+import { mapMutations, mapActions, mapGetters } from "vuex";
+
 export default {
   data: () => ({}),
 
-  methods: {}
+  methods: {
+    ...mapActions("app", {
+      enableNotification: "enableNotification"
+    })
+  }
 }
 </script>
 <style scoped lang="css">
