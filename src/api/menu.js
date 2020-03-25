@@ -1,6 +1,6 @@
 const Menu = [
   {
-    title: "Recovery",
+    title: "Recovery To-Do List",
     icon: "filter_vintage",
     name: "Recovery",
     key: "key-Recovery"
@@ -14,7 +14,7 @@ const Menu = [
   },
 
   {
-    title: "Stress Recovery Analysis",
+    title: "Stress-Recovery Analysis",
     icon: "healing",
     name: "StressRecovery",
     key: "key-RecoveryDiagnostic"

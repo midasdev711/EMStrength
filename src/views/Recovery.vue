@@ -94,7 +94,7 @@
 
       <v-dialog v-model="dialog">
         <v-card>
-          <v-card-title class="headline">{{dialogData.category}} Recovery</v-card-title>
+          <v-card-title class="headline">{{dialogData.category}} Recovery To-Do List</v-card-title>
 
           <v-card-text>
             <v-layout>
