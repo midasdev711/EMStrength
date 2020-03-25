@@ -29,7 +29,7 @@
     </div>
     <template v-else>
       <v-layout justify-center ma-0>
-        <v-flex sm6 xs12 v-if="notification">
+        <v-flex sm6 xs12 v-if="notification || getNotificationStatus">
           <v-card
             color
             class="black--text mt-2 col-sm-6 notification"
@@ -52,7 +52,7 @@
               </p>
             </v-card-text>
             <v-card-actions text-align-right>
-              <v-btn flat right @click="notification = false">Got it!</v-btn>
+              <v-btn flat right @click="notification = false;_disableNotification();">Got it!</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -200,7 +200,11 @@ export default {
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getDiagnosticAnswersData",
-      getDiagnosticLastAnswered: "getDiagnosticLastAnswered"
+      getDiagnosticLastAnswered: "getDiagnosticLastAnswered",
+      getNotificationStatus: "getNotificationStatus"
+    }),
+    ...mapGetters("auth", {
+      getDataUserProfile: "getDataUserProfile",
     }),
     getFilteredQuestionData() {
       let result = []
@@ -220,9 +224,6 @@ export default {
       }
       return result
     },
-    ...mapGetters("auth", {
-      getDataUserProfile: "getDataUserProfile"
-    }),
     getLastAnswered() {
       if (this.getDiagnosticLastAnswered.sectionNo == undefined) {
         this.getDiagnosticLastAnswered.sectionNo = 0;
@@ -253,7 +254,8 @@ export default {
       _getQuestions: "getQuestions",
       _getQuestionsAnswers: "getAnswersData", //getAnswersData ? make dynmaic
       _saveAnswers: "saveAnswers",
-      _setDiagnosticLastAnswered: "setDiagnosticLastAnswered"
+      _setDiagnosticLastAnswered: "setDiagnosticLastAnswered",
+      _disableNotification: "disableNotification"
     }),
 
     compId(type, id) {

@@ -104,7 +104,8 @@ export default {
       signin: "login",
       _updateUser: "updateUser",
       updateCurrentUserData: "getMe",
-      _getUserCode: "getUserCode"
+      _getUserCode: "getUserCode",
+      _disableNotification: "disableNotification"
     }),
     reset() {
       this.$refs.form.reset();

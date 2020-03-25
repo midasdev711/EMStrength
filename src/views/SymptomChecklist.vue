@@ -41,7 +41,7 @@
               </p>
             </v-card-text>
             <v-card-actions text-align-right>
-              <v-btn flat right @click="notification = false">Got it!</v-btn>
+              <v-btn flat right @click="notification = false;_disableNotification();">Got it!</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -200,7 +200,8 @@ export default {
     ...mapGetters("app", {
       getAnswersData: "getSymptomAnswersData",
       getSymptomHorizontalData: "getSymptomHorizontalData",
-      getSymptomLastAnswered: "getSymptomLastAnswered"
+      getSymptomLastAnswered: "getSymptomLastAnswered",
+      getNotificationStatus: "getNotificationStatus"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -231,7 +232,7 @@ export default {
         ? this.getSymptomLastAnswered.subsectionNo + 1
         : 1;
       if (this.getSymptomLastAnswered.sectionNo != null && this.getSymptomLastAnswered.subsectionNo != null) {
-        this.notification = false;
+        this.notification = false | this.getNotificationStatus;
         this.goToLastStep(this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo].vertical.length, this.getSymptomHorizontalData.length);
       }
     }
@@ -240,7 +241,8 @@ export default {
     ...mapActions("app", {
       _getQuestionsAnswers: "getAnswersData",
       _saveAnswers: "saveAnswers",
-      _setLastAnswered: "setSymptomLastAnswered"
+      _setLastAnswered: "setSymptomLastAnswered",
+      _disableNotification: "disableNotification"
     }),
     compId(type, id) {
       return "comp" + type + id;

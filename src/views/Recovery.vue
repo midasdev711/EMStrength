@@ -19,103 +19,113 @@
       </vue-circle>
     </div>
     <v-flex xs12 sm6 v-else>
-      <v-card v-if="getSymptomUpdated == null">
-        <v-card-title align-center justify-center>
-          <h2 class="text-center">Building your Energy Health through Recovery</h2>
-          <img src="/img/Eden-2.png" width="60%" />
-        </v-card-title>
-        <v-container fluid align-center text-center >
-          <h3
-            class="text-left"
-          >
-            There are 2 essential steps in balancing your Energy Health to sustain Wellbeing and ensure you can Perform at your Best:
-            <br><br>
-            1. Diagnosing your current Energy Health<br>
-            2. Responding to energy imbalances with Increased Recovery
-            <br><br>
-            Get started with the Diagnostic by going through the Energy Health Symptom Checklist, and then kickstart your Energy Wellbeing and Performance with our guided Recovery To DO-List.
-          </h3>
-          <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
-          <h3>The Energy Health Symptom Checklist typically takes 5-10 minutes to complete.</h3>
-        </v-container>
-      </v-card>
-      <v-card
-        color
-        class="black--text mt-2"
-        v-if="getSymptomUpdated != null & !getDataUserProfile.recoveryChecked & getRecoveryData.length > 0"
-      >
-        <v-card-title primary-title>
-          <div>
-            <p>
-              These are Recovery Activity Lists for
-              <br><br>
-              (1) Mental/Emotional Recovery<br>
-              (2) Physical Recovery<br><br>
-
-              The lists are 30 items long, presented 6 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance. 
-              <br><br>
-              Adopt 1-3 activities at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance. If, at any time, your symptoms become concerning or are experienced as unmanageable, consult a physician and other relevant health care providers (e.g. psychologist).
-            </p>
-          </div>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn flat @click="visitRecovery">Got it!</v-btn>
-        </v-card-actions>
-      </v-card>
-      <template v-if="getSymptomUpdated != null & getRecoveryData.length > 0">
-        <v-card
-          dark
-          v-bind:color="questions.rating | shadeBackgroundColor(colorRating)"
-          v-for="(questions, index) in getRecoveryData"
-          :key="index + '-recoverysection'"
-          class="question-box mb-2 mt-2"
-        >
-          <v-card-title>
-            <span class="title">{{questions.category}}</span>
-            <v-layout align-center justify-end>
-              <v-icon
-                large
-                @click="showHelpDialog(questions.category, questions.rating, questions.lastCompleted)"
-              >help</v-icon>
-            </v-layout>
+      <template v-if="getSymptomUpdated == null">
+        <v-card>
+          <v-card-title align-center justify-center>
+            <h2 class="text-center">Let's get going on your energy management!</h2>
+            <img src="/img/Eden-2.png" width="60%" />
           </v-card-title>
-          <v-container fluid>
-            <v-checkbox
-              :key="question.recoveryId"
-              v-model="question.done"
-              v-if="(question.done == null ? true : false) | !getRecoveryCheck"
-              :label="question.remedy"
-              v-for="question in questions.items"
-              @change="updateComponentValue(question.recoveryId, question.done)"
-            ></v-checkbox>
+          <v-container fluid align-center text-center >
+            <h3
+              class="text-left"
+            >
+              To identify energy imbalances in your life and guide your Recovery Activities, we'll start with the Symptom Checklist.
+            </h3>
+            <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
+            <h3>allow up to 15 minutes to complete.</h3>
           </v-container>
         </v-card>
       </template>
+      <template v-else>
+        <v-dialog v-model="getNotification" class="notification-dialog">
+          <v-card>
+            <v-card-title class="headline">Building your Energy Health through Recovery</v-card-title>
+            <v-card-text>
+              <p>
+                There are 2 essential steps in balancing your Energy Health to sustain Wellbeing and ensure you can Perform at your Best:
+                <br><br>
+                1. Diagnosing your current Energy Health<br>
+                2. Responding to energy imbalances with Increased Recovery
+                <br><br>
+                Get started with the Diagnostic by going through the Energy Health Symptom Checklist, and then kickstart your Energy Wellbeing and Performance with our guided Recovery To DO-List.
+              </p>
+            </v-card-text>
 
-      <v-dialog v-model="dialog">
-        <v-card>
-          <v-card-title class="headline">{{dialogData.category}} Recovery To-Do List</v-card-title>
-
-          <v-card-text>
-            <v-layout>
-              <v-icon medium :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
-              <span class="pl-10">{{dialogData.rating | ratingFilter}}</span>
-            </v-layout>
-            <p>Last assessed {{ getSymptomUpdated | daysAgo }}</p>
-            <p v-html="dialogData.content"></p>
-          </v-card-text>
-
+            <v-card-actions>
+              <v-btn color="green darken-1" flat="flat" @click="notificationDialog = false; _disableNotification();">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-card
+          color
+          class="black--text mt-2"
+          v-if="!getDataUserProfile.recoveryChecked & getRecoveryData.length > 0"
+        >
+          <v-card-title primary-title>
+            <div>
+              <p v-html="tipText"></p>
+            </div>
+          </v-card-title>
           <v-card-actions>
-            <v-btn
-              color="green darken-1"
-              flat="flat"
-              @click="dialog = false; commenceQuestionnaire();"
-            >RE-RUN</v-btn>
-
-            <v-btn color="green darken-1" flat="flat" @click="dialog = false">OK</v-btn>
+            <v-btn flat v-if="!moreTips" @click="moreText">More</v-btn>
+            <v-btn flat @click="visitRecovery">Got it!</v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog>
+        <template v-if="getRecoveryData.length > 0">
+          <v-card
+            dark
+            v-bind:color="questions.rating | shadeBackgroundColor(colorRating)"
+            v-for="(questions, index) in getRecoveryData"
+            :key="index + '-recoverysection'"
+            class="question-box mb-2 mt-2"
+          >
+            <v-card-title>
+              <span class="title">{{questions.category}}</span>
+              <v-layout align-center justify-end>
+                <v-icon
+                  large
+                  @click="showHelpDialog(questions.category, questions.rating, questions.lastCompleted)"
+                >help</v-icon>
+              </v-layout>
+            </v-card-title>
+            <v-container fluid>
+              <v-checkbox
+                :key="question.recoveryId"
+                v-model="question.done"
+                v-if="(question.done == null ? true : false) | !getRecoveryCheck"
+                :label="question.remedy"
+                v-for="question in questions.items"
+                @change="updateComponentValue(question.recoveryId, question.done)"
+              ></v-checkbox>
+            </v-container>
+          </v-card>
+        </template>
+
+        <v-dialog v-model="dialog">
+          <v-card>
+            <v-card-title class="headline">{{dialogData.category}} Recovery To-Do List</v-card-title>
+
+            <v-card-text>
+              <v-layout>
+                <v-icon medium :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
+                <span class="pl-10">{{dialogData.rating | ratingFilter}}</span>
+              </v-layout>
+              <p>Last assessed {{ getSymptomUpdated | daysAgo }}</p>
+              <p v-html="dialogData.content"></p>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn
+                color="green darken-1"
+                flat="flat"
+                @click="dialog = false; commenceQuestionnaire();"
+              >RE-RUN</v-btn>
+
+              <v-btn color="green darken-1" flat="flat" @click="dialog = false">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </template>
     </v-flex>
   </v-layout>
 </template>
@@ -129,6 +139,9 @@ import moment from "moment";
 export default {
   data() {
     return {
+      notificationDialog: true,
+      moreTips: false,
+      tipText: "",
       firstTime: true,
       dialog: false,
       dialogData: {
@@ -137,6 +150,7 @@ export default {
         lastCompleted: "",
         content: ""
       },
+      showNotification: true,
       topNotification: true,
       colorRating: {
         Default: "#c3e2ef",
@@ -163,10 +177,19 @@ export default {
     }),
     ...mapGetters("app", {
       getRecoveryCheck: "getRecoveryCheck",
-      getRecoveryData: "getRecoveryData"
+      getRecoveryData: "getRecoveryData",
+      getNotificationStatus: "getNotificationStatus"
     }),
     toolbarColor() {
       return this.$vuetify.options.extra.mainNav;
+    },
+    getNotification: {
+      get() {
+        return this.notificationDialog | this.getNotificationStatus
+      },
+      set(val) {
+        
+      }
     }
   },
   filters: {
@@ -195,8 +218,21 @@ export default {
       setRecoveryCheck: "setRecoveryCheck",
       getAllRecovery: "getAllRecovery",
       saveRecovery: "saveRecovery",
-      _visitRecovery: "visitRecovery"
+      _visitRecovery: "visitRecovery",
+      _disableNotification: "disableNotification"
     }),
+
+    moreText() {
+      this.tipText = `These are Recovery Activity Lists for
+                <br><br>
+                (1) Mental/Emotional Recovery<br>
+                (2) Physical Recovery<br><br>
+
+                The lists are 30 items long, presented 6 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance. 
+                <br><br>
+                Adopt 1-3 activities at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance. If, at any time, your symptoms become concerning or are experienced as unmanageable, consult a physician and other relevant health care providers (e.g. psychologist).`
+      this.moreTips = true
+    },
 
     visitRecovery() {
       this.topNotification = false
@@ -316,6 +352,8 @@ export default {
         this.firstTime = true;
       });  
     })
+
+    this.tipText = `Adopt 1-3 activities at a time to improve your energy levels`
     
   }
 };
