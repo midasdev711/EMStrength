@@ -6,15 +6,16 @@
       <v-toolbar-items>
         <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
           <v-btn icon large flat slot="activator" @click="enableNotification">
-            <img src="/img/information.png" alt="" width="30px" />
+            <v-icon>info_outline</v-icon>
           </v-btn>
         </v-menu>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
-        <v-layout align-center justify-center>
+        <v-layout  justify-center>
           <v-flex xs12 sm8 md4 lg4>
+            <v-btn color="white" @click="$router.push({ name: 'Recovery'})">Back to recovery</v-btn>
             <router-view :key="$route.path"></router-view>
           </v-flex>
         </v-layout>
