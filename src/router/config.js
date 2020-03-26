@@ -186,10 +186,10 @@ export const protectedRoute = [
       },
 
       {
-        path: "/summary",
-        name: "Summary",
-        component: () => import(`@/views/Summary.vue`),
-        meta: { title: "Summary", icon: "table", requiresAuth: true }
+        path: "/aboutus",
+        name: "aboutus",
+        component: () => import(`@/views/Aboutus.vue`),
+        meta: { title: "About Us", icon: "table", requiresAuth: true }
       },
         
       {

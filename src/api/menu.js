@@ -21,19 +21,18 @@ const Menu = [
   },
 
   {
-    title: "Energy Health Decision Profile",
+    title: "Decision Profile",
     icon: "favorite",
     name: "Decision Profile",
     key: "key-DecisionProfile"
   },
 
   {
-    title: "Summary",
-    icon: "filter_vintage",
-    name: "Summary",
-    key: "key-summary"
+    title: "About Us",
+    icon: "menu_book",
+    name: "aboutus",
+    key: "key-aboutus"
   },
-
 
   {
     title: "Terms & Conditions",
@@ -41,6 +40,7 @@ const Menu = [
     name: "TermsConditions",
     key: "key-TermsConditions"
   },
+
   {
     title: "Privacy Policy",
     icon: "security",       
@@ -49,8 +49,8 @@ const Menu = [
   },
 
   {
-    title: "Energy Health",
-    icon: "shopping_basket",
+    title: "Contact Us",
+    icon: "mail_outline",
     name: "EnergyHealth_shop",
     href: "https://coaching.site.com.au/",
     key: "key-EnergyHealth"

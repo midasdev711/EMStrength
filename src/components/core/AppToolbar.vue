@@ -9,7 +9,7 @@
     <v-toolbar-items>
       <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
         <v-btn icon large flat slot="activator" @click="enableNotification">
-          <img src="/img/information.png" alt="" width="30px" />
+          <v-icon>info_outline</v-icon>
         </v-btn>
       </v-menu>
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
