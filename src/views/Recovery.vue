@@ -71,11 +71,11 @@
             <v-btn flat @click="visitRecovery">Got it!</v-btn>
           </v-card-actions>
         </v-card>
-        <template v-if="getRecoveryData.length > 0">
+        <template v-if="getQuestionData.length > 0">
           <v-card
             dark
             v-bind:color="questions.rating | shadeBackgroundColor(colorRating)"
-            v-for="(questions, index) in getRecoveryData"
+            v-for="(questions, index) in getQuestionData"
             :key="index + '-recoverysection'"
             class="question-box mb-2 mt-2"
           >
@@ -92,7 +92,6 @@
               <v-checkbox
                 :key="question.recoveryId"
                 v-model="question.done"
-                v-if="(question.done == null ? true : false) | !getRecoveryCheck"
                 :label="question.remedy"
                 v-for="question in questions.items"
                 @change="updateComponentValue(question.recoveryId, question.done)"
@@ -180,6 +179,23 @@ export default {
       getRecoveryData: "getRecoveryData",
       getNotificationStatus: "getNotificationStatus"
     }),
+    getQuestionData() {
+      let newRecoveryData = []
+      for (let i = 0; i < this.getRecoveryData.length; i ++) {
+        let questions = this.getRecoveryData[i]
+        let newQuestionItems = []
+        for (let j = 0; j < questions.items.length; j ++) {
+          let question = questions.items[j]
+          if ((question.done == null ? true : false) || !this.getRecoveryCheck) {
+            newQuestionItems.push(question)
+          }
+        }
+        let newQuestions = Object.assign({}, questions)
+        newQuestions.items = Object.assign({}, newQuestionItems)
+        newRecoveryData.push(newQuestions)
+      }
+      return newRecoveryData
+    },
     toolbarColor() {
       return this.$vuetify.options.extra.mainNav;
     },
