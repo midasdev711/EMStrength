@@ -32,7 +32,7 @@
           <p>
             Welcome to the first steps in making a positive change to your Energy Health!
              <br><br>
-            Based in  research, this Diagnostic measures stress and recovery levels, providing information necessary to build a foundation of health for Mental and Physical Wellbeing &amp; Performance.
+            Based in research, this Diagnostic measures stress and recovery levels, providing information necessary to build a foundation of health for Mental and Physical Wellbeing &amp; Performance.
             <br><br>
             We are thrilled to go on this journey with you, sharing insights on how to get the best out of yourself and your life! 
             <br><br>
