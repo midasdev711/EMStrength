@@ -161,7 +161,7 @@ export const protectedRoute = [
         path: "/recovery",
         name: "Recovery",
         component: () => import(`@/views/Recovery.vue`),
-        meta: { title: "Recovery To-Do List", icon: "filter_vintage", requiresAuth: true }
+        meta: { title: "Recovery To-DO List", icon: "filter_vintage", requiresAuth: true }
       },
 
       {
