@@ -5,6 +5,7 @@ import APIService from '@/apiService/apiService.js';
 const API = new APIService();
 
 const state = {
+  showNotification: false,
   questions: [],
   answersData: [],
   recoveryData: [],
@@ -78,6 +79,7 @@ const initialState = {
 
 // getters
 const getters = {
+  getNotificationStatus: state => state.showNotification,
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
   getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.firstAnswered ? state.diagnosticAnswers.firstAnswered : { sectionNo: 0, subsectionNo: 0},
@@ -110,6 +112,14 @@ const getters = {
 
 // actions
 const actions = {
+  enableNotification: ({commit}) => {
+    commit("enableNotification");
+  },
+
+  disableNotification: ({commit}) => {
+    commit("disableNotification");
+  },
+
   visitRecovery: ({commit}) => {
     var headers = {
       'Content-Type': 'application/json-patch+json',
@@ -417,6 +427,14 @@ const mutations = {
 
   setDecisionLastAnswered: (state, data) => {
     state.decisionAnswers.firstAnswered = Object.assign({}, data);
+  },
+
+  enableNotification: (state) => {
+    state.showNotification = true
+  },
+
+  disableNotification: (state) => {
+    state.showNotification = false
   },
 
   // EXAMPLES

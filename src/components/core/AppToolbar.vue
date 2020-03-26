@@ -8,13 +8,9 @@
     <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck" :disabled="getSymptomUpdated == null"></v-checkbox>
     <v-toolbar-items>
       <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
-        <!--v-btn icon flat slot="activator" @click="navigateToFeedback()">
-          <v-badge color="red" overlap >
-            <span slot="badge" v-if="getDataUserProfile.unreadReceivedMessages > 0">{{getDataUserProfile.unreadReceivedMessages}}</span>
-            <v-icon medium>notifications</v-icon>
-          </v-badge>
-        </v-btn-->
-        <!--notification-list></notification-list-->
+        <v-btn icon large flat slot="activator" @click="enableNotification">
+          <img src="/img/information.png" alt="" width="30px" />
+        </v-btn>
       </v-menu>
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
         <v-btn icon large flat slot="activator">
@@ -99,7 +95,8 @@ export default {
   methods: {
     ...mapActions("app", {
       resetState: "resetState",
-      setRecoveryCheck: "setRecoveryCheck"
+      setRecoveryCheck: "setRecoveryCheck",
+      enableNotification: "enableNotification"
     }),
     ...mapMutations("app", ["setDrawer", "toggleDrawer"]),
     handleDrawerToggle() {

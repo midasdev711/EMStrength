@@ -19,6 +19,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((m) => m.meta.requiresAuth)) {
 
     console.log(store.getters['auth/getIsLogined']);
+    store.dispatch('app/disableNotification')
 
     var token = localStorage.getItem('token');
     

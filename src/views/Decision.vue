@@ -21,7 +21,7 @@
     </div>
     <template v-else>
       <v-layout justify-center ma-0>
-        <v-flex sm6 xs12 v-if="notification">
+        <v-flex sm6 xs12 v-if="notification || getNotificationStatus">
           <v-card
             color
             class="black--text mt-2 col-sm-6 notification"
@@ -30,8 +30,6 @@
             <v-card-text>
               <p>
                 You have arrived at the part of the Diagnostic within which we gather information to build your Energy Health Decision Profile. 
-                <br><br>
-                The Profile covers the factors that can affect your Energy Health decisions around self-care, from 5 key areas of influence:
                 <br><br>
                 1. Socio-Cultural<br>
                 2. Situational<br>
@@ -42,8 +40,8 @@
                 You are encouraged to provide as much detail as you can, in order to build an accurate Profile. The accuracy will help with developing the most effective responses to manage your Energy Health. Nonetheless, there is no pressure to respond to questions with which you don't feel comfortable.
               </p>
             </v-card-text>
-            <v-card-actions text-align-right>
-              <v-btn flat right @click="notification = false">Got it!</v-btn>
+            <v-card-actions>
+              <v-btn flat @click="notification = false;_disableNotification();">Got it!</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -196,7 +194,8 @@ export default {
     ...mapGetters("app", {
       getAnswersData: "getDecisionAnswersData",
       getDecisionHorizontalData: "getDecisionHorizontalData",
-      getDecisionLastAnswered: "getDecisionLastAnswered"
+      getDecisionLastAnswered: "getDecisionLastAnswered",
+      getNotificationStatus: "getNotificationStatus"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -221,11 +220,13 @@ export default {
       return result
     },
     getLastAnswered() {
+      console.log(this.getNotificationStatus)
       if (this.getDecisionLastAnswered.sectionNo == null) {
         this.notification = true;
       } else {
         this.notification = false;
       }
+      // this.notification = this.notification | this.getNotificationStatus;
       this.hStepper = this.getDecisionLastAnswered.sectionNo
         ? this.getDecisionLastAnswered.sectionNo + 1
         : 1;
@@ -251,6 +252,7 @@ export default {
       _getQuestionsAnswers: "getAnswersData",
       _saveAnswers: "saveAnswers",
       _setDecisionLastAnswered: "setDecisionLastAnswered",
+      _disableNotification: "disableNotification"
     }),
     compId(type, id) {
       return "comp" + type + id;
@@ -407,6 +409,11 @@ export default {
   @media (max-width: 768px) {
     display: none;
   }
+}
+
+>>>.v-card__actions {
+  display flex
+  justify-content flex-end
 }
 
 >>>.v-card.notification
