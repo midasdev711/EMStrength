@@ -47,7 +47,7 @@
                 1. Diagnosing your current Energy Health<br>
                 2. Responding to energy imbalances with Increased Recovery
                 <br><br>
-                Get started with the Diagnostic by going through the Energy Health Symptom Checklist, and then kickstart your Energy Wellbeing and Performance with our guided Recovery To DO-List.
+                Get started with the Diagnostic by going through the Energy Health Symptom Checklist, and then kickstart your Energy Wellbeing and Performance with our guided Recovery To-DO List.
               </p>
             </v-card-text>
 
@@ -103,7 +103,7 @@
 
         <v-dialog v-model="dialog">
           <v-card>
-            <v-card-title class="headline">{{dialogData.category}} Recovery To-Do List</v-card-title>
+            <v-card-title class="headline">{{dialogData.category}} Recovery To-DO List</v-card-title>
 
             <v-card-text>
               <v-layout>

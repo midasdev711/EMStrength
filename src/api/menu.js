@@ -1,6 +1,6 @@
 const Menu = [
   {
-    title: "Recovery To-Do List",
+    title: "Recovery To-DO List",
     icon: "filter_vintage",
     name: "Recovery",
     key: "key-Recovery"
