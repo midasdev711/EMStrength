@@ -1,7 +1,7 @@
 <template>
   <v-app class="app without-drawer">
     <div class="without-drawer__logo left">
-      <img src="/img/logo.png" alt="EnergyHealth" />
+      <img src="/img/logo.png" height="36" alt="EnergyHealth" />
     </div>
     <admin-toolbar class="app--toolbar"></admin-toolbar>
     <v-content>

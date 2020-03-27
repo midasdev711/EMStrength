@@ -46,17 +46,6 @@
         </v-flex>
       </v-layout>
       <hr />
-      <v-layout wrap text-xs-center mb-3>
-        <v-flex xs12 sm6  v-bind:class="{ 'hidden': isUser }">
-          <h2>Macros</h2>
-          <v-btn @click="macrosDialog = true">
-            Update user's macros
-            <v-icon>keyboard_arrow_right</v-icon>
-          </v-btn>
-          <Macros :userId="userId" :macros="user.profile" :macros-dialog.sync="macrosDialog" @close="macrosDialog = false"></Macros>
-        </v-flex>
-      </v-layout>
-      <hr />
       <v-layout wrap text-xs-center>
         <v-flex xs12>
           <v-btn color="primary" :loading="signOutLoading" @click="signOut">Sign out</v-btn>
@@ -67,7 +56,6 @@
 </template>
 
 <script>
-import Macros from "@/components/account/Macros"
 import ResetPassword from "@/components/account/ResetPassword"
 import DropzoneAvatar from "@/components/widgets/DropzoneAvatar";
 
@@ -112,7 +100,6 @@ export default {
     }
   },
   components: {
-    Macros,
     ResetPassword,
     DropzoneAvatar
   },

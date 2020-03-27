@@ -19,7 +19,7 @@ const state = {
 // getters
 const getters = {
   getIsLogined: state => state.isLogined,
-  getIsAdmin: state => state.isAdmin,
+  getUserType: state => state.userProfile.userType,
   getDataUserProfile: state => state.userProfile,
   getCurrentUserCode: state => state.userProfile.userAccessCode,
   getSymptomUpdated: state => state.userProfile.symptomCompleted

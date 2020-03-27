@@ -15,32 +15,30 @@ const router = new Router({
 // router gards
 router.beforeEach((to, from, next) => {
   NProgress.start()
+  console.log(from, to)
   //auth route is authenticated
   if (to.matched.some((m) => m.meta.requiresAuth)) {
-
-    console.log(store.getters['auth/getIsLogined']);
     store.dispatch('app/disableNotification')
-
     var token = localStorage.getItem('token');
     
-    // if (!store.getters['auth/getIsLogined'] && to.name !== 'Login') {
-    //   next({ name: 'Auth' })
-    // }
-
     if (!token && to.name !== 'Login') {
       next({ name: 'Auth' })
     }
-
-    // if (needSubscription() && to.name !== 'Subscription') {
-    //   next({ name: 'Subscription' })
-    // }
   }
 
-  // if (to.path === '/logout') {
-  //   store.dispatch('entities/auth/logout')
-  //   next({ name: 'Login' })
+  // if (to.matched.some((m) => m.meta.onlyAdmin)) {
+  //   store.dispatch('app/disableNotification')
+  //   if (store.getters['auth/getUserType'] != 'Admin' && to.name !== 'Login' && from.name !== null) {
+  //     next({ name: 'Forbidden' })
+  //   }
   // }
 
+  // if (to.matched.some((m) => m.meta.onlyUser)) {
+  //   store.dispatch('app/disableNotification')
+  //   if (store.getters['auth/getUserType'] != 'User' && to.name !== 'Login' && from.name !== null) {
+  //     next({ name: 'Forbidden' })
+  //   }
+  // }
   next()
 })
 

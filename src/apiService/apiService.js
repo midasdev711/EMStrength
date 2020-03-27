@@ -33,6 +33,8 @@ export default class APIService {
       .catch(e => {
         if (e.response.status == 401) {
           router.push({ name: 'Auth' })
+        } else if (e.response.status == 403) {
+          router.push({ name: 'Forbidden' })
         }
         return e;
       });
@@ -59,6 +61,8 @@ export default class APIService {
           } else {
             router.push({ name: 'Auth' })
           }
+        } else if (e.response.status == 403) {
+          router.push({ name: 'Forbidden' })
         }
         // this.errors.push(e)
         throw e;
@@ -81,6 +85,11 @@ export default class APIService {
       })
       .catch(e => {
         // this.errors.push(e)
+        if (e.response.status == 401) {
+          router.push({ name: 'Auth' })
+        } else if (e.response.status == 403) {
+          router.push({ name: 'Forbidden' })
+        }
         throw e;
       });
   }
@@ -102,6 +111,8 @@ export default class APIService {
       .catch(e => {
         if (e.response.status == 401) {
           router.push({ name: 'Auth' })
+        } else if (e.response.status == 403) {
+          router.push({ name: 'Forbidden' })
         }
         // this.errors.push(e)
         return e;
@@ -125,6 +136,8 @@ export default class APIService {
       .catch(e => {
         if (e.response.status == 401) {
           router.push({ name: 'Auth' })
+        } else if (e.response.status == 403) {
+          router.push({ name: 'Forbidden' })
         }
         // this.errors.push(e)
         return e;

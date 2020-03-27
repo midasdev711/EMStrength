@@ -8,7 +8,7 @@
       <v-btn icon flat @click="$router.push({ name: 'ManageUsers' })">
         <v-icon medium>settings</v-icon>
       </v-btn>
-      <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
+      <!-- <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
         <v-btn icon flat slot="activator">
           <v-badge color="red" overlap>
             <span slot="badge" v-if="getDataUserProfile.unreadReceivedMessages > 0">{{getDataUserProfile.unreadReceivedMessages}}</span>
@@ -16,7 +16,7 @@
           </v-badge>
         </v-btn>
         <notification-list></notification-list>
-      </v-menu>
+      </v-menu> -->
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
         <v-btn icon large flat slot="activator">
           <v-avatar size="30px">
@@ -65,12 +65,6 @@ export default {
           href: "/users/account",
           title: "Profile",
           click: this.handleProfile
-        },
-        {
-          icon: "settings",
-          href: "/users/manage",
-          title: "Settings",
-          click: this.handleSetting
         },
         {
           icon: "fullscreen_exit",

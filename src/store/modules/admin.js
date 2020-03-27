@@ -1,5 +1,4 @@
 import { set, toggle } from "@/util/vuex";
-import { Items, groups } from "@/api/user"
 import  APIService  from '@/apiService/apiService.js';
 import moment from 'moment'
 
@@ -8,8 +7,8 @@ const API = new APIService ();
 const state = {
   checkoutStatus: null,
   showDrawer: null,
-  users: Items,
-  userGroups: groups,
+  users: [],
+  userGroups: [],
   group: null,
   group_data: [],
   user_data: [],

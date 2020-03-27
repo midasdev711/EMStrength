@@ -88,11 +88,13 @@ export const publicRoute = [
       {
         path: "summary",
         name: "AdminSummary",
+        meta: { requiresAuth: true, onlyAdmin: true },
         component: () => import("@/views/admin/Summary.vue")
       },
       {
         path: "account",
         name: "UserAccount",
+        meta: { requiresAuth: true, onlyAdmin: true },
         component: () => import("@/views/admin/UserAccount.vue")
       }
     ]
@@ -108,17 +110,24 @@ export const publicRoute = [
       {
         path: "manage",
         name: "ManageUsers",
-        meta: { title: "Manage Users & Groups", requiresAuth: true },
+        meta: { title: "Manage Users & Groups", requiresAuth: true, onlyAdmin: true },
         component: () => import("@/views/admin/Users.vue")
       },
       {
         path: "account",
         name: "AdminAccount",
-        meta: { title: "Account", requiresAuth: true },
+        meta: { title: "Account", requiresAuth: true, onlyAdmin: true },
         component: () => import("@/views/admin/Account.vue")
       },
       
     ]
+  },
+
+  {
+    path: "/403",
+    name: "Forbidden",
+    meta: { title: "Access Denied", hiddenInMenu: true, requiresAuth: true },
+    component: () => import(/* webpackChunkName: "error-403" */ "@/views/error/Deny.vue")
   },
 
   {
@@ -151,69 +160,60 @@ export const protectedRoute = [
     redirect: "/recovery",
     children: [
       {
-        path: "/403",
-        name: "Forbidden",
-        meta: { title: "Access Denied", hiddenInMenu: true, requiresAuth: true },
-        component: () => import(/* webpackChunkName: "error-403" */ "@/views/error/Deny.vue")
-      },
-
-      {
         path: "/recovery",
         name: "Recovery",
         component: () => import(`@/views/Recovery.vue`),
-        meta: { title: "Recovery To-DO List", icon: "filter_vintage", requiresAuth: true }
+        meta: { title: "Recovery To-DO List", icon: "filter_vintage", requiresAuth: true, onlyUser: true }
       },
 
       {
         path: "/stress_recovery",
         name: "StressRecovery",
         component: () => import(`@/views/Diagnostic.vue`),
-        meta: { title: "Stress-Recovery Analysis", icon: "checklist", requiresAuth: true }
+        meta: { title: "Stress-Recovery Analysis", icon: "checklist", requiresAuth: true, onlyUser: true }
       },
 
       {
         path: "/symptom_checklist",
         name: "Symptom Checklist",
         component: () => import(`@/views/SymptomChecklist.vue`),
-        meta: { title: "Symptom Checklist", icon: "checklist", requiresAuth: true }
+        meta: { title: "Symptom Checklist", icon: "checklist", requiresAuth: true, onlyUser: true }
       },
 
       {
         path: "/decision_profile",
         name: "Decision Profile",
         component: () => import(`@/views/Decision.vue`),
-        meta: { title: "Decision Profile", icon: "favourite", requiresAuth: true }
+        meta: { title: "Decision Profile", icon: "favourite", requiresAuth: true, onlyUser: true }
       },
 
       {
         path: "/aboutus",
         name: "aboutus",
         component: () => import(`@/views/Aboutus.vue`),
-        meta: { title: "About Us", icon: "table", requiresAuth: true }
+        meta: { title: "About Us", icon: "table", requiresAuth: true, onlyUser: true }
       },
         
       {
         path: "/account",
         name: "Account",
         component: () => import(`@/views/Account.vue`),
-        meta: { title: "Profile", requiresAuth: true }
+        meta: { title: "Profile", requiresAuth: true, onlyUser: true }
       },      
 
       {
         path: "terms-and-conditions",
         name: "TermsConditions",
-        meta: { title: "Terms & Conditions", requiresAuth: true },
+        meta: { title: "Terms & Conditions", requiresAuth: true, onlyUser: true },
         component: () => import("@/views/TermsConditions.vue")
       },
+
       {
         path: "privacy-policy",
         name: "PrivacyPolicy",
-        meta: { title: "Privacy Policy", requiresAuth: true },
+        meta: { title: "Privacy Policy", requiresAuth: true, onlyUser: true },
         component: () => import("@/views/PrivacyPolicy.vue")
       },
     ]
   }
-    
-  
-
 ]

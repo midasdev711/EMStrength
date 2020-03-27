@@ -9,7 +9,7 @@
           <h1>403</h1>
           <h2 class="my-3 headline ">Sorry, access denied.</h2>
           <div>
-            <v-btn color="primary" @click="goHome">Go Home</v-btn>
+            <v-btn @click="goHome">Go Home</v-btn>
           </div>
         </div>
       </v-layout>
@@ -18,14 +18,22 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters("auth", {
+      getUserType: "getUserType"
+    }),
+  },
   methods: {
     goHome() {
-      this.$router.push({ path: "/" })
+      if (this.getUserType == 'User') {
+        this.$router.push({ path: "/" })
+      } else if (this.getUserType == 'Admin') {
+        this.$router.push({ path: "/admin" })
+      }
     }
-  },
-  created() {
-    console.log("here")
   }
 }
 </script>
