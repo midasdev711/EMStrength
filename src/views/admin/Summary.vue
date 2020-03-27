@@ -175,11 +175,11 @@
           <img src="/img/Eden-4.png" width="80%" />
         </vue-circle>
       </div>
-      <div class="mt-2" v-if="!isAnswerLoading && getAnswersData.length > 0">
+      <div class="mt-2" v-if="!isAnswerLoading && getFilteredQuestionData.length > 0">
         <div class="clear-fix"></div>
         <v-stepper v-model="hStepper">
           <v-stepper-header>
-            <template v-for="step in getAnswersData">
+            <template v-for="step in getFilteredQuestionData">
               <v-stepper-step
                 :key="`${step.sectionNo}-step`"
                 :complete="hStepper > (step.sectionNo + 1)"
@@ -197,7 +197,7 @@
 
           <v-stepper-items>
             <v-stepper-content
-              v-for="stepp in getAnswersData"
+              v-for="stepp in getFilteredQuestionData"
               :key="`${stepp.sectionNo}-content`"
               :step="stepp.sectionNo + 1"
             >
@@ -206,7 +206,7 @@
                   {{stepp.section}}
                   <span
                     class="right"
-                  >{{stepp.sectionNo + 1}} of {{getAnswersData.length}}</span>
+                  >{{stepp.sectionNo + 1}} of {{getFilteredQuestionData.length}}</span>
                 </h3>
               </v-card>
               <v-card>
@@ -240,7 +240,6 @@
                             class="row"
                             v-for="a in stepl.items"
                             :key="a.id"
-                            v-if="a.isConditionQuestionMet"
                           >
                             <components
                               v-if="a.question.useText"
@@ -349,7 +348,25 @@ export default {
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
-    })
+    }),
+    getFilteredQuestionData() {
+      let result = []
+      for (let i = 0; i < this.getAnswersData.length; i ++) {
+        let stepp = this.getAnswersData[i]
+        let newVertical = []
+        for (let j = 0; j < stepp.vertical.length; j ++) {
+          let stepl = stepp.vertical[j]
+          let items = stepl.items.filter( v => v.isConditionQuestionMet)
+          let newStepl = Object.assign({}, stepl)
+          newStepl.items = Object.assign([], items)
+          newVertical.push(newStepl);
+        }
+        let newStepp = Object.assign({}, stepp)
+        newStepp.vertical = Object.assign([], newVertical)
+        result.push(newStepp)
+      }
+      return result
+    },
   },
   watch: {
     "$route.query"(newQuery, oldQuery) {
