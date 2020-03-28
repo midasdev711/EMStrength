@@ -80,11 +80,11 @@
             class="question-box mb-2 mt-2"
           >
             <v-card-title>
-              <span class="title">{{questions.category}}</span>
+              <span class="title">{{questions.categoryName}}</span>
               <v-layout align-center justify-end>
                 <v-icon
                   large
-                  @click="showHelpDialog(questions.category, questions.rating, questions.lastCompleted)"
+                  @click="showHelpDialog(questions)"
                 >help</v-icon>
               </v-layout>
             </v-card-title>
@@ -102,7 +102,7 @@
 
         <v-dialog v-model="dialog">
           <v-card>
-            <v-card-title class="headline">{{dialogData.category}} Recovery To-DO List</v-card-title>
+            <v-card-title class="headline">{{dialogData.category}} Recovery</v-card-title>
 
             <v-card-text>
               <v-layout>
@@ -259,50 +259,47 @@ export default {
       this.$router.push({name: "StressRecovery", params: {title: this.dialogData.category}})
     },
 
-    showHelpDialog(category, rating, lastCompleted) {
-      this.dialogData.category = category;
-      this.dialogData.rating = rating;
-      this.dialogData.lastCompleted = lastCompleted;
-      if (category == 'Physical' && rating == 'CouldBeImproved') {
+    showHelpDialog(questions) {
+      this.dialogData.category = questions.categoryName;
+      this.dialogData.rating = questions.rating;
+      this.dialogData.lastCompleted = questions.lastCompleted;
+      if (questions.category == 'Physical' && questions.rating == 'CouldBeImproved') {
         this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 
         <br><br>
         Every time you feel your energy levels change, it is helpful to re-run the diagnostic. If energy is balanced and you want to reach for higher performance, adopt 2-3 extra activities from the Recovery To-DO List.
         `
-      } else if (category == 'Physical' && rating == 'Poor') {
+      } else if (questions.category == 'Physical' && questions.rating == 'Poor') {
         this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a significant energy imbalance. Ensure you have adopted 3-5 activities from the Recovery To-DO List. 
           <br><br>
           Also, postpone any demanding activities that are not high priority, and let go of stressors that are beyond your control.
           <br><br>
           Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician for any Physical health concerns.
         `
-      } else if (category == 'Physical' && rating == 'NeedsImproving') {
+      } else if (questions.category == 'Physical' && questions.rating == 'NeedsImproving') {
         this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a moderate energy imbalance. Ensure you have adopted 1-3 activities from the Recovery To-DO List. 
           <br><br>
           Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician for any Physical health concerns.
         `
-      } else if ((category == 'Mental' || category == 'Emotional') && rating == 'CouldBeImproved') {
+      } else if (questions.category == 'MentalEmotional' && questions.rating == 'CouldBeImproved') {
         this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 
         <br><br>
         Every time you feel your energy levels change, you can re-run the diagnostic and adopt Recovery Activities to re-establish energy balance. If energy is balanced and you want to reach for higher performance, adopt 2-3 extra activities from the Recovery To-DO List.
         `
-      } else if ((category == 'Mental' || category == 'Emotional') && rating == 'Poor') {
+      } else if (questions.category == 'MentalEmotional' && questions.rating == 'Poor') {
         this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a significant energy imbalance. Ensure you have adopted 3-5 activities from the Recovery To-DO List. 
           <br><br>
           Also, postpone any demanding activities in your life that are not high priority, and where you can, let go of stressors that are beyond your control.
           <br><br>
           Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician and psychologist for any Mental Health concerns.
         `
-      } else if ((category == 'Mental' || category == 'Emotional') && rating == 'NeedsImproving') {
+      } else if (questions.category == 'MentalEmotional' && questions.rating == 'NeedsImproving') {
         this.dialogData.content = `On last assessment, your Energy Health Symptoms suggest a moderate energy imbalance. Ensure you have adopted at least 2-3 activities from the Recovery To-DO List. 
           <br><br>
           Re-run the diagnostic regularly and continue to adopt Recovery Activities until your Symptoms suggest your energy is balanced again. Consult a physician and psychologist for any Mental Health concerns.
         `
       }
 
-      
-      
       this.dialog = true;
-      console.log(category)
     },
 
     hex2(c) {

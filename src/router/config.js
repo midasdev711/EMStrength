@@ -119,7 +119,6 @@ export const publicRoute = [
         meta: { title: "Account", requiresAuth: true, onlyAdmin: true },
         component: () => import("@/views/admin/Account.vue")
       },
-      
     ]
   },
 

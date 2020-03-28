@@ -15,7 +15,6 @@ const router = new Router({
 // router gards
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  console.log(from, to)
   //auth route is authenticated
   if (to.matched.some((m) => m.meta.requiresAuth)) {
     store.dispatch('app/disableNotification')

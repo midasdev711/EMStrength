@@ -132,7 +132,6 @@ export default {
       this.user['unreadMessages'] = 2;
       this.displayData();
     }*/
-    console.log(this.$route.name)
     this.windowWidth = window.innerWidth;
   }
 }

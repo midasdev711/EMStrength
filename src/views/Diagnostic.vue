@@ -399,31 +399,17 @@ export default {
                 subsectionNo: -1
               };
               break;
-            case 'Mental':
+            case 'Mental/Emotional':
               lastAnswered = {
                 sectionNo: 0,
-                subsectionNo: -1
-              };
-              break;
-            case 'Emotional':
-              lastAnswered = {
-                sectionNo: 0,
-                subsectionNo: -1
-              };
-              break;
-            case 'Social':
-              lastAnswered = {
-                sectionNo: 2,
-                subsectionNo: -1
-              };
-              break;
-            case 'Environmental':
-              lastAnswered = {
-                sectionNo: 3,
                 subsectionNo: -1
               };
               break;
             default:
+              lastAnswered = {
+                sectionNo: 0,
+                subsectionNo: -1
+              };
               break;
           }
           this._setDiagnosticLastAnswered(lastAnswered);

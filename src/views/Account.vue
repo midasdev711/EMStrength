@@ -63,7 +63,7 @@ export default {
     return {
       valid: null,
       dialog: true,
-      userCode: "", // fMvsVLvSf       Zsk5t2JDH              IAFGR1Rfa
+      userCode: null,
       groupId: null,
       user: {
         firstName: "",

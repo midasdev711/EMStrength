@@ -1,7 +1,7 @@
 <template>
   <v-toolbar color="primary" fixed dark app>
     <v-toolbar-title>
-      <v-toolbar-side-icon @click="handleDrawerToggle" v-if="$route.name != 'ManageUsers'"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click="handleDrawerToggle" v-if="showToggleIcon"></v-toolbar-side-icon>
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
@@ -59,6 +59,7 @@ export default {
   },
   data() {
     return {
+      showToggleIcon: true,
       items: [
         {
           icon: "account_circle",
@@ -98,6 +99,12 @@ export default {
     },
     handleSetting() {},
     handleProfile() {}
+  },
+  mounted() {
+    let disableToggleIconList = ['ManageUsers', 'AdminAccount']
+    if (disableToggleIconList.indexOf(this.$route.name) > -1) {
+      this.showToggleIcon = false
+    }
   }
 }
 </script>

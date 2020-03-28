@@ -46,7 +46,7 @@ const actions = {
     });
   },
   getMe: ({ commit }) => {
-    if(!localStorage.getItem("token")){
+    if(!localStorage.getItem("token")) {
       return;
     }
     var headers = {accept: 'application/json'};

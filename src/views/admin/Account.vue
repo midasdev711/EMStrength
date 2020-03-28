@@ -1,193 +1,217 @@
 <template>
   <v-container grid-list-xl class="account-page">
-    <v-btn class="v-btn--back-link" @click="backToDashboard">Back to Dashboard</v-btn>
-    <v-card>
-      <v-layout wrap>
-        <v-flex xs12 sm5 text-xs-center>
-          <div class="mb-3">
-            <v-avatar size="150px">
-            <img v-bind:src="user.avatarURL" alt="">
-            </v-avatar>
-            <DropzoneAvatar ref="dropzone"/>
-          </div>
-          <v-btn @click="saveImage()">Change</v-btn>
-        </v-flex>
-        <v-flex xs12 sm7>
-          <h2>Account Details</h2>
-          <p>Full name: {{user.userName}} </p><!--  ({{user.gender}}) -->
-          <p>Email: {{user.email}}</p>
+    <div class="text-xs-center" v-if="isLoading">
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        v-bind:color="$vuetify.theme['progressColor']"
+        indeterminate
+      ></v-progress-circular>
+    </div>
+    <v-form ref="form" v-model="valid" lazy-validation v-else>
+      <v-text-field v-model="user.firstName" :rules="firstNameRules" label="First name" required></v-text-field>
+
+      <v-text-field v-model="user.lastName" :rules="lastNameRules" label="Last name" required></v-text-field>
+
+      <v-text-field v-model="user.email" :rules="emailRules" label="Email" required></v-text-field>
+
+      <v-text-field v-model="user.age" :rules="ageRules" label="Age" required></v-text-field>
+
+      <v-switch v-model="user.gender" :label="user.gender ? 'Male' : 'Male'"></v-switch>
+
+      <v-text-field v-model="user.postCode" :rules="postCodeRules" label="Post code" required></v-text-field>
+
+      <v-text-field v-model="user.occupation" :rules="occupationRules" label="Occupation" required></v-text-field>
+
+      <v-btn :disabled="!valid" color="white" @click="submit">Update</v-btn>
+    </v-form>
+    <v-dialog v-model="getNotification" class="notification-dialog">
+      <v-card>
+        <v-card-title class="headline">The Energy Health Diagnostic</v-card-title>
+        <v-card-text>
           <p>
-            Password: * * * * * * *
-            <v-btn class="v-btn--inline" @click.sync="passwordDialog = true">RESET</v-btn>
-            <ResetPassword :password-dialog.sync="passwordDialog" @close="passwordDialog = false"></ResetPassword>
+            Welcome to the first steps in making a positive change to your Energy Health!
+            <br><br>
+            Based in research, this Diagnostic measures stress and recovery levels, providing information necessary to build a foundation of health for Mental and Physical Wellbeing &amp; Performance.
+            <br><br>
+            We are thrilled to go on this journey with you, sharing insights on how to get the best out of yourself and your life! 
+            <br><br>
+            We look forward to seeing you create positive change through improving recovery!
+            <br><br>
+            Dr Sean &amp; Kate Richardson<br>
+            Founders, Energy Health Inc
           </p>
-          <p>Group:{{user.groupName}}</p>
-          <p>Measurement preference: {{user.profile && user.profile.measure}} </p>
-                      <v-select
-                        v-model="user.measure"
-                        :items="unitOfMeasurement"
-                        title="option"
-                        item-value="id"
-                        item-name="text"
-                        label="Unit of Measure"
-                      >
-                      </v-select>
-        </v-flex>
-      </v-layout>
-      <hr />
-      <v-layout wrap text-xs-center mb-3>
-        <v-flex xs12 sm6>
-          <h2>Policies</h2>
-          <v-btn class="mb-3" @click="$router.push({ name: 'TermsConditions' })">
-            Terms &amp; Conditions
-            <v-icon>keyboard_arrow_right</v-icon>
-          </v-btn>
-          <v-btn class="mb-3" @click="$router.push({ name: 'PrivacyPolicy' })">
-            Privacy Policy
-            <v-icon>keyboard_arrow_right</v-icon>
-          </v-btn>
-        </v-flex>
-      </v-layout>
-      <hr />
-      <v-layout wrap text-xs-center>
-        <v-flex xs12>
-          <v-btn color="primary" :loading="signOutLoading" @click="signOut">Sign out</v-btn>
-        </v-flex>
-      </v-layout>
-    </v-card>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="green darken-1" flat="flat" @click="dialog = false;_disableNotification();">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
-import ResetPassword from "@/components/account/ResetPassword"
+import ResetPassword from "@/components/account/ResetPassword";
 import DropzoneAvatar from "@/components/widgets/DropzoneAvatar";
 
-import { mapActions, mapGetters } from 'vuex'
-
-const blob_uri = 'https://ctmdevblobstore.blob.core.windows.net';
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Account",
   data() {
     return {
-      userId: "3c2692a0-8768-4472-b9de-3fcb57fde1d9", //TODO: set userId on open  
+      valid: null,
+      dialog: true,
+      userCode: null,
+      groupId: null,
       user: {
-        id: "",
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        gender: "Male",
-        groupName: "",
-        measure: "Metric",
-        avatarURL: '/static/avatar/default.png',
-        profile: {}
+        age: "",
+        gender: false,
+        postCode: "",
+        occupation: "",
+        userType: "User",
+        groupId: ""
       },
-      macrosDialog: false,
-      passwordDialog: false,
-      signOutLoading: false,
-      isUser: false,
-      unitOfMeasurement: [
-        { 
-          value: 0,
-          text: "Metric"
-        },
-        { 
-          value: 1,
-          text: "Imperial"
-        }
-      ]
-    }
+      firstNameRules: [v => !!v || "First name is required"],
+      lastNameRules: [v => !!v || "Last name is required"],
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
+      ageRules: [
+        v => !!v || "Age is required",
+        v => /^\d+$/.test(v) || "Age must be valid"
+      ],
+      occupationRules: [v => !!v || "Occupation is required"],
+      postCodeRules: [v => !!v || "Post code is required"],
+      isLoading: false,
+      isUserDataExist: false
+    };
   },
-  components: {
-    ResetPassword,
-    DropzoneAvatar
-  },
+  components: {},
   methods: {
     ...mapActions("app", {
-      uploadImage: "uploadImage",
-    }),
-    ...mapActions("auth", {
-      getMe: "getMe"
+      _postUser: "postUser",
+      _disableNotification: "disableNotification"
     }),
     ...mapActions("admin", {
-      getUser: "getUser",
-      updateAvatar: "updateAvatar",
-      updateUnit: "updateUnit"
+      getUser: "getUser"
     }),
-
-    async saveImage() {
-      let files = this.$refs.dropzone.getFiles();
-      let file = files[0];
-
-      var result = await this.uploadImage(file);
-      let temp = Object.assign({}, this.user);
-      temp.avatarURL = result;
-      this.user.avatarURL = temp.avatarURL;
-      var data = {
-        "userId": this.user.id,
-        "avatar": this.user.avatarURL
-      }
-      this.updateAvatar(data).then(res => {
-        this.$toast.success('Successfully saved', {});
-        this.getMe().then(data => {
-          this.user = data;
-        });
-      });
+    ...mapActions("auth", {
+      signin: "login",
+      _updateUser: "updateUser",
+      updateCurrentUserData: "getMe",
+      _getUserCode: "getUserCode",
+    }),
+    reset() {
+      this.$refs.form.reset();
+    },
+    resetValidation() {
+      this.$refs.form.resetValidation();
     },
 
-    saveUnit() {
-      var data = {
-        "userId": this.user.id,
-        "measure": this.user.measure
-      }
-      this.updateUnit(data).then(res => {
-        this.$toast.success('Successfully updated unit', {});
-      });
-    },
+    submit() {
+      if (this.$refs.form.validate()) {
+        let data = {
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          occupation: this.user.occupation,
+          postCode: this.user.postCode,
+          age: this.user.age,
+          gender: this.user.gender ? "Male" : "Female",
+          email: this.user.email,
+          password: this.user.password,
+          userType: 'Admin',
+          // groupId: this.user.groupId,
+          // userAccessCode: this.getCurrentUserCode
+        };
 
-
-    signOut() {
-      this.signOutLoading = true
-      setTimeout(() => {
-        this.$router.push(`/auth/login`)
-      },
-        1000
-      )
-    },
-    backToDashboard() {
-      if (this.isUser == false) {
-        this.$router.push({ name: 'DashboardAdmin' });
-      }
-      else {
-        this.$router.push({ name: 'Dashboard' });
+        this._updateUser(data)
+          .then(res => {
+            this.$toast.success(`Successfully updated`);
+          })
+          .catch(err => {
+            console.log("update failed");
+          });
       }
     }
   },
   computed: {
     ...mapGetters("auth", {
-      getDataUserProfile: "getDataUserProfile"
+      getDataUserProfile: "getDataUserProfile",
+      getCurrentUserCode: "getCurrentUserCode"
     }),
-    ...mapGetters("admin", {
-      getSelectedUser: "getSelectedUser"
+    ...mapGetters("app", {
+      getNotificationStatus: "getNotificationStatus"
     }),
-
+    getNotification: {
+      get() {
+        return this.dialog | this.getNotificationStatus
+      },
+      set(val) {
+        
+      }
+    }
   },
   mounted() {
-    this.userId = this.getDataUserProfile.id;
-    // if (this.getDataUserProfile.userRoles.indexOf("Admin") == -1) {
-    //   this.isUser = true;
-    // }
-    this.getMe().then(data => {
-      this.user = data;
-    });
-  } 
-}
+    this.user = Object.assign({}, this.getDataUserProfile);
+    if (this.user.gender == "Male") {
+      this.user.gender = true;
+    } else {
+      this.user.gender = false;
+    }
+    // this.user.groupId = res.groupId;
+  }
+};
 </script>
 
-<style lang="stylus">
-  .hidden
-    display none
-  .account-page
-    @media (max-width 600px) {
-      margin-top 5em
+<style lang="stylus" scoped>
+form {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.dropzone .dz-preview .dz-image {
+  z-index: 5;
+}
+
+.v-card__actions {
+  justify-content: flex-end;
+}
+
+>>>.v-dialog
+  max-width 50%
+  @media (max-width: 500px) {
+    max-width 90%
+    line-height 18px
+    .v-card {
+      padding 10px
     }
+
+    .v-card__title, .v-card__text {
+      padding 5px
+    }
+
+    .v-card__title {
+      padding-bottom 15px
+    }
+  }
+
+  @media (max-width: 500px) {
+    max-width 90%
+    line-height 18px
+
+    .v-card__title {
+      padding-bottom 15px
+      font-size 20px!important
+    }
+  }
+
 </style>
