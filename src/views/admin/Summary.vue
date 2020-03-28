@@ -106,7 +106,7 @@
                               class="text-xs-center pointer-cursor"
                               v-for="user in props.item.userResults"
                               :key="user.id"
-                              @click="showAnswerLayout(user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
+                              @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
                             >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -144,7 +144,7 @@
                               class="text-xs-center pointer-cursor"
                               v-for="user in props.item.userResults"
                               :key="user.id"
-                              @click="showAnswerLayout(user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
+                              @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
                             >{{ user.value == null ? 'N/A' : user.value }}</td>
                           </template>
                         </v-data-table>
@@ -344,6 +344,8 @@ export default {
   computed: {
     ...mapGetters("app", {
       getUserSummaryData: "getUserSummaryData",
+    }),
+    ...mapGetters("admin", {
       getAnswersData: "getSummaryAnswersData"
     }),
     ...mapGetters("auth", {
@@ -389,9 +391,14 @@ export default {
   methods: {
     ...mapActions("app", {
       _getUserSummaryData: "getUserSummaryData",
-      _getSummaryData: "getAnswersData",
       _getGroupSummaryData: "getGroupSummaryData"
     }),
+
+    ...mapActions("admin", {
+      _getSummaryData: "getAnswersData"
+    }),
+
+    updateComponentValue() {},
 
     generateUserHeader(results) {
       let header = [];
@@ -407,8 +414,6 @@ export default {
       return header;
     },
 
-    updateComponentValue() {},
-
     generateHeader(results) {
       let header = [];
       for (let i = 0; i < results[0].userResults.length; i++) {
@@ -423,9 +428,9 @@ export default {
       return header;
     },
 
-    showAnswerLayout(summaryId, article = "Symptom") {
+    showAnswerLayout(userId, summaryId, article = "Symptom") {
       let data = {
-        params: `?Article=${article}&AnswerSummaryId=${summaryId}`,
+        params: `?UserId=${userId}&article=${article}&AnswerSummaryId=${summaryId}`,
         article: "Summary"
       };
       this.isAnswerLoading = true;

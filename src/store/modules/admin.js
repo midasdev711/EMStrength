@@ -22,7 +22,8 @@ const state = {
   weeklySummary: [],
   selectedUser: "",
   checkinData: [],
-  submissionList: []
+  submissionList: [],
+  summaryAnswers: []
 }
 
 // getters
@@ -41,11 +42,22 @@ const getters = {
   getWeeklySummary: state => state.weeklySummary,
   getCheckinData: state => state.checkinData,
   getSelectedUser: state => state.selectedUser,
-  getSubmissionList: state => state.submissionList
+  getSubmissionList: state => state.submissionList,
+  getSummaryAnswersData: state => state.summaryAnswers && state.summaryAnswers.horizontal ? state.summaryAnswers.horizontal : [],
 }
 
 // actions
 const actions = {
+  getAnswersData: ({ commit }, data) => {
+    return API.get(`api/admin/answers/layout${data.params}`)
+      .then(result => {
+        commit("setSummaryAnswers", result['data']);
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
 
   getSubmissionFilter: ({ commit }) => {
     let header = {
@@ -547,7 +559,12 @@ const mutations = {
 
   saveGeneratedUserCodes: (state, codes) => {
     state.generated_user_codes = codes;
+  },
+
+  setSummaryAnswers: (state, data) => {
+    state.summaryAnswers = Object.assign({}, data);
   }
+
 }
 
 export default {

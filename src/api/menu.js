@@ -36,7 +36,7 @@ const Menu = [
 
   {
     title: "Terms & Conditions",
-    icon: "menu_book",
+    icon: "library_books",
     name: "TermsConditions",
     key: "key-TermsConditions"
   },
