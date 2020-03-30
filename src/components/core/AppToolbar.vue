@@ -5,13 +5,11 @@
     </v-toolbar-title>
     <div v-if="$vuetify.breakpoint.xsOnly && $route.meta.title" class="title-mobile">{{ $route.meta.title }}</div>
     <v-spacer></v-spacer>
-    <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck" :disabled="getSymptomUpdated == null"></v-checkbox>
     <v-toolbar-items>
-      <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
-        <v-btn icon large flat slot="activator" @click="enableNotification">
-          <v-icon>info_outline</v-icon>
-        </v-btn>
-      </v-menu>
+      <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck" :disabled="getSymptomUpdated == null"></v-checkbox>
+      <v-btn icon large flat slot="activator" @click="enableNotification">
+        <v-icon>info_outline</v-icon>
+      </v-btn>
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
         <v-btn icon large flat slot="activator">
           <v-avatar size="30px">
@@ -139,5 +137,8 @@ export default {
 
 <style lang="stylus" scoped>
 >>>.recoveryCheck
-  padding-top 25px
+  padding-top 20px
+  @media (max-width: 500px) {
+    padding-top 15px
+  }
 </style>

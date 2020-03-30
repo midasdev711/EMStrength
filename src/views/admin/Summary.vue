@@ -1,16 +1,5 @@
 <template>
   <v-container grid-list-xl>
-    <v-alert v-model="alert" dismissible color="info">
-      <v-flex row layout>
-        <v-flex xs6 class="text-xs-center">
-          <h2>{{username}}</h2>
-        </v-flex>
-        <v-flex xs6 class="text-xs-center">
-          <h2>{{groupname}}</h2>
-        </v-flex>
-      </v-flex>
-    </v-alert>
-
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -30,6 +19,16 @@
       </vue-circle>
     </div>
     <div v-else>
+      <v-alert v-model="alert" dismissible color="info">
+        <v-flex row layout>
+          <v-flex xs6 class="text-xs-center">
+            <h2>{{username}}</h2>
+          </v-flex>
+          <v-flex xs6 class="text-xs-center">
+            <h2>{{groupname}}</h2>
+          </v-flex>
+        </v-flex>
+      </v-alert>
       <template>
         <v-tabs dark v-model="articleTab" color="primary" grow>
           <v-tabs-slider color="yellow"></v-tabs-slider>
