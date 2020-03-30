@@ -15,7 +15,6 @@
       <v-container fluid fill-height>
         <v-layout  justify-center>
           <v-flex xs12 sm8 md4 lg4>
-            <v-btn color="white" @click="$router.push({ name: 'Recovery'})">Back to recovery</v-btn>
             <router-view :key="$route.path"></router-view>
           </v-flex>
         </v-layout>

@@ -58,7 +58,6 @@ export default {
       {
         this._getUserCode(this.userCode).then(res => {
           console.log(res);
-          this.$toast.success(`Valid UserCode`);
           this.$router.push({ name: 'AccountDetails', query: { code: this.userCode }});
             
         }).catch(err => {

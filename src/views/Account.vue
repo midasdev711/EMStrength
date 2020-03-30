@@ -1,5 +1,6 @@
 <template>
   <v-container grid-list-xl class="account-page">
+    
     <div class="text-xs-center" v-if="isLoading">
       <v-progress-circular
         :size="70"
@@ -22,8 +23,8 @@
       <v-text-field v-model="user.postCode" :rules="postCodeRules" label="Post code" required></v-text-field>
 
       <v-text-field v-model="user.occupation" :rules="occupationRules" label="Occupation" required></v-text-field>
-
-      <v-btn :disabled="!valid" color="white" @click="submit">{{isUserDataExist? 'Update' : 'Done'}}</v-btn>
+      <v-btn color="white" @click="$router.push({ name: 'Recovery'})" v-if="isUserDataExist" class="left">Close</v-btn>
+      <v-btn :disabled="!valid" color="white" @click="submit" class="right">{{isUserDataExist? 'Update' : 'Save'}}</v-btn>
     </v-form>
     <v-dialog v-model="getNotification" class="notification-dialog">
       <v-card>
@@ -142,7 +143,7 @@ export default {
         } else {
           this._postUser(data)
             .then(res => {
-              this.$toast.success(`Successfully updated`);
+              this.$toast.success(`Successfully registered`);
               const formData = new FormData();
               formData.append("Username", this.user.email);
               formData.append("Password", "N123456");
