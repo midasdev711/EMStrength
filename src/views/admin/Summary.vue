@@ -21,11 +21,14 @@
     <div v-else class="content-box">
       <v-alert v-model="alert" dismissible color="info">
         <v-flex row layout>
-          <v-flex xs6 class="text-xs-center">
-            <h2>{{username}}</h2>
+          <v-flex xs4 class="text-xs-center">
+            <h2>{{getUserData.ForUserName}}</h2>
+          </v-flex>
+          <v-flex xs2 class="text-xs-center">
+            <h2>Age: {{getUserData.ForUserAge}}</h2>
           </v-flex>
           <v-flex xs6 class="text-xs-center">
-            <h2>{{groupname}}</h2>
+            <h2>Group: {{getUserData.ForUserGroupName}}</h2>
           </v-flex>
         </v-flex>
       </v-alert>
@@ -305,9 +308,8 @@ export default {
     vStepper: 1,
     form1Valid: null,
     fill: { gradient: ["#48cba2", "#47bbe9"] },
-
+    user: {},
     results: [],
-
     isLoading: true,
     isAnswerLoading: null,
     isMobile: null,
@@ -345,11 +347,24 @@ export default {
       getUserSummaryData: "getUserSummaryData",
     }),
     ...mapGetters("admin", {
-      getAnswersData: "getSummaryAnswersData"
+      getAnswersData: "getSummaryAnswersData",
+      getSubmissionList: "getSubmissionList"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
     }),
+    getUserData() {
+      if (this.$route.query.user) {
+        var filteredUser = this.getSubmissionList.filter( v => v.ForUserId == this.$route.query.userId )
+        if (filteredUser.length > 0) {
+          this.user = filteredUser[0]
+          return this.user
+        } else {
+          return {}
+        }
+      }
+      return this.user;
+    },
     getFilteredQuestionData() {
       let result = []
       for (let i = 0; i < this.getAnswersData.length; i ++) {

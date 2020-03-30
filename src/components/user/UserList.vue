@@ -1,6 +1,9 @@
 <template>
   <v-card>
-    <v-btn color="primary right" @click="confirmdialog = true" :loading="loading">Delete selected</v-btn>
+    <v-flex row id="delete-button">
+      <v-btn color="primary" @click="confirmdialog = true" :loading="loading">Delete selected</v-btn>
+    </v-flex>
+    
     <v-dialog v-model="confirmdialog" max-width="290">
       <v-card>
         <v-card-text>Are you sure you want to delete {{deleteNumber}} users?</v-card-text>
@@ -22,7 +25,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-text-field label="Search" v-model="search" append-icon="search" class="search-text"></v-text-field>
+    <v-flex row layout>
+      <v-flex lg6 xs12>
+        <v-text-field label="Search" v-model="search.username" append-icon="search" class="search-text"></v-text-field>
+      </v-flex>
+      <v-flex lg6 xs12>
+        <v-select
+          :items="getGroupData"
+          item-text="title"
+          item-value="title"
+          label="Group"
+          v-model="search.selectedGroup"
+        ></v-select>
+      </v-flex>
+    </v-flex>
+    
     <v-data-table
       :headers="headers"
       :items="getUserData"
@@ -92,14 +109,18 @@ export default {
       filters: {
         search: ""
       },
-      search: "",
+      search: {
+        username: "",
+        selectedGroup: ""
+      },
       user_data: [],
       loading: false
     };
   },
   computed: {
     ...mapGetters("admin", {
-      getUserData: "getUserData"
+      getUserData: "getUserData",
+      getGroupData: "getGroupData"
     })
   },
   methods: {
@@ -147,14 +168,18 @@ export default {
       });
     },
     userFilter(items, search, filter) {
-      search = search.toString().toLowerCase();
-      return items.filter(row => filter(row["fullName"], search));
+      var username = search.username.toString().toLowerCase();
+      var selectedGroup = search.selectedGroup;
+      return items.filter(row => {
+        if (row['fullName'] && row['fullName'].toLowerCase().includes(username)) {
+          if (row['groupName'] && selectedGroup && row['groupName'].includes(selectedGroup)) {
+            return row
+          } else if (selectedGroup == "") {
+            return row
+          }
+        }
+      });
     },
-    /*deleteSelected() {
-      this.$store.state.app.users = this.$store.state.app.users.filter(el => {
-        return el.checkbox === false;
-      })
-    },*/
 
     send_request() {
       this.loading = true;
@@ -233,13 +258,13 @@ export default {
 };
 </script>
 
-<style scoped>
-.table .v-input--checkbox .v-input__slot {
-  margin-bottom: -10px;
+<style lang="stylus" scoped>
+>>>#delete-button {
+  text-align right
 }
 
-.search-text {
-  width: 50%;
+.table .v-input--checkbox .v-input__slot {
+  margin-bottom: -10px;
 }
 
 >>> table.v-table th {
