@@ -150,9 +150,6 @@
                   </div>
                 </v-stepper>
               </v-card>
-
-              <v-btn color="primary" v-if="stepp.sectionNo + 1 < getFilteredQuestionData.length" @click="nextHorizontalStep">Continue</v-btn>
-              <v-btn flat v-if="stepp.sectionNo > 1" @click="prevHorizontalStep">Back</v-btn>
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
