@@ -2,7 +2,10 @@
   <v-card class="elevation-1 pa-3">
     <v-card-text>
       <div class="layout column align-center">
-        <img src="/img/icons/msapplication-icon-144x144.png" class="auth__logo" alt="Vue Material Admin" />
+        <img 
+        height="144"
+        src="/img/icons/icon-e@3x.png"
+        class="auth__logo" alt="Vue Material Admin" />
         <h1 class="flex my-4 primary--text">Sign In</h1>
       </div>
       <v-form>

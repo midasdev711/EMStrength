@@ -1,7 +1,7 @@
 <template>
   <v-app class="primary split-bg">
     <v-toolbar color="primary darken-1" dark>
-      <img src="/img/logo.png" height="36" alt="EnergyHealth" />
+      <img src="/img/EH-LL-W@3x.png" height="57" alt="EnergyHealth" />
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
