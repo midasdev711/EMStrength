@@ -32,7 +32,7 @@
               To identify energy imbalances in your life and guide your Recovery Activities, we'll start with the Symptom Checklist.
             </h3>
             <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
-            <h3>allow up to 15 minutes to complete.</h3>
+            <h4>The Symptom Checklist typcially takes 5 - 10 minutes to complete.</h4>
           </v-container>
         </v-card>
       </template>
