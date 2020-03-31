@@ -7,7 +7,7 @@
     width="300"
   >
     <v-toolbar color="primary darken-1" dark>
-      <img src="/img/logo.png" height="36" alt="EnergyHealth" />
+      <img src="/img/EH-LL-W@3x.png" height="57" alt="EnergyHealth" />
     </v-toolbar>
     <v-tabs v-model="active" :hide-slider="true">
       <v-container pt-0 pb-0 ml-0 mr-0>

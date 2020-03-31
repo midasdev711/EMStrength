@@ -8,7 +8,8 @@
               <v-card-text>
                 <div class="layout column align-center">
                   <img
-                    src="/img/icons/msapplication-icon-144x144.png"
+                    height="144"
+                    src="/img/icons/icon-e@3x.png"
                     class="auth__logo img-responsive"
                     alt="EM Forgot password"
                   />

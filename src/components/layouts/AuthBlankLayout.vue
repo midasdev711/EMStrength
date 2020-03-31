@@ -1,7 +1,7 @@
 <template>
   <v-app class="">
     <v-toolbar color="primary darken-1" dark>
-      <img src="/img/logo.png" height="36" alt="EnergyHealth" />
+      <img src="/img/EH-LL-W.png" height="56" alt="EnergyHealth" />
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
