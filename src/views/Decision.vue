@@ -107,7 +107,6 @@
                             v-for="a in stepp.vertical[vStepNum-1].items"
                             :key="a.id"
                           >
-                            <!-- TODO: only show only if a.isConditionQuestionMet == true  -->
                             <components
                               v-if="a.question.useText"
                               :is="a.question.type"
@@ -143,7 +142,7 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >Continue</v-btn>
+                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
                         <v-btn flat v-if="vStepNum-1 > 0" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
@@ -295,23 +294,16 @@ export default {
       let nextSectionNo = this.hStepper;
       let nextSubsectionNo = this.vStepper;
       if (this.vStepper < verticalMaxSteps) {
-        nextSubsectionNo++;
+        // nextSubsectionNo++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           nextSectionNo++;
         }
-        nextSubsectionNo = 1;
+        nextSubsectionNo = 0;
       }
       return this.saveAnswers(nextSectionNo, nextSubsectionNo)
         .then(res => {
-          if (this.vStepper < verticalMaxSteps) {
-            this.vStepper++;
-          } else {
-            if (this.hStepper < horizontalMaxSteps) {
-              this.hStepper++;
-            }
-            this.vStepper = 1;
-          }
+          
         })
         .then(_ => {
           this.isLoading = false;

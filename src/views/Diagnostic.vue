@@ -155,7 +155,7 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >Continue</v-btn>
+                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
                         <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
@@ -230,10 +230,10 @@ export default {
       }
       this.hStepper = this.getDiagnosticLastAnswered.sectionNo
         ? this.getDiagnosticLastAnswered.sectionNo + 1
-        : 0;
+        : 1;
       this.vStepper = this.getDiagnosticLastAnswered.subsectionNo
         ? this.getDiagnosticLastAnswered.subsectionNo + 1
-        : 0;
+        : 1;
       let pageHolder = this.getAnswersData[
         this.getDiagnosticLastAnswered.sectionNo
       ];
@@ -247,9 +247,8 @@ export default {
   },
   methods: {
     ...mapActions("app", {
-      //_getUser: "getUser",
       _getQuestions: "getQuestions",
-      _getQuestionsAnswers: "getAnswersData", //getAnswersData ? make dynmaic
+      _getQuestionsAnswers: "getAnswersData", 
       _saveAnswers: "saveAnswers",
       _setDiagnosticLastAnswered: "setDiagnosticLastAnswered",
       _disableNotification: "disableNotification"
@@ -335,18 +334,10 @@ export default {
         if (this.hStepper < horizontalMaxSteps) {
           nextSectionNo++;
         }
-        nextSubsectionNo = 1;
+        nextSubsectionNo = 0;
       }
       return this.saveAnswers(nextSectionNo, nextSubsectionNo)
         .then(res => {
-          if (this.vStepper < verticalMaxSteps) {
-            this.vStepper++;
-          } else {
-            if (this.hStepper < horizontalMaxSteps) {
-              this.hStepper++;
-            }
-            this.vStepper = 1;
-          }
         })
         .then(_ => {
           this.isLoading = false;

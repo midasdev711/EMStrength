@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12 sm11>
+  <v-flex xs10 sm11 class="scale">
     <span class="caption">{{title}}</span>
 
     <v-slider
@@ -94,4 +94,6 @@ export default {
   width 78px!important
   text-align center
   border-radius 60% 27% 0
+.scale 
+  margin 0 auto
 </style>

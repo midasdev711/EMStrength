@@ -146,7 +146,7 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >Continue</v-btn>
+                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
                         <v-btn flat v-if="stepl.sectionNo > 0" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
@@ -287,12 +287,12 @@ export default {
       let nextSectionNo = this.hStepper;
       let nextSubsectionNo = this.vStepper;
       if (this.vStepper < verticalMaxSteps) {
-        nextSubsectionNo++;
+        // nextSubsectionNo++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           nextSectionNo++;
         }
-        nextSubsectionNo = 1;
+        nextSubsectionNo = 0;
       }
       if (isSavingAnswer) {
 
