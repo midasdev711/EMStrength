@@ -233,10 +233,10 @@ export default {
       }
       this.hStepper = this.getDiagnosticLastAnswered.sectionNo
         ? this.getDiagnosticLastAnswered.sectionNo + 1
-        : 1;
+        : 0;
       this.vStepper = this.getDiagnosticLastAnswered.subsectionNo
         ? this.getDiagnosticLastAnswered.subsectionNo + 1
-        : 1;
+        : 0;
       let pageHolder = this.getAnswersData[
         this.getDiagnosticLastAnswered.sectionNo
       ];
