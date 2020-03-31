@@ -36,7 +36,7 @@ export default class APIService {
         } else if (e.response.status == 403) {
           router.push({ name: 'Forbidden' })
         }
-        return e;
+        throw e;
       });
   }
 

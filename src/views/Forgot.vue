@@ -71,13 +71,10 @@ export default {
         let data = {
           email: this.model.Username
         };
-
         console.log(data);
-
-
         this._postForgotPassword(data).then(res => {
             this.$toast.success(`Check your inbox for the reset link`);
-            this.$router.push({ name: 'Account'});
+            this.$router.push({ name: 'Login'});
         }).catch(err => {
             this.$toast.warning(`Username invalid or could not be found`);
             this.$toast.warning(err.errors[0].errorMessage);

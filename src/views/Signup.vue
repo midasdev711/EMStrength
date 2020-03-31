@@ -63,7 +63,7 @@ export default {
             
         }).catch(err => {
           this.$toast.warning(`User code invalid or claimed`);
-          this.$toast.warning(err.errors[0].errorMessage);
+          // this.$toast.warning(err.errors[0].errorMessage);
         });
       }
 
