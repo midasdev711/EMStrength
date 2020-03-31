@@ -26,13 +26,15 @@
             <img src="/img/Eden-2.png" width="60%" />
           </v-card-title>
           <v-container fluid align-center text-center >
-            <h3
+            <h4
               class="text-left"
             >
               To identify energy imbalances in your life and guide your Recovery Activities, we'll start with the Symptom Checklist.
-            </h3>
+            </h4>
             <v-btn color="success" @click="$router.push({ name: 'Symptom Checklist'})">Get started</v-btn>
-            <h4>The Symptom Checklist typcially takes 5 - 10 minutes to complete.</h4>
+            <p></p>
+            <h5><p>The Symptom Checklist typically takes 5-10 minutes to complete.</p></h5>
+            
           </v-container>
         </v-card>
       </template>
