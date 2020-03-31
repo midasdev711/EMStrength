@@ -57,7 +57,7 @@
               >
                 <span :style="{ color: $vuetify.theme.subheading1 }">
                   {{step.section}}
-                  <span class="dev-hint">(Section)</span>
+                  <span class="dev-hint"></span>
                 </span>
               </v-stepper-step>
             </template>
