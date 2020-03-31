@@ -30,6 +30,9 @@
             <v-card-text>
               <p>
                 You have arrived at the part of the Diagnostic within which we gather information to build your Energy Health Decision Profile. 
+              </p>
+              <p>
+                The profile covers the factors from 5 key areas of influence:
                 <br><br>
                 1. Socio-Cultural<br>
                 2. Situational<br>
