@@ -9,21 +9,17 @@
       ></v-progress-circular>
     </div>
     <v-form ref="form" v-model="valid" lazy-validation v-else>
-      <v-text-field v-model="user.firstName" :rules="firstNameRules" label="First name" required></v-text-field>
+      <v-text-field v-model="user.firstName" label="First name" readonly></v-text-field>
 
-      <v-text-field v-model="user.lastName" :rules="lastNameRules" label="Last name" required></v-text-field>
+      <v-text-field v-model="user.lastName" label="Last name" readonly></v-text-field>
 
-      <v-text-field v-model="user.email" :rules="emailRules" label="Email" required></v-text-field>
+      <v-text-field v-model="user.email" label="Email" readonly></v-text-field>
 
-      <v-text-field v-model="user.age" :rules="ageRules" label="Age" required></v-text-field>
+      <v-switch v-model="user.gender" :label="user.gender ? 'Male' : 'Male'" readonly></v-switch>
 
-      <v-switch v-model="user.gender" :label="user.gender ? 'Male' : 'Male'"></v-switch>
+      <v-text-field v-model="user.occupation" label="Occupation" readonly></v-text-field>
 
-      <v-text-field v-model="user.postCode" :rules="postCodeRules" label="Post code" required></v-text-field>
-
-      <v-text-field v-model="user.occupation" :rules="occupationRules" label="Occupation" required></v-text-field>
-
-      <v-btn :disabled="!valid" color="white" @click="submit">Update</v-btn>
+      <v-btn :disabled="!valid" color="white" @click="$router.push({ name: 'AdminSummary' })">Close</v-btn>
     </v-form>
   </v-container>
 </template>

@@ -4,6 +4,16 @@ import moment from 'moment'
 
 const API = new APIService ();
 
+function groupSort( a, b ) {
+  if ( a.title < b.title ){
+    return -1;
+  }
+  if ( a.title > b.title ){
+    return 1;
+  }
+  return 0;
+}
+
 const state = {
   checkoutStatus: null,
   showDrawer: null,
@@ -29,7 +39,7 @@ const state = {
 // getters
 const getters = {
   getCheckoutStatus: state => state.checkoutStatus,
-  getGroupData: state => state.group_data,
+  getGroupData: state => state.group_data.sort(groupSort),
   getUserData: state => state.user_data,
   //getUserCodes: state => state.generated_user_codes,
   getDataDiets: state => state.diets,
@@ -457,7 +467,7 @@ const mutations = {
   },
   get_group_success(state, group_data) {
     state.status = "get_group_success";
-    state.group_data = group_data;
+    state.group_data = Object.assign([], group_data)
   },
   get_group_failed(state) {
     state.status = "get_group_failed";

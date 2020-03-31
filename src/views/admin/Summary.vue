@@ -591,7 +591,7 @@ export default {
   position: sticky;
   top: 64px;
   width: 100%;
-  z-index: 9999999;
+  z-index: 5;
 }
 
 .content-box {

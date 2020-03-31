@@ -143,7 +143,7 @@ export default {
         } else {
           this._postUser(data)
             .then(res => {
-              this.$toast.success(`Successfully registered`);
+              this.$toast.success(`Please check your inbox for your password.`);
               const formData = new FormData();
               formData.append("Username", this.user.email);
               formData.append("Password", "N123456");

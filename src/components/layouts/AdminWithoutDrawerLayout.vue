@@ -27,7 +27,7 @@ export default {
 .without-drawer
   &__logo
     position: fixed
-    padding: 12px 24px
+    padding: 8px 24px
     z-index: 100
 </style>
 
