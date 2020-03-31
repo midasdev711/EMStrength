@@ -90,7 +90,7 @@ export default {
       occupationRules: [v => !!v || "Occupation is required"],
       postCodeRules: [v => !!v || "Post code is required"],
       isLoading: false,
-      isUserDataExist: false
+      isUserDataExist: true
     };
   },
   components: {},
@@ -187,7 +187,7 @@ export default {
     }),
     getNotification: {
       get() {
-        return this.dialog | this.getNotificationStatus
+        return (this.dialog | this.getNotificationStatus) & !this.isUserDataExist
       },
       set(val) {
         
