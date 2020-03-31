@@ -7,7 +7,7 @@
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck" :disabled="getSymptomUpdated == null"></v-checkbox>
-      <v-btn icon large flat slot="activator" @click="enableNotification">
+      <v-btn icon large flat v-if="showNotificationIcon" @click="enableNotification">
         <v-icon>info_outline</v-icon>
       </v-btn>
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
@@ -52,6 +52,7 @@ export default {
   data() {
     return {
       recoveryCheck: false,
+      showNotificationIcon: true,
       user: {
         id: "",
         name: "",
@@ -120,7 +121,17 @@ export default {
       if (newParam != oldParam) {
         this.setRecoveryCheck();
       }
-    }
+    },
+    "$route.name"(newQuery, oldQuery) {
+      let textOnlyPages = ['aboutus', 'TermsConditions', 'PrivacyPolicy']
+      if (newQuery != oldQuery) {
+        if (textOnlyPages.indexOf(newQuery) > -1) {
+          this.showNotificationIcon = false
+        } else {
+          this.showNotificationIcon = true
+        }
+      }
+    },
   },
   mounted() {
     /*if (this.getDataUserProfile.length > 0) {
@@ -130,6 +141,13 @@ export default {
       this.user['unreadMessages'] = 2;
       this.displayData();
     }*/
+    let textOnlyPages = ['aboutus', 'TermsConditions', 'PrivacyPolicy']
+    if (textOnlyPages.indexOf(this.$route.name) > -1) {
+      this.showNotificationIcon = false
+    } else {
+      this.showNotificationIcon = true
+    }
+    
     this.windowWidth = window.innerWidth;
   }
 }

@@ -25,29 +25,6 @@
 
       <v-btn :disabled="!valid" color="white" @click="submit">Update</v-btn>
     </v-form>
-    <v-dialog v-model="getNotification" class="notification-dialog">
-      <v-card>
-        <v-card-title class="headline">The Energy Health Diagnostic</v-card-title>
-        <v-card-text>
-          <p>
-            Welcome to the first steps in making a positive change to your Energy Health!
-            <br><br>
-            Based in research, this Diagnostic measures stress and recovery levels, providing information necessary to build a foundation of health for Mental and Physical Wellbeing &amp; Performance.
-            <br><br>
-            We are thrilled to go on this journey with you, sharing insights on how to get the best out of yourself and your life! 
-            <br><br>
-            We look forward to seeing you create positive change through improving recovery!
-            <br><br>
-            Dr Sean &amp; Kate Richardson<br>
-            Founders, Energy Health Inc
-          </p>
-        </v-card-text>
-
-        <v-card-actions>
-          <v-btn color="green darken-1" flat="flat" @click="dialog = false;_disableNotification();">OK</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
