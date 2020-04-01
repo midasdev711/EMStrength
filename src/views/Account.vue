@@ -190,7 +190,7 @@ export default {
         return (this.dialog | this.getNotificationStatus) & !this.isUserDataExist
       },
       set(val) {
-        
+        if (val == false) this._disableNotification();
       }
     }
   },

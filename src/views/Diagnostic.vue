@@ -29,7 +29,7 @@
     </div>
     <template v-else>
       <v-layout justify-center ma-0>
-        <v-flex sm6 xs12 v-if="notification || getNotificationStatus">
+        <v-dialog sm6 xs12 v-model="getNotification">
           <v-card
             color
             class="black--text mt-2 col-sm-6 notification"
@@ -55,8 +55,8 @@
               <v-btn flat @click="notification = false;_disableNotification();">Got it!</v-btn>
             </v-card-actions>
           </v-card>
-        </v-flex>
-        <v-stepper v-model="hStepper" v-else>
+        </v-dialog>
+        <v-stepper v-model="hStepper">
           
           <v-stepper-header>
             <template v-for="step in getFilteredQuestionData">
@@ -203,6 +203,17 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
     }),
+    getNotification: {
+      get() {
+        return this.notification | this.getNotificationStatus
+      },
+      set(val) {
+        if (!val) {
+          this._disableNotification()
+          this.notification = false
+        }
+      }
+    },
     getFilteredQuestionData() {
       let result = []
       for (let i = 0; i < this.getAnswersData.length; i ++) {
@@ -233,7 +244,7 @@ export default {
         : 1;
       this.vStepper = this.getDiagnosticLastAnswered.subsectionNo
         ? this.getDiagnosticLastAnswered.subsectionNo + 1
-        : 1;
+        : 0;
       let pageHolder = this.getAnswersData[
         this.getDiagnosticLastAnswered.sectionNo
       ];
@@ -449,11 +460,14 @@ export default {
   justify-content flex-end
 }
 
->>>.v-card.notification
+>>>.v-dialog
+  max-width 50%
   @media (max-width: 500px) {
-    line-height 19px
-    padding 10px
-    
+    max-width 90%
+    line-height 18px
+    .v-card {
+      padding 10px
+    }
 
     .v-card__title, .v-card__text {
       padding 5px
@@ -465,6 +479,9 @@ export default {
   }
 
   @media (max-width: 500px) {
+    max-width 90%
+    line-height 18px
+
     .v-card__title {
       padding-bottom 15px
       font-size 20px!important
