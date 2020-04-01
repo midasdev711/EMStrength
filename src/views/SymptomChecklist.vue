@@ -147,7 +147,7 @@
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
-                        <v-btn flat v-if="stepl.sectionNo > 0" @click="prevVerticalStep">Back</v-btn>
+                        <v-btn flat @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>

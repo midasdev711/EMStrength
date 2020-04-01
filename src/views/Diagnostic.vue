@@ -156,7 +156,7 @@
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
-                        <v-btn flat v-if="stepl.subsectionNo > 0" @click="prevVerticalStep">Back</v-btn>
+                        <v-btn flat @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -368,13 +368,6 @@ export default {
           console.log(err);
         });
     },
-    nextHorizontalStep() {
-      let lastAnswered = {
-        sectionNo: this.hStepper,
-        subsectionNo: -1
-      };
-      this._setDiagnosticLastAnswered(lastAnswered);
-    },
     prevVerticalStep() {
       let lastAnswered = {
         sectionNo: this.hStepper - 1,
@@ -382,14 +375,6 @@ export default {
       };
       this._setDiagnosticLastAnswered(lastAnswered);
     },
-    prevHorizontalStep() {
-      let lastAnswered = {
-        sectionNo: this.hStepper > 2 ? this.hStepper - 2 : 0,
-        subsectionNo: -1
-      };
-      this._setDiagnosticLastAnswered(lastAnswered);
-    },
-
     loadSubheading(activeMeasurement) {
       this.isLoading = true;
       let data = {

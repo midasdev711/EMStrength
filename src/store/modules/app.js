@@ -256,6 +256,8 @@ const actions = {
       'Content-Type': 'application/json; charset=utf-8',
     };
 
+    commit("auth/setRecoveryCompleted", {}, {root: true});
+
     return API.put(`api/user/recovery`, data, headers)
       .then(result => {
         commit("auth/setRecoveryCompleted", {}, {root: true});
