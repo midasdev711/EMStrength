@@ -147,6 +147,10 @@ const actions = {
     commit("setDecisionLastAnswered", data);
   },
 
+  setAnswerData: ({commit}, data) => {
+    commit("setAnswerData", data);
+  },
+
   clearAnswersData: ({ commit }) => {
     commit("setSummaryAnswers", []);
   }, 
@@ -197,6 +201,7 @@ const actions = {
   },
 
   saveAnswers: ({ commit }, data) => {
+
     let lastAnswered = {
       sectionNo: data.nextSectionNo - 1,
       subsectionNo: data.nextSubsectionNo - 1
@@ -424,6 +429,31 @@ const mutations = {
 
   setDecisionLastAnswered: (state, data) => {
     state.decisionAnswers.lastAnswered = Object.assign({}, data);
+  },
+
+  setSymptomAnswerData: (state, data) => {
+    state.symptomAnswers.lastAnswered = Object.assign({}, data);
+  },
+
+  setDiagnosticAnswerData: (state, data) => {
+    state.diagnosticAnswers.firstAnswered = Object.assign({}, data);
+  },
+
+  setAnswerData: (state, data) => {
+    let sectionNo = data.nextSectionNo
+    let subsectionNo = data.nextSubsectionNo
+
+    let answerIndex = data.article.toLowerCase() + 'Answers'
+
+    for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
+      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i]
+      for (let j = 0; j < data.answers.length; j ++) {
+        if (tmp.questionId == data.answers[j].questionId) {
+          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value
+          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text
+        }
+      }
+    }
   },
 
   enableNotification: (state) => {

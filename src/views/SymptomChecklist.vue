@@ -255,7 +255,8 @@ export default {
       _getQuestionsAnswers: "getAnswersData",
       _saveAnswers: "saveAnswers",
       _setLastAnswered: "setSymptomLastAnswered",
-      _disableNotification: "disableNotification"
+      _disableNotification: "disableNotification",
+      _setAnswer: "setAnswerData"
     }),
     compId(type, id) {
       return "comp" + type + id;
@@ -310,6 +311,15 @@ export default {
         }
         nextSubsectionNo = 0;
       }
+      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+
+      let answerData = {
+        answers: answers,
+        article: "Symptom",
+        nextSectionNo: this.hStepper - 1,
+        nextSubsectionNo: this.vStepper - 1
+      };
+      this._setAnswer(answerData)
       if (isSavingAnswer) {
 
         return this.saveAnswers(nextSectionNo, nextSubsectionNo)

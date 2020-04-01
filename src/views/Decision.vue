@@ -143,7 +143,7 @@
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
-                        <v-btn flat v-if="vStepNum-1 > 0" @click="prevVerticalStep">Back</v-btn>
+                        <v-btn flat @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -194,7 +194,7 @@ export default {
       getAnswersData: "getDecisionAnswersData",
       getDecisionHorizontalData: "getDecisionHorizontalData",
       getDecisionLastAnswered: "getDecisionLastAnswered",
-      getNotificationStatus: "getNotificationStatus"
+      getNotificationStatus: "getNotificationStatus",
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile"
@@ -259,7 +259,8 @@ export default {
       _getQuestionsAnswers: "getAnswersData",
       _saveAnswers: "saveAnswers",
       _setDecisionLastAnswered: "setDecisionLastAnswered",
-      _disableNotification: "disableNotification"
+      _disableNotification: "disableNotification",
+      _setAnswer: "setAnswerData"
     }),
     compId(type, id) {
       return "comp" + type + id;
@@ -309,6 +310,15 @@ export default {
         }
         nextSubsectionNo = 0;
       }
+      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+
+      let answerData = {
+        answers: answers,
+        article: "Decision",
+        nextSectionNo: this.hStepper - 1,
+        nextSubsectionNo: this.vStepper - 1
+      };
+      this._setAnswer(answerData)
       return this.saveAnswers(nextSectionNo, nextSubsectionNo)
         .then(res => {
           

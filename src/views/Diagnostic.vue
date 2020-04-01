@@ -261,7 +261,8 @@ export default {
       _getQuestionsAnswers: "getAnswersData", 
       _saveAnswers: "saveAnswers",
       _setDiagnosticLastAnswered: "setDiagnosticLastAnswered",
-      _disableNotification: "disableNotification"
+      _disableNotification: "disableNotification",
+      _setAnswer: "setAnswerData"
     }),
 
     compId(type, id) {
@@ -311,8 +312,8 @@ export default {
         answers: answers,
         complete: currentTime,
         article: "Diagnostic",
-        nextSectionNo: nextSectionNo - 1,
-        nextSubsectionNo: nextSubsectionNo - 1
+        nextSectionNo: nextSectionNo,
+        nextSubsectionNo: nextSubsectionNo
       };
 
       return this._saveAnswers(answerData)
@@ -339,13 +340,23 @@ export default {
       let nextSectionNo = this.hStepper;
       let nextSubsectionNo = this.vStepper;
       if (this.vStepper < verticalMaxSteps) {
-        nextSubsectionNo++;
+        // nextSubsectionNo++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           nextSectionNo++;
         }
         nextSubsectionNo = 0;
       }
+      
+      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+
+      let answerData = {
+        answers: answers,
+        article: "Diagnostic",
+        nextSectionNo: this.hStepper - 1,
+        nextSubsectionNo: this.vStepper - 1
+      };
+      this._setAnswer(answerData)
       return this.saveAnswers(nextSectionNo, nextSubsectionNo)
         .then(res => {
         })
