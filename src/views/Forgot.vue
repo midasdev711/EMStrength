@@ -71,7 +71,6 @@ export default {
         let data = {
           email: this.model.Username
         };
-        console.log(data);
         this._postForgotPassword(data).then(res => {
             this.$toast.success(`Check your inbox for the reset link`);
             this.$router.push({ name: 'Login'});
