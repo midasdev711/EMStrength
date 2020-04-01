@@ -7,7 +7,7 @@
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-checkbox v-model="recoveryCheck" v-if="$route.name == 'Recovery'" class="recoveryCheck" :disabled="getSymptomUpdated == null"></v-checkbox>
-      <v-btn icon large flat v-if="showNotificationIcon" @click="enableNotification">
+      <v-btn icon large flat v-if="showNotificationIcon && (($route.name == 'Recovery' && getSymptomUpdated) || ($route.name != 'Recovery' && !getSymptomUpdated))" @click="enableNotification">
         <v-icon>info_outline</v-icon>
       </v-btn>
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">

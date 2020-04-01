@@ -22,7 +22,8 @@ const getters = {
   getUserType: state => state.userProfile.userType,
   getDataUserProfile: state => state.userProfile,
   getCurrentUserCode: state => state.userProfile.userAccessCode,
-  getSymptomUpdated: state => state.userProfile.symptomCompleted
+  getSymptomUpdated: state => state.userProfile.symptomCompleted,
+  getRecoveryUpdated: state => state.userProfile.recoveryCompleted
 }
 
 // actions
@@ -128,7 +129,13 @@ const mutations = {
   },
   visitRecovery: (state) => {
     state.userProfile.recoveryChecked = true;
-  }
+  },
+  setRecoveryCompleted: (state) => {
+    state.userProfile.recoveryCompleted = true;
+  },
+  setArticleCompleted: (state, data) => {
+    state.userProfile[data.article.toLowerCase() + 'Completed'] = true;
+  },
 }
 
 export default {

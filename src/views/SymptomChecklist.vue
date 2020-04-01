@@ -205,12 +205,10 @@ export default {
     }),
     getNotification: {
       get() {
-        console.log('get', this.notification, this.getNotificationStatus)
         return this.notification | this.getNotificationStatus
       },
       set(val) {
         if (!val) {
-          console.log('set', this.notification, this.getNotificationStatus)
           this._disableNotification();
           this.notification = false
         }

@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
-          <v-btn icon large flat slot="activator" @click="enableNotification">
+          <v-btn icon large flat slot="activator" v-if="getDataUserProfile.email == ''" @click="enableNotification">
             <v-icon>info_outline</v-icon>
           </v-btn>
         </v-menu>
@@ -28,6 +28,13 @@ import { mapMutations, mapActions, mapGetters } from "vuex";
 
 export default {
   data: () => ({}),
+
+  computed: {
+    ...mapGetters("auth", {
+      getDataUserProfile: "getDataUserProfile",
+      getSymptomUpdated: "getSymptomUpdated"
+    }),
+  },
 
   methods: {
     ...mapActions("app", {

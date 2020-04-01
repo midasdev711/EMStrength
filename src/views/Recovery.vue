@@ -140,7 +140,7 @@ import moment from "moment";
 export default {
   data() {
     return {
-      notificationDialog: true,
+      notificationDialog: false,
       moreTips: false,
       tipText: "",
       firstTime: true,
@@ -174,7 +174,8 @@ export default {
   computed: {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
-      getSymptomUpdated: "getSymptomUpdated"
+      getSymptomUpdated: "getSymptomUpdated",
+      getRecoveryUpdated: "getRecoveryUpdated"
     }),
     ...mapGetters("app", {
       getRecoveryCheck: "getRecoveryCheck",
@@ -182,6 +183,11 @@ export default {
       getNotificationStatus: "getNotificationStatus"
     }),
     getQuestionData() {
+      if (this.getRecoveryUpdated == null) {
+        this.notificationDialog = true
+      } else {
+        this.notificationDialog = false
+      }
       let newRecoveryData = []
       for (let i = 0; i < this.getRecoveryData.length; i ++) {
         let questions = this.getRecoveryData[i]
@@ -206,7 +212,10 @@ export default {
         return this.notificationDialog | this.getNotificationStatus
       },
       set(val) {
-        
+        if (!val) {
+          this._disableNotification();
+          this.notificationDialog = false
+        }
       }
     }
   },

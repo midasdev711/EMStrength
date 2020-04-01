@@ -82,7 +82,7 @@ const getters = {
   getNotificationStatus: state => state.showNotification,
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
-  getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.firstAnswered ? state.diagnosticAnswers.firstAnswered : { sectionNo: 0, subsectionNo: 0},
+  getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.firstAnswered ? state.diagnosticAnswers.firstAnswered : { sectionNo: null, subsectionNo: null},
   getSymptomLastAnswered: state => state.symptomAnswers && state.symptomAnswers.lastAnswered ? state.symptomAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0},
   getDecisionLastAnswered: state => state.decisionAnswers && state.decisionAnswers.lastAnswered ? state.decisionAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0},
 
@@ -203,7 +203,7 @@ const actions = {
     };
     var headers = { 'Content-Type': 'application/json-patch+json' };
     return API.patch('api/user/answers', data, headers).then(result => {
-      // commit("setAnswers", data);
+      commit("auth/setArticleCompleted", {article: data.article}, {root: true});
       commit("set" + data.article + "LastAnswered", lastAnswered);
     }).catch(err => {
       throw err;
@@ -253,7 +253,7 @@ const actions = {
 
     return API.put(`api/user/recovery`, data, headers)
       .then(result => {
-        commit("saveRecovery", data);
+        commit("auth/setRecoveryCompleted", {}, {root: true});
         return data;
       })
       .catch(err => {
@@ -406,9 +406,6 @@ const mutations = {
     state.recoveryCheck = !state.recoveryCheck;
   },
   setRecovery: set('recoveryData'),
-  saveRecovery: (state, data) => {
-    console.log("mutation saveRecovery called");
-  },
   setUserSummaryData: (state, data) => {
     state.userSummaryData = Object.assign({}, data);
   },

@@ -234,17 +234,16 @@ export default {
     },
     getLastAnswered() {
       if (this.getDiagnosticLastAnswered.sectionNo == undefined) {
-        this.getDiagnosticLastAnswered.sectionNo = 0;
         this.notification = true;
       } else {
         this.notification = false;
       }
-      this.hStepper = this.getDiagnosticLastAnswered.sectionNo
+      this.hStepper = this.getDiagnosticLastAnswered.sectionNo != null
         ? this.getDiagnosticLastAnswered.sectionNo + 1
         : 1;
-      this.vStepper = this.getDiagnosticLastAnswered.subsectionNo
+      this.vStepper = this.getDiagnosticLastAnswered.subsectionNo != null
         ? this.getDiagnosticLastAnswered.subsectionNo + 1
-        : 0;
+        : 1;
       let pageHolder = this.getAnswersData[
         this.getDiagnosticLastAnswered.sectionNo
       ];
