@@ -18,7 +18,7 @@ Vue.use(VeeValidate);
 Vue.use(VueToast, {
   // One of options
   position: 'top-right',
-  duration: 2000
+  duration: 3000
 });
 
 Vue.use(VueAzureUploader);

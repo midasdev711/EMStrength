@@ -161,7 +161,7 @@ export default {
                 });
             })
             .catch(err => {
-              console.log("create failed");
+              this.$toast.error(err.response.data.errors[0].errorMessage);
             });
         }
       }

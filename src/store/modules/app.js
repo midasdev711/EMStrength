@@ -206,9 +206,25 @@ const actions = {
       sectionNo: data.sectionNo,
       subsectionNo: data.subsectionNo
     };
+
+    let verticalMaxSteps = data.verticalMaxSteps
+    let horizontalMaxSteps = data.horizontalMaxSteps
+    let sectionNo = data.sectionNo
+    let subsectionNo = data.subsectionNo
+
+    if (subsectionNo < verticalMaxSteps - 1) {
+      data.subsectionNo++;
+    } else {
+      if (data.sectionNo < horizontalMaxSteps - 1) {
+        data.sectionNo++;
+      }
+      data.subsectionNo = 0;
+    }
+
     var headers = { 'Content-Type': 'application/json-patch+json' };
     return API.patch('api/user/answers', data, headers).then(result => {
       commit("auth/setArticleCompleted", {article: data.article}, {root: true});
+      commit("setArticleAnswer", {article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data});
       commit("set" + data.article + "LastAnswered", lastAnswered);
     }).catch(err => {
       throw err;
@@ -456,6 +472,25 @@ const mutations = {
         }
       }
     }
+  },
+
+  setArticleAnswer: (state, data) => {
+    let sectionNo = data.sectionNo
+    let subsectionNo = data.subsectionNo
+
+    console.log(data)
+
+    // let answerIndex = data.article.toLowerCase() + 'Answers'
+
+    // for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
+    //   let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i]
+    //   for (let j = 0; j < data.answers.length; j ++) {
+    //     if (tmp.questionId == data.answers[j].questionId) {
+    //       state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value
+    //       state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text
+    //     }
+    //   }
+    // }
   },
 
   enableNotification: (state) => {
