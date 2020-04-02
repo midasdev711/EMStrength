@@ -203,8 +203,8 @@ const actions = {
   saveAnswers: ({ commit }, data) => {
 
     let lastAnswered = {
-      sectionNo: data.nextSectionNo - 1,
-      subsectionNo: data.nextSubsectionNo - 1
+      sectionNo: data.sectionNo,
+      subsectionNo: data.subsectionNo
     };
     var headers = { 'Content-Type': 'application/json-patch+json' };
     return API.patch('api/user/answers', data, headers).then(result => {

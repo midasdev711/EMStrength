@@ -362,8 +362,8 @@ export default {
         answers: answers,
         complete: currentTime,
         article: "Symptom",
-        nextSectionNo: nextSectionNo,
-        nextSubsectionNo: nextSubsectionNo
+        sectionNo: nextSectionNo - 1,
+        subsectionNo: nextSubsectionNo - 1
       };
 
       return this._saveAnswers(answerData)
