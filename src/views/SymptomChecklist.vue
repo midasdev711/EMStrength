@@ -53,7 +53,6 @@
                 :complete="hStepper > (step.sectionNo + 1)"
                 :step="step.sectionNo + 1"
                 :color="$vuetify.theme.subheading1"
-                editable
               >
                 <span :style="{ color: $vuetify.theme.subheading1 }">
                   {{step.section}}
@@ -82,7 +81,6 @@
                   <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
                     <!--stepl.subsectionNo + 1-->
                     <v-stepper-step
-                      editable
                       v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                       :key="stepl.subsectionNo + '-sub-step'"
                       :color="$vuetify.theme.subheading2"

@@ -56,7 +56,6 @@
                 :complete="hStepper > (step.sectionNo + 1)"
                 :step="step.sectionNo + 1"
                 :color="$vuetify.theme.subheading1"
-                editable
               >{{step.section}}</v-stepper-step>
             </template>
           </v-stepper-header>
@@ -82,7 +81,6 @@
                     :key="`${stepp.sectionNo}-${vStepNum}`"
                   >
                     <v-stepper-step
-                      editable
                       v-bind:step="$vuetify.theme.step.charAt(vStepNum-1)"
                       :key="vStepNum + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
