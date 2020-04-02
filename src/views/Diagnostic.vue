@@ -300,7 +300,7 @@ export default {
       this.answers.push(tmp);
     },
 
-    saveAnswers(nextSectionNo, nextSubsectionNo) {
+    saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps) {
       let currentTime = new Date().toISOString();
 
       let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
@@ -311,7 +311,9 @@ export default {
         complete: currentTime,
         article: "Diagnostic",
         sectionNo: nextSectionNo - 1,
-        subsectionNo: nextSubsectionNo - 1
+        subsectionNo: nextSubsectionNo - 1,
+        verticalMaxSteps: verticalMaxSteps,
+        horizontalMaxSteps: horizontalMaxSteps
       };
 
       return this._saveAnswers(answerData)
@@ -355,7 +357,7 @@ export default {
         nextSubsectionNo: this.vStepper - 1
       };
       this._setAnswer(answerData)
-      return this.saveAnswers(nextSectionNo, nextSubsectionNo)
+      return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
         .then(res => {
         })
         .then(_ => {

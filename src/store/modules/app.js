@@ -480,17 +480,19 @@ const mutations = {
 
     console.log(data)
 
-    // let answerIndex = data.article.toLowerCase() + 'Answers'
+    let answerIndex = data.article.toLowerCase() + 'Answers'
 
-    // for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
-    //   let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i]
-    //   for (let j = 0; j < data.answers.length; j ++) {
-    //     if (tmp.questionId == data.answers[j].questionId) {
-    //       state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value
-    //       state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text
-    //     }
-    //   }
-    // }
+    console.log(state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items)
+    console.log(data.nextSubsection)
+
+    for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
+      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i]
+      for (let j = 0; j < data.nextSubsection.length; j ++) {
+        if (tmp.questionId == data.nextSubsection[j].questionId) {
+          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].isConditionQuestionMet = data.nextSubsection[j].isConditionQuestionMet
+        }
+      }
+    }
   },
 
   enableNotification: (state) => {

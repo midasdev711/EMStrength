@@ -198,6 +198,11 @@ export default {
     this.isLoading = true;
     this._getUserCode(this.getCurrentUserCode)
       .then(res => {
+        console.log(res)
+        // if (!res.userId) {
+        //   this.$toast.warning(`User code invalid`);
+        //   this.$router.push({ name: "dashboard" });
+        // }
         this.user = Object.assign({}, this.getDataUserProfile);
         if (this.user.gender == "Male") {
           this.user.gender = true;
