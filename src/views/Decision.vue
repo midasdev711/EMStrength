@@ -20,6 +20,13 @@
       </vue-circle>
     </div>
     <template v-else>
+      <v-alert
+        :value="getDataUserProfile.decisionCompleted"
+        color="warning"
+        icon="done"
+        outline>
+        Completed {{getDataUserProfile.decisionCompleted | formatDate}} <v-btn flat round outline @click="reRun">Re-Run</v-btn>
+      </v-alert>
       <v-layout justify-center ma-0>
         <v-dialog sm6 xs12 v-model="getNotification">
           <v-card
@@ -260,6 +267,9 @@ export default {
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData"
     }),
+    reRun() {
+
+    },
     compId(type, id) {
       return "comp" + type + id;
     },
@@ -368,6 +378,14 @@ export default {
         .catch(err => {
           throw err;
         });
+    }
+  },
+  filters: {
+    formatDate(date) {
+      return moment(date).format("YYYY-MM-DD hh:mm:ss");
+    },
+    formatDateOnly(date) {
+      return moment(date).format("YYYY-MM-DD");
     }
   },
   mounted() {

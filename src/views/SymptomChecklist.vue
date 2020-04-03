@@ -20,6 +20,13 @@
       </vue-circle>
     </div>
     <template v-else>
+      <v-alert
+        :value="getDataUserProfile.symptomCompleted"
+        color="warning"
+        icon="done"
+        outline>
+        Completed {{getDataUserProfile.symptomCompleted | formatDate}} <v-btn flat round outline @click="reRun">Re-Run</v-btn>
+      </v-alert>
       <v-layout justify-center ma-0>
         <v-dialog sm6 xs12 v-model="getNotification">
           <v-card
@@ -45,6 +52,8 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        
+        
         <v-stepper v-model="hStepper">
           <v-stepper-header>
             <template v-for="step in getFilteredQuestionData">
@@ -256,6 +265,9 @@ export default {
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData"
     }),
+    reRun() {
+
+    },
     compId(type, id) {
       return "comp" + type + id;
     },
@@ -371,6 +383,14 @@ export default {
         .catch(err => {
           throw err;
         });
+    }
+  },
+  filters: {
+    formatDate(date) {
+      return moment(date).format("YYYY-MM-DD hh:mm:ss");
+    },
+    formatDateOnly(date) {
+      return moment(date).format("YYYY-MM-DD");
     }
   },
   mounted() {

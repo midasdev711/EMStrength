@@ -28,6 +28,13 @@
       </vue-circle>
     </div>
     <template v-else>
+      <v-alert
+        :value="getDataUserProfile.stressRecoveryCompleted"
+        color="warning"
+        icon="done"
+        outline>
+        Completed {{getDataUserProfile.stressRecoveryCompleted | formatDate}} <v-btn flat round outline @click="reRun">Re-Run</v-btn>
+      </v-alert>
       <v-layout justify-center ma-0>
         <v-dialog sm6 xs12 v-model="getNotification">
           <v-card
@@ -169,6 +176,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import VueCircle from "vue2-circle-progress";
 import components from "../components/questionLayout";
 import { mapActions, mapGetters } from "vuex";
@@ -262,6 +270,10 @@ export default {
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData"
     }),
+
+    reRun() {
+
+    },
 
     compId(type, id) {
       return "comp" + type + id;
@@ -421,6 +433,14 @@ export default {
           this._setDiagnosticLastAnswered(lastAnswered);
         }
       });
+    }
+  },
+  filters: {
+    formatDate(date) {
+      return moment(date).format("YYYY-MM-DD hh:mm:ss");
+    },
+    formatDateOnly(date) {
+      return moment(date).format("YYYY-MM-DD");
     }
   },
   mounted() {
