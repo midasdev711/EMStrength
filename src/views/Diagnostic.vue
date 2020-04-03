@@ -372,11 +372,20 @@ export default {
         });
     },
     prevVerticalStep() {
-      let lastAnswered = {
-        sectionNo: this.hStepper - 1,
-        subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
-      };
-      this._setDiagnosticLastAnswered(lastAnswered);
+      let lastAnswered
+      if (this.vStepper > 1) {
+        lastAnswered = {
+          sectionNo: this.hStepper - 1,
+          subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+        }
+      } else {
+        lastAnswered = {
+          sectionNo: this.hStepper - 2,
+          subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
+        }
+      }
+      
+      this._setDiagnosticLastAnswered(lastAnswered)
     },
     loadSubheading(activeMeasurement) {
       this.isLoading = true;

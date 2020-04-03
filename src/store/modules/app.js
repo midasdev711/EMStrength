@@ -82,7 +82,7 @@ const getters = {
   getNotificationStatus: state => state.showNotification,
   getQuestions: state => state.questions,
   getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
-  getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.firstAnswered ? state.diagnosticAnswers.firstAnswered : { sectionNo: null, subsectionNo: null},
+  getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.lastAnswered ? state.diagnosticAnswers.lastAnswered : { sectionNo: null, subsectionNo: null},
   getSymptomLastAnswered: state => state.symptomAnswers && state.symptomAnswers.lastAnswered ? state.symptomAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0},
   getDecisionLastAnswered: state => state.decisionAnswers && state.decisionAnswers.lastAnswered ? state.decisionAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0},
 
@@ -444,7 +444,7 @@ const mutations = {
   },
 
   setDiagnosticLastAnswered: (state, data) => {
-    state.diagnosticAnswers.firstAnswered = Object.assign({}, data);
+    state.diagnosticAnswers.lastAnswered = Object.assign({}, data);
   },
 
   setDecisionLastAnswered: (state, data) => {
@@ -456,7 +456,7 @@ const mutations = {
   },
 
   setDiagnosticAnswerData: (state, data) => {
-    state.diagnosticAnswers.firstAnswered = Object.assign({}, data);
+    state.diagnosticAnswers.lastAnswered = Object.assign({}, data);
   },
 
   setAnswerData: (state, data) => {
