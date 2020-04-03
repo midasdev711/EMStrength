@@ -140,8 +140,8 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
-                        <v-btn flat @click="prevVerticalStep">Back</v-btn>
+                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
+                        <v-btn flat v-if="!(vStepper == 1 && hStepper == 1)" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -319,9 +319,6 @@ export default {
       this._setAnswer(answerData)
       return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
         .then(res => {
-          
-        })
-        .then(_ => {
           this.isLoading = false;
           this.$forceUpdate();
         })
@@ -329,24 +326,10 @@ export default {
           console.log(err);
         });
     },
-    nextHorizontalStep() {
-      let lastAnswered = {
-        sectionNo: this.hStepper,
-        subsectionNo: -1
-      };
-      this._setDecisionLastAnswered(lastAnswered);
-    },
     prevVerticalStep() {
       let lastAnswered = {
         sectionNo: this.hStepper - 1,
         subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
-      };
-      this._setDecisionLastAnswered(lastAnswered);
-    },
-    prevHorizontalStep() {
-      let lastAnswered = {
-        sectionNo: this.hStepper > 2 ? this.hStepper - 2 : 0,
-        subsectionNo: -1
       };
       this._setDecisionLastAnswered(lastAnswered);
     },
@@ -358,13 +341,16 @@ export default {
       let answerData = {
         userId: this.getDataUserProfile.id,
         answers: answers,
-        complete: currentTime,
         article: "Decision",
         sectionNo: nextSectionNo - 1,
         subsectionNo: nextSubsectionNo - 1,
         verticalMaxSteps: verticalMaxSteps,
         horizontalMaxSteps: horizontalMaxSteps
       };
+
+      if (this.hStepper == horizontalMaxSteps && this.vStepper == verticalMaxSteps) {
+        answerData['complete'] = currentTime
+      }
 
       return this._saveAnswers(answerData)
         .then(res => {
@@ -386,7 +372,6 @@ export default {
     this._getQuestionsAnswers(params).then(data => {
       this.isLoading = false;
       this.questions = data;
-      console.log(data);
     });
   }
 };

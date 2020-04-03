@@ -154,7 +154,7 @@
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
-                        <v-btn flat @click="prevVerticalStep">Back</v-btn>
+                        <v-btn flat v-if="!(vStepper == 1 && hStepper == 1)" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -308,13 +308,16 @@ export default {
       let answerData = {
         userId: this.getDataUserProfile.id,
         answers: answers,
-        complete: currentTime,
         article: "Diagnostic",
         sectionNo: nextSectionNo - 1,
         subsectionNo: nextSubsectionNo - 1,
         verticalMaxSteps: verticalMaxSteps,
         horizontalMaxSteps: horizontalMaxSteps
       };
+
+      if (this.hStepper == horizontalMaxSteps && this.vStepper == verticalMaxSteps) {
+        answerData['complete'] = currentTime
+      }
 
       return this._saveAnswers(answerData)
         .then(res => {

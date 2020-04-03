@@ -145,7 +145,7 @@
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
-                        <v-btn flat @click="prevVerticalStep">Back</v-btn>
+                        <v-btn flat v-if="!(vStepper == 1 && hStepper == 1)" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -329,24 +329,10 @@ export default {
           });
       }
     },
-    nextHorizontalStep() {
-      let lastAnswered = {
-        sectionNo: this.hStepper,
-        subsectionNo: -1
-      };
-      this._setLastAnswered(lastAnswered);
-    },
     prevVerticalStep() {
       let lastAnswered = {
         sectionNo: this.hStepper - 1,
         subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
-      };
-      this._setLastAnswered(lastAnswered);
-    },
-    prevHorizontalStep() {
-      let lastAnswered = {
-        sectionNo: this.hStepper > 2 ? this.hStepper - 2 : 0,
-        subsectionNo: -1
       };
       this._setLastAnswered(lastAnswered);
     },
@@ -358,13 +344,16 @@ export default {
       let answerData = {
         userId: this.getDataUserProfile.id,
         answers: answers,
-        complete: currentTime,
         article: "Symptom",
         sectionNo: nextSectionNo - 1,
         subsectionNo: nextSubsectionNo - 1,
         verticalMaxSteps: verticalMaxSteps,
         horizontalMaxSteps: horizontalMaxSteps
       };
+
+      if (this.hStepper == horizontalMaxSteps && this.vStepper == verticalMaxSteps) {
+        answerData['complete'] = currentTime
+      }
 
       return this._saveAnswers(answerData)
         .then(res => {

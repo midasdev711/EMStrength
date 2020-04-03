@@ -223,7 +223,9 @@ const actions = {
 
     var headers = { 'Content-Type': 'application/json-patch+json' };
     return API.patch('api/user/answers', data, headers).then(result => {
-      commit("auth/setArticleCompleted", {article: data.article}, {root: true});
+      if (data.complete) {
+        commit("auth/setArticleCompleted", {article: data.article}, {root: true});
+      }
       commit("setArticleAnswer", {article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data});
       commit("set" + data.article + "LastAnswered", lastAnswered);
     }).catch(err => {
