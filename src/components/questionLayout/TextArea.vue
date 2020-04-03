@@ -3,7 +3,7 @@
     <v-textarea
       v-bind:name="id"
       v-bind:label="title"
-      v-bind:placeholder="title"
+      placeholder="enter here..."
       v-model="textValue"
       v-validate="'required'"
       @input="updateValue"
