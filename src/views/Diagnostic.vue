@@ -268,11 +268,17 @@ export default {
       _saveAnswers: "saveAnswers",
       _setDiagnosticLastAnswered: "setDiagnosticLastAnswered",
       _disableNotification: "disableNotification",
-      _setAnswer: "setAnswerData"
+      _setAnswer: "setAnswerData",
+      _reRunArticle: 'reRunArticle'
     }),
 
     reRun() {
-
+      let data = {
+        article: 'Symptom'
+      }
+      return this._reRunArticle(data).then(res => {
+        console.log(res)
+      })
     },
 
     compId(type, id) {

@@ -244,6 +244,17 @@ const actions = {
       });
   },
 
+  reRunArticle: ({ commit }, data) => {
+    return API.get(`api/user/answers/rerun/${data.article}`)
+      .then(result => {
+        commit("auth/reRunArticle", {article: data.article}, {root: true});
+        return result['data'];
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
+
   getGroupSummaryData: ({ commit }, data) => {
     return API.get(`api/group/summary/layoutV2${data.params}`)
     // return API.get(`api/group/summary/layout${data.params}`)

@@ -22,7 +22,7 @@ const getters = {
   getUserType: state => state.userProfile.userType,
   getDataUserProfile: state => state.userProfile,
   getCurrentUserCode: state => state.userProfile.userAccessCode,
-  getSymptomUpdated: state => state.userProfile.symptomCompleted,
+  getSymptomUpdated: state => state.userProfile.recoveryOpened,
   getRecoveryUpdated: state => state.userProfile.recoveryCompleted
 }
 
@@ -134,7 +134,22 @@ const mutations = {
     state.userProfile.recoveryCompleted = true;
   },
   setArticleCompleted: (state, data) => {
-    state.userProfile[data.article.toLowerCase() + 'Completed'] = true;
+    state.userProfile[data.article.toLowerCase() + 'Completed'] = new Date()
+    if (data.article == 'Symptom') {
+      state.userProfile.recoveryOpened = true
+    } else if (data.article == 'Diagnostic') {
+      state.userProfile.stressRecoveryCompleted = new Date()
+    }
+  },
+  reRunArticle: (state, data) => {
+    state.userProfile[data.article.toLowerCase() + 'Completed'] = null
+    state.userProfile[data.article.toLowerCase() + 'Reruned'] = true
+    if (data.article == 'Symptom') {
+      state.userProfile.recoveryOpened = true
+    } else if (data.article == 'Diagnostic') {
+      state.userProfile.stressRecoveryCompleted = null
+      state.userProfile.stressRecoveryReruned = true
+    }
   },
 }
 
