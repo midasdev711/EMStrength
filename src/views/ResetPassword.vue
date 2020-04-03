@@ -17,8 +17,6 @@
                 </div>
                 <v-form id="formUser">
 
-                  <p> TOKEN: {{token}} for debug</p>
-
                   <p>Enter your new password</p>
                     
                   <v-text-field
