@@ -19,7 +19,7 @@
       </vue-circle>
     </div>
     <v-flex xs12 sm6 v-else>
-      <template v-if="getSymptomUpdated == null">
+      <template v-if="!getSymptomUpdated">
         <v-card>
           <v-card-title align-center justify-center>
             <h2 class="text-center">Let's get going on your energy management!</h2>

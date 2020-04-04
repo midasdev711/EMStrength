@@ -225,6 +225,10 @@ const actions = {
     return API.patch('api/user/answers', data, headers).then(result => {
       if (data.complete) {
         commit("auth/setArticleCompleted", {article: data.article}, {root: true});
+        lastAnswered = {
+          sectionNo: null,
+          subsectionNo: null
+        };
       }
       commit("setArticleAnswer", {article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data});
       commit("set" + data.article + "LastAnswered", lastAnswered);
@@ -245,9 +249,14 @@ const actions = {
   },
 
   reRunArticle: ({ commit }, data) => {
+    // let lastAnswered = {
+    //   sectionNo: null,
+    //   subsectionNo: null
+    // };
     return API.get(`api/user/answers/rerun/${data.article}`)
       .then(result => {
         commit("auth/reRunArticle", {article: data.article}, {root: true});
+        // commit("set" + data.article + "LastAnswered", lastAnswered);
         return result['data'];
       })
       .catch(err => {
@@ -471,49 +480,42 @@ const mutations = {
   },
 
   setAnswerData: (state, data) => {
-    let sectionNo = data.nextSectionNo
-    let subsectionNo = data.nextSubsectionNo
+    let sectionNo = data.nextSectionNo;
+    let subsectionNo = data.nextSubsectionNo;
 
-    let answerIndex = data.article.toLowerCase() + 'Answers'
+    let answerIndex = data.article.toLowerCase() + 'Answers';
 
     for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
-      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i]
+      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i];
       for (let j = 0; j < data.answers.length; j ++) {
         if (tmp.questionId == data.answers[j].questionId) {
-          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value
-          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text
+          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value;
+          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text;
         }
       }
     }
   },
 
   setArticleAnswer: (state, data) => {
-    let sectionNo = data.sectionNo
-    let subsectionNo = data.subsectionNo
-
-    console.log(data)
-
-    let answerIndex = data.article.toLowerCase() + 'Answers'
-
-    console.log(state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items)
-    console.log(data.nextSubsection)
-
+    let sectionNo = data.sectionNo;
+    let subsectionNo = data.subsectionNo;
+    let answerIndex = data.article.toLowerCase() + 'Answers';
     for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
-      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i]
+      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i];
       for (let j = 0; j < data.nextSubsection.length; j ++) {
         if (tmp.questionId == data.nextSubsection[j].questionId) {
-          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].isConditionQuestionMet = data.nextSubsection[j].isConditionQuestionMet
+          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].isConditionQuestionMet = data.nextSubsection[j].isConditionQuestionMet;
         }
       }
     }
   },
 
   enableNotification: (state) => {
-    state.showNotification = true
+    state.showNotification = true;
   },
 
   disableNotification: (state) => {
-    state.showNotification = false
+    state.showNotification = false;
   },
 
   // EXAMPLES
@@ -522,7 +524,7 @@ const mutations = {
   setColor: set("color"),
   toggleDrawer: toggle("showDrawer"),
   saveWeeklySummary: (state, weekData) => {
-    let tempArray = Object.assign([], state.weeklySummary)
+    let tempArray = Object.assign([], state.weeklySummary);
     let dataExist = false;
     for (let i = 0; i < tempArray.length; i++) {
       let element = tempArray[i];
@@ -531,9 +533,9 @@ const mutations = {
       }
     }
     if (!dataExist) {
-      tempArray.push(...weekData)
+      tempArray.push(...weekData);
     }
-    state.weeklySummary = Object.assign([], tempArray)
+    state.weeklySummary = Object.assign([], tempArray);
   },
   setMessageThread: (state, data) => {
     state.status = "get_messages_succeeded";

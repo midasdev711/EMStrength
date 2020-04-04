@@ -153,7 +153,7 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Save/Exit' : 'Continue'}}</v-btn>
+                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn flat v-if="!(vStepper == 1 && hStepper == 1)" @click="prevVerticalStep">Back</v-btn>
                       </v-card>
                     </v-stepper-content>
@@ -205,10 +205,12 @@ export default {
       getAnswersData: "getSymptomAnswersData",
       getSymptomHorizontalData: "getSymptomHorizontalData",
       getSymptomLastAnswered: "getSymptomLastAnswered",
-      getNotificationStatus: "getNotificationStatus"
+      getNotificationStatus: "getNotificationStatus",
     }),
     ...mapGetters("auth", {
-      getDataUserProfile: "getDataUserProfile"
+      getDataUserProfile: "getDataUserProfile",
+      symptomReruned: "getSymptomReruned",
+      symptomCompleted: "getSymptomCompleted"
     }),
     getNotification: {
       get() {
@@ -335,9 +337,11 @@ export default {
         nextSectionNo: this.hStepper - 1,
         nextSubsectionNo: this.vStepper - 1
       };
-      this._setAnswer(answerData)
-      if (isSavingAnswer) {
-
+      if (!this.symptomReruned && this.symptomCompleted) {
+        this.goToLastStep(this.getFilteredQuestionData[this.hStepper - 1].vertical.length, this.getFilteredQuestionData.length);
+        this.isLoading = false;
+      } else {
+        this._setAnswer(answerData)
         return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
           .then(res => {
             this.isLoading = false;
@@ -346,22 +350,32 @@ export default {
             console.log(err);
           });
       }
+      
     },
     prevVerticalStep() {
-      let lastAnswered
-      if (this.vStepper > 1) {
-        lastAnswered = {
-          sectionNo: this.hStepper - 1,
-          subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+      let lastAnswered;
+      if (!this.symptomReruned && this.symptomCompleted) {
+        if (this.vStepper > 1) {
+          this.vStepper --;
+        } else {
+          this.vStepper = this.getFilteredQuestionData[this.hStepper - 2].vertical.length;
+          this.hStepper --;
         }
       } else {
-        lastAnswered = {
-          sectionNo: this.hStepper - 2,
-          subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
+        if (this.vStepper > 1) {
+          lastAnswered = {
+            sectionNo: this.hStepper - 1,
+            subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+          };
+        } else {
+          lastAnswered = {
+            sectionNo: this.hStepper - 2,
+            subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
+          };
         }
+        this._setLastAnswered(lastAnswered);
       }
       
-      this._setLastAnswered(lastAnswered)
     },
     saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps) {
       let currentTime = new Date().toISOString();

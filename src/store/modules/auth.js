@@ -23,7 +23,13 @@ const getters = {
   getDataUserProfile: state => state.userProfile,
   getCurrentUserCode: state => state.userProfile.userAccessCode,
   getSymptomUpdated: state => state.userProfile.recoveryOpened,
-  getRecoveryUpdated: state => state.userProfile.recoveryCompleted
+  getRecoveryUpdated: state => state.userProfile.recoveryCompleted,
+  getSymptomReruned: state => state.userProfile.symptomReruned,
+  getSymptomCompleted: state => state.userProfile.symptomCompleted,
+  getStressRecoveryReruned: state => state.userProfile.stressRecoveryReruned,
+  getStressRecoveryCompleted: state => state.userProfile.stressRecoveryCompleted,
+  getDecisionReruned: state => state.userProfile.decisionReruned,
+  getDecisionCompleted: state => state.userProfile.decisionCompleted,
 }
 
 // actions
