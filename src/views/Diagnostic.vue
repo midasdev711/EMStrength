@@ -208,6 +208,8 @@ export default {
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
+      stressRecoveryReruned: "getStressRecoveryReruned",
+      stressRecoveryCompleted: "getStressRecoveryCompleted"
     }),
     getNotification: {
       get() {
@@ -377,33 +379,47 @@ export default {
         nextSectionNo: this.hStepper - 1,
         nextSubsectionNo: this.vStepper - 1
       };
-      this._setAnswer(answerData)
-      return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
-        .then(res => {
-        })
-        .then(_ => {
-          this.isLoading = false;
-          this.$forceUpdate();
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    prevVerticalStep() {
-      let lastAnswered
-      if (this.vStepper > 1) {
-        lastAnswered = {
-          sectionNo: this.hStepper - 1,
-          subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
-        }
+      if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
+        this.goToLastStep(this.getFilteredQuestionData[this.hStepper - 1].vertical.length, this.getFilteredQuestionData.length);
+        this.isLoading = false;
       } else {
-        lastAnswered = {
-          sectionNo: this.hStepper - 2,
-          subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
-        }
+        this._setAnswer(answerData)
+        return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
+          .then(res => {
+          })
+          .then(_ => {
+            this.isLoading = false;
+            this.$forceUpdate();
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
       
-      this._setDiagnosticLastAnswered(lastAnswered)
+    },
+    prevVerticalStep() {
+      let lastAnswered;
+      if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
+        if (this.vStepper > 1) {
+          this.vStepper --;
+        } else {
+          this.vStepper = this.getFilteredQuestionData[this.hStepper - 2].vertical.length;
+          this.hStepper --;
+        }
+      } else {
+        if (this.vStepper > 1) {
+          lastAnswered = {
+            sectionNo: this.hStepper - 1,
+            subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+          };
+        } else {
+          lastAnswered = {
+            sectionNo: this.hStepper - 2,
+            subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
+          };
+        }
+        this._setDiagnosticLastAnswered(lastAnswered);
+      }
     },
     loadSubheading(activeMeasurement) {
       this.isLoading = true;
