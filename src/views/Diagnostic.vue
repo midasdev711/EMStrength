@@ -32,30 +32,29 @@
         :value="getDataUserProfile.stressRecoveryCompleted"
         color="warning"
         icon="done"
-        outline>
-        Completed {{getDataUserProfile.stressRecoveryCompleted | formatDate}} <v-btn flat round outline @click="reRun">Re-Run</v-btn>
+        outline
+      >
+        Completed {{getDataUserProfile.stressRecoveryCompleted | formatDate}}
+        <v-btn flat round outline @click="reRun">Re-Run</v-btn>
       </v-alert>
       <v-layout justify-center ma-0>
         <v-dialog sm6 xs12 v-model="getNotification">
-          <v-card
-            color
-            class="black--text mt-2 col-sm-6 notification"
-          >
+          <v-card color class="black--text mt-2 col-sm-6 notification">
             <v-card-title class="headline">Stress-Recovery Analysis</v-card-title>
             <v-card-text>
               <p>
                 After completing the Energy Health Symptom Checklist, this next part is about building a more detailed understanding of the sources of energy imbalance in your life.
-                <br><br>
-                There are 2 key areas of the Stress-Recovery Analysis:
-                <br><br>
-                  1. Stress Measurement - how much energy you are spending daily, <br>
-                  weekly, monthly<br><br>
-
-                  2. Recovery Measurement - how much energy you are recovering <br>
-                  daily, weekly, monthly<br>
-                <br>
-                The analysis asks for your ratings on activities, personal experiences and health issues, and you are encouraged to provide as much detail as you can, in order to create an accurate picture of your Stress-Recovery Balance. The accuracy will help with developing the most effective responses to manage your Energy Health. Nonetheless, there is no pressure to respond to questions with which you don't feel comfortable.
-
+                <br />
+                <br />There are 2 key areas of the Stress-Recovery Analysis:
+                <br />
+                <br />1. Stress Measurement - how much energy you are spending daily,
+                <br />weekly, monthly
+                <br />
+                <br />2. Recovery Measurement - how much energy you are recovering
+                <br />daily, weekly, monthly
+                <br />
+                <br />
+The analysis asks for your ratings on activities, personal experiences and health issues, and you are encouraged to provide as much detail as you can, in order to create an accurate picture of your Stress-Recovery Balance. The accuracy will help with developing the most effective responses to manage your Energy Health. Nonetheless, there is no pressure to respond to questions with which you don't feel comfortable.
               </p>
             </v-card-text>
             <v-card-actions>
@@ -64,7 +63,6 @@
           </v-card>
         </v-dialog>
         <v-stepper v-model="hStepper">
-          
           <v-stepper-header>
             <template v-for="step in getFilteredQuestionData">
               <v-stepper-step
@@ -120,11 +118,7 @@
                       <v-card class="mb-5">
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
-                          <div
-                            class="row"
-                            v-for="a in stepl.items"
-                            :key="a.id"
-                          >
+                          <div class="row" v-for="a in stepl.items" :key="a.id">
                             <components
                               v-if="a.question.useText"
                               :is="a.question.type"
@@ -161,7 +155,11 @@
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
-                        <v-btn flat v-if="!(vStepper == 1 && hStepper == 1)" @click="prevVerticalStep">Back</v-btn>
+                        <v-btn
+                          flat
+                          v-if="!(vStepper == 1 && hStepper == 1)"
+                          @click="prevVerticalStep"
+                        >Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -213,32 +211,32 @@ export default {
     }),
     getNotification: {
       get() {
-        return this.notification | this.getNotificationStatus
+        return this.notification | this.getNotificationStatus;
       },
       set(val) {
         if (!val) {
-          this._disableNotification()
-          this.notification = false
+          this._disableNotification();
+          this.notification = false;
         }
       }
     },
     getFilteredQuestionData() {
-      let result = []
-      for (let i = 0; i < this.getAnswersData.length; i ++) {
-        let stepp = this.getAnswersData[i]
-        let newVertical = []
-        for (let j = 0; j < stepp.vertical.length; j ++) {
-          let stepl = stepp.vertical[j]
-          let items = stepl.items.filter( v => v.isConditionQuestionMet)
-          let newStepl = Object.assign({}, stepl)
-          newStepl.items = Object.assign([], items)
+      let result = [];
+      for (let i = 0; i < this.getAnswersData.length; i++) {
+        let stepp = this.getAnswersData[i];
+        let newVertical = [];
+        for (let j = 0; j < stepp.vertical.length; j++) {
+          let stepl = stepp.vertical[j];
+          let items = stepl.items.filter(v => v.isConditionQuestionMet);
+          let newStepl = Object.assign({}, stepl);
+          newStepl.items = Object.assign([], items);
           newVertical.push(newStepl);
         }
-        let newStepp = Object.assign({}, stepp)
-        newStepp.vertical = Object.assign([], newVertical)
-        result.push(newStepp)
+        let newStepp = Object.assign({}, stepp);
+        newStepp.vertical = Object.assign([], newVertical);
+        result.push(newStepp);
       }
-      return result
+      return result;
     },
     getLastAnswered() {
       if (this.getDiagnosticLastAnswered.sectionNo == undefined) {
@@ -246,12 +244,14 @@ export default {
       } else {
         this.notification = false;
       }
-      this.hStepper = this.getDiagnosticLastAnswered.sectionNo != null
-        ? this.getDiagnosticLastAnswered.sectionNo + 1
-        : 1;
-      this.vStepper = this.getDiagnosticLastAnswered.subsectionNo != null
-        ? this.getDiagnosticLastAnswered.subsectionNo + 1
-        : 1;
+      this.hStepper =
+        this.getDiagnosticLastAnswered.sectionNo != null
+          ? this.getDiagnosticLastAnswered.sectionNo + 1
+          : 1;
+      this.vStepper =
+        this.getDiagnosticLastAnswered.subsectionNo != null
+          ? this.getDiagnosticLastAnswered.subsectionNo + 1
+          : 1;
       let pageHolder = this.getAnswersData[
         this.getDiagnosticLastAnswered.sectionNo
       ];
@@ -266,21 +266,21 @@ export default {
   methods: {
     ...mapActions("app", {
       _getQuestions: "getQuestions",
-      _getQuestionsAnswers: "getAnswersData", 
+      _getQuestionsAnswers: "getAnswersData",
       _saveAnswers: "saveAnswers",
       _setDiagnosticLastAnswered: "setDiagnosticLastAnswered",
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData",
-      _reRunArticle: 'reRunArticle'
+      _reRunArticle: "reRunArticle"
     }),
 
     reRun() {
       let data = {
-        article: 'Symptom'
-      }
+        article: "Diagnostic"
+      };
       return this._reRunArticle(data).then(res => {
-        console.log(res)
-      })
+        console.log(res);
+      });
     },
 
     compId(type, id) {
@@ -296,7 +296,14 @@ export default {
       //this.hStepper = step + 1;
     },
 
-    updateComponentValue(value, questionId, answerId, useText, section, subsection) {
+    updateComponentValue(
+      value,
+      questionId,
+      answerId,
+      useText,
+      section,
+      subsection
+    ) {
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
           if (useText) {
@@ -320,10 +327,17 @@ export default {
       this.answers.push(tmp);
     },
 
-    saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps) {
+    saveAnswers(
+      nextSectionNo,
+      nextSubsectionNo,
+      verticalMaxSteps,
+      horizontalMaxSteps
+    ) {
       let currentTime = new Date().toISOString();
 
-      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+      let answers = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == this.vStepper
+      );
 
       let answerData = {
         userId: this.getDataUserProfile.id,
@@ -335,8 +349,11 @@ export default {
         horizontalMaxSteps: horizontalMaxSteps
       };
 
-      if (this.hStepper == horizontalMaxSteps && this.vStepper == verticalMaxSteps) {
-        answerData['complete'] = currentTime
+      if (
+        this.hStepper == horizontalMaxSteps &&
+        this.vStepper == verticalMaxSteps
+      ) {
+        answerData["complete"] = currentTime;
       }
 
       return this._saveAnswers(answerData)
@@ -370,8 +387,10 @@ export default {
         }
         nextSubsectionNo = 0;
       }
-      
-      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+
+      let answers = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == this.vStepper
+      );
 
       let answerData = {
         answers: answers,
@@ -380,13 +399,20 @@ export default {
         nextSubsectionNo: this.vStepper - 1
       };
       if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
-        this.goToLastStep(this.getFilteredQuestionData[this.hStepper - 1].vertical.length, this.getFilteredQuestionData.length);
+        this.goToLastStep(
+          this.getFilteredQuestionData[this.hStepper - 1].vertical.length,
+          this.getFilteredQuestionData.length
+        );
         this.isLoading = false;
       } else {
-        this._setAnswer(answerData)
-        return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
-          .then(res => {
-          })
+        this._setAnswer(answerData);
+        return this.saveAnswers(
+          nextSectionNo,
+          nextSubsectionNo,
+          verticalMaxSteps,
+          horizontalMaxSteps
+        )
+          .then(res => {})
           .then(_ => {
             this.isLoading = false;
             this.$forceUpdate();
@@ -395,16 +421,17 @@ export default {
             console.log(err);
           });
       }
-      
     },
     prevVerticalStep() {
       let lastAnswered;
       if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
         if (this.vStepper > 1) {
-          this.vStepper --;
+          this.vStepper--;
         } else {
-          this.vStepper = this.getFilteredQuestionData[this.hStepper - 2].vertical.length;
-          this.hStepper --;
+          this.vStepper = this.getFilteredQuestionData[
+            this.hStepper - 2
+          ].vertical.length;
+          this.hStepper--;
         }
       } else {
         if (this.vStepper > 1) {
@@ -415,7 +442,9 @@ export default {
         } else {
           lastAnswered = {
             sectionNo: this.hStepper - 2,
-            subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
+            subsectionNo:
+              this.getFilteredQuestionData[this.hStepper - 2].vertical.length -
+              2
           };
         }
         this._setDiagnosticLastAnswered(lastAnswered);
@@ -433,13 +462,13 @@ export default {
         if (this.selectedSection.title) {
           let lastAnswered;
           switch (this.selectedSection.title) {
-            case 'Physical':
+            case "Physical":
               lastAnswered = {
                 sectionNo: 1,
                 subsectionNo: -1
               };
               break;
-            case 'Mental/Emotional':
+            case "Mental/Emotional":
               lastAnswered = {
                 sectionNo: 0,
                 subsectionNo: -1
@@ -469,13 +498,12 @@ export default {
     if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
     this.loadSubheading(0);
-    this.selectedSection = this.$router.currentRoute.params
+    this.selectedSection = this.$router.currentRoute.params;
   }
 };
 </script>
 
 <style lang="stylus" scoped>
-
 >>>.v-stepper__content {
   padding: 0;
   margin-right: 0;
@@ -505,35 +533,38 @@ export default {
 }
 
 >>>.v-card__actions {
-  display flex
-  justify-content flex-end
+  display: flex;
+  justify-content: flex-end;
 }
 
->>>.v-dialog
-  max-width 50%
+>>>.v-dialog {
+  max-width: 50%;
+
   @media (max-width: 500px) {
-    max-width 90%
-    line-height 18px
+    max-width: 90%;
+    line-height: 18px;
+
     .v-card {
-      padding 10px
+      padding: 10px;
     }
 
     .v-card__title, .v-card__text {
-      padding 5px
+      padding: 5px;
     }
 
     .v-card__title {
-      padding-bottom 15px
+      padding-bottom: 15px;
     }
   }
 
   @media (max-width: 500px) {
-    max-width 90%
-    line-height 18px
+    max-width: 90%;
+    line-height: 18px;
 
     .v-card__title {
-      padding-bottom 15px
-      font-size 20px!important
+      padding-bottom: 15px;
+      font-size: 20px !important;
     }
   }
+}
 </style>

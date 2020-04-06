@@ -272,7 +272,7 @@ export default {
     }),
     reRun() {
       let data = {
-        article: 'Symptom'
+        article: 'Decision'
       }
       return this._reRunArticle(data).then(res => {
         console.log(res)

@@ -20,31 +20,25 @@
       </vue-circle>
     </div>
     <template v-else>
-      <v-alert
-        :value="getDataUserProfile.symptomCompleted"
-        color="warning"
-        icon="done"
-        outline>
-        Completed {{getDataUserProfile.symptomCompleted | formatDate}} <v-btn flat round outline @click="reRun">Re-Run</v-btn>
+      <v-alert :value="getDataUserProfile.symptomCompleted" color="warning" icon="done" outline>
+        Completed {{getDataUserProfile.symptomCompleted | formatDate}}
+        <v-btn flat round outline @click="reRun">Re-Run</v-btn>
       </v-alert>
       <v-layout justify-center ma-0>
         <v-dialog sm6 xs12 v-model="getNotification">
-          <v-card
-            color
-            class="black--text mt-2 col-sm-6 notification"
-          >
+          <v-card color class="black--text mt-2 col-sm-6 notification">
             <v-card-title class="headline">Energy Health Symptom Checklist</v-card-title>
             <v-card-text>
               <p>
                 You have arrived at the first part of the Energy Health Diagnostic, designed to assess the markers of energy imbalance in your life.
-                <br><br>
-                The early signs of mental and physical health conditions, and/or performance challenges often show up in our daily experiences of mild to moderate mental, emotional &amp; physical symptoms. 
-                <br><br>
-                These symptoms are indicators that there is some sort of imbalance in your body. Without an effective response to the symptoms, they will likely stay the same or progressively get worse.
-                <br><br>
-                Some of these symptoms may seem obvious, some are often hidden from awareness. However, many people don’t pay attention to their symptoms until they become significant and/or disruptive to their lives.
-                <br><br>
-                The Symptom Checklist helps you with a quick survey of a range of symptoms that indicate your current Energy Health balance (or imbalance), so that you can take steps to get healthier.
+                <br />
+                <br />The early signs of mental and physical health conditions, and/or performance challenges often show up in our daily experiences of mild to moderate mental, emotional &amp; physical symptoms.
+                <br />
+                <br />These symptoms are indicators that there is some sort of imbalance in your body. Without an effective response to the symptoms, they will likely stay the same or progressively get worse.
+                <br />
+                <br />Some of these symptoms may seem obvious, some are often hidden from awareness. However, many people don’t pay attention to their symptoms until they become significant and/or disruptive to their lives.
+                <br />
+                <br />The Symptom Checklist helps you with a quick survey of a range of symptoms that indicate your current Energy Health balance (or imbalance), so that you can take steps to get healthier.
               </p>
             </v-card-text>
             <v-card-actions>
@@ -52,8 +46,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        
-        
+
         <v-stepper v-model="hStepper">
           <v-stepper-header>
             <template v-for="step in getFilteredQuestionData">
@@ -112,11 +105,7 @@
                       <v-card class="mb-5">
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
-                          <div
-                            class="row"
-                            v-for="a in stepl.items"
-                            :key="a.id"
-                          >
+                          <div class="row" v-for="a in stepl.items" :key="a.id">
                             <!--{{a.question.type}}-->
                             <components
                               v-if="a.question.useText"
@@ -154,7 +143,11 @@
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
-                        <v-btn flat v-if="!(vStepper == 1 && hStepper == 1)" @click="prevVerticalStep">Back</v-btn>
+                        <v-btn
+                          flat
+                          v-if="!(vStepper == 1 && hStepper == 1)"
+                          @click="prevVerticalStep"
+                        >Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -205,7 +198,7 @@ export default {
       getAnswersData: "getSymptomAnswersData",
       getSymptomHorizontalData: "getSymptomHorizontalData",
       getSymptomLastAnswered: "getSymptomLastAnswered",
-      getNotificationStatus: "getNotificationStatus",
+      getNotificationStatus: "getNotificationStatus"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
@@ -214,32 +207,32 @@ export default {
     }),
     getNotification: {
       get() {
-        return this.notification | this.getNotificationStatus
+        return this.notification | this.getNotificationStatus;
       },
       set(val) {
         if (!val) {
           this._disableNotification();
-          this.notification = false
+          this.notification = false;
         }
       }
     },
     getFilteredQuestionData() {
-      let result = []
-      for (let i = 0; i < this.getSymptomHorizontalData.length; i ++) {
-        let stepp = this.getSymptomHorizontalData[i]
-        let newVertical = []
-        for (let j = 0; j < stepp.vertical.length; j ++) {
-          let stepl = stepp.vertical[j]
-          let items = stepl.items.filter( v => v.isConditionQuestionMet)
-          let newStepl = Object.assign({}, stepl)
-          newStepl.items = Object.assign([], items)
+      let result = [];
+      for (let i = 0; i < this.getSymptomHorizontalData.length; i++) {
+        let stepp = this.getSymptomHorizontalData[i];
+        let newVertical = [];
+        for (let j = 0; j < stepp.vertical.length; j++) {
+          let stepl = stepp.vertical[j];
+          let items = stepl.items.filter(v => v.isConditionQuestionMet);
+          let newStepl = Object.assign({}, stepl);
+          newStepl.items = Object.assign([], items);
           newVertical.push(newStepl);
         }
-        let newStepp = Object.assign({}, stepp)
-        newStepp.vertical = Object.assign([], newVertical)
-        result.push(newStepp)
+        let newStepp = Object.assign({}, stepp);
+        newStepp.vertical = Object.assign([], newVertical);
+        result.push(newStepp);
       }
-      return result
+      return result;
     },
     getLastAnswered() {
       if (this.getSymptomLastAnswered.sectionNo == undefined) {
@@ -253,9 +246,16 @@ export default {
       this.vStepper = this.getSymptomLastAnswered.subsectionNo
         ? this.getSymptomLastAnswered.subsectionNo + 1
         : 1;
-      if (this.getSymptomLastAnswered.sectionNo != null && this.getSymptomLastAnswered.subsectionNo != null) {
+      if (
+        this.getSymptomLastAnswered.sectionNo != null &&
+        this.getSymptomLastAnswered.subsectionNo != null
+      ) {
         this.notification = false | this.getNotificationStatus;
-        this.goToLastStep(this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo].vertical.length, this.getSymptomHorizontalData.length);
+        this.goToLastStep(
+          this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo]
+            .vertical.length,
+          this.getSymptomHorizontalData.length
+        );
       }
     }
   },
@@ -266,23 +266,29 @@ export default {
       _setLastAnswered: "setSymptomLastAnswered",
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData",
-      _reRunArticle: 'reRunArticle'
+      _reRunArticle: "reRunArticle"
     }),
     reRun() {
       let data = {
-        article: 'Symptom'
-      }
+        article: "Symptom"
+      };
       return this._reRunArticle(data).then(res => {
-        console.log(res)
-      })
+        console.log(res);
+      });
     },
     compId(type, id) {
       return "comp" + type + id;
     },
-    updateComponentValue(value, questionId, answerId, useText, section, subsection) {
+    updateComponentValue(
+      value,
+      questionId,
+      answerId,
+      useText,
+      section,
+      subsection
+    ) {
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
-          
           if (useText) {
             this.answers[i].text = value;
           } else {
@@ -329,7 +335,9 @@ export default {
         }
         nextSubsectionNo = 0;
       }
-      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+      let answers = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == this.vStepper
+      );
 
       let answerData = {
         answers: answers,
@@ -338,11 +346,19 @@ export default {
         nextSubsectionNo: this.vStepper - 1
       };
       if (!this.symptomReruned && this.symptomCompleted) {
-        this.goToLastStep(this.getFilteredQuestionData[this.hStepper - 1].vertical.length, this.getFilteredQuestionData.length);
+        this.goToLastStep(
+          this.getFilteredQuestionData[this.hStepper - 1].vertical.length,
+          this.getFilteredQuestionData.length
+        );
         this.isLoading = false;
       } else {
-        this._setAnswer(answerData)
-        return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
+        this._setAnswer(answerData);
+        return this.saveAnswers(
+          nextSectionNo,
+          nextSubsectionNo,
+          verticalMaxSteps,
+          horizontalMaxSteps
+        )
           .then(res => {
             this.isLoading = false;
           })
@@ -350,16 +366,17 @@ export default {
             console.log(err);
           });
       }
-      
     },
     prevVerticalStep() {
       let lastAnswered;
       if (!this.symptomReruned && this.symptomCompleted) {
         if (this.vStepper > 1) {
-          this.vStepper --;
+          this.vStepper--;
         } else {
-          this.vStepper = this.getFilteredQuestionData[this.hStepper - 2].vertical.length;
-          this.hStepper --;
+          this.vStepper = this.getFilteredQuestionData[
+            this.hStepper - 2
+          ].vertical.length;
+          this.hStepper--;
         }
       } else {
         if (this.vStepper > 1) {
@@ -370,17 +387,25 @@ export default {
         } else {
           lastAnswered = {
             sectionNo: this.hStepper - 2,
-            subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
+            subsectionNo:
+              this.getFilteredQuestionData[this.hStepper - 2].vertical.length -
+              2
           };
         }
         this._setLastAnswered(lastAnswered);
       }
-      
     },
-    saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps) {
+    saveAnswers(
+      nextSectionNo,
+      nextSubsectionNo,
+      verticalMaxSteps,
+      horizontalMaxSteps
+    ) {
       let currentTime = new Date().toISOString();
 
-      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+      let answers = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == this.vStepper
+      );
 
       let answerData = {
         userId: this.getDataUserProfile.id,
@@ -392,8 +417,11 @@ export default {
         horizontalMaxSteps: horizontalMaxSteps
       };
 
-      if (this.hStepper == horizontalMaxSteps && this.vStepper == verticalMaxSteps) {
-        answerData['complete'] = currentTime
+      if (
+        this.hStepper == horizontalMaxSteps &&
+        this.vStepper == verticalMaxSteps
+      ) {
+        answerData["complete"] = currentTime;
       }
 
       return this._saveAnswers(answerData)
@@ -463,35 +491,38 @@ export default {
 }
 
 >>>.v-card__actions {
-  display flex
-  justify-content flex-end
+  display: flex;
+  justify-content: flex-end;
 }
 
->>>.v-dialog
-  max-width 50%
+>>>.v-dialog {
+  max-width: 50%;
+
   @media (max-width: 500px) {
-    max-width 90%
-    line-height 18px
+    max-width: 90%;
+    line-height: 18px;
+
     .v-card {
-      padding 10px
+      padding: 10px;
     }
 
     .v-card__title, .v-card__text {
-      padding 5px
+      padding: 5px;
     }
 
     .v-card__title {
-      padding-bottom 15px
+      padding-bottom: 15px;
     }
   }
 
   @media (max-width: 500px) {
-    max-width 90%
-    line-height 18px
+    max-width: 90%;
+    line-height: 18px;
 
     .v-card__title {
-      padding-bottom 15px
-      font-size 20px!important
+      padding-bottom: 15px;
+      font-size: 20px !important;
     }
   }
+}
 </style>
