@@ -98,13 +98,13 @@
                     <v-stepper-content v-bind:step="vStepNum" :key="vStepNum + '-sub-content'">
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
                         <h3>
-                          {{$vuetify.theme.step.charAt(vStepNum-1)}}
+                          {{$vuetify.theme.step.charAt(vStepNum-1)}}{{step.section}}</v-stepper-step>
                           <span
                             class="right"
                           >{{vStepNum}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
-                      <v-card class="mb-5">
+                      <v-card class="mb-5" v-if="vStepNum == vStepper">
                         <span class="dev-hint">P {{vStepNum-1}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div
@@ -218,6 +218,7 @@ export default {
       }
     },
     getFilteredQuestionData() {
+      console.log(new Date())
       let result = []
       for (let i = 0; i < this.getDecisionHorizontalData.length; i ++) {
         let stepp = this.getDecisionHorizontalData[i]

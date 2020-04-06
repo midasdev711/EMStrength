@@ -36,6 +36,7 @@ export default {
   watch: {
     valueStatus(newProps, oldProps) {
       if (newProps != oldProps) {
+        console.log(new Date())
         this.$emit('update-value', newProps, this.questionId, this.answerId, this.useText, this.section, this.subsection);
       }
     }
