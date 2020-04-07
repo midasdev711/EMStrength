@@ -16,9 +16,7 @@
       :disabled="disabled"
     >
       <template v-slot:thumb-label="props">
-        <span>
-          {{ getTickLabel(props.value) }}
-        </span>
+        <span>{{ getTickLabel(props.value) }}</span>
       </template>
     </v-slider>
     <p class="text-xs-right">{{ getTickLabel(this.sliderValue) }}</p>
@@ -38,9 +36,12 @@ export default {
     },
     items: {
       type: Array,
-      default: [{
-        "value":2,"title":"Medium"
-      }]
+      default: [
+        {
+          value: 2,
+          title: "Medium"
+        }
+      ]
     },
     questionId: String,
     answerId: String,
@@ -48,18 +49,18 @@ export default {
     section: Number,
     subsection: Number
   },
-  data () {
+  data() {
     return {
-      themeColourSeconary_Dark: '#213060',
-      themeColourSeconary_Mid: '#00a38a',
+      themeColourSeconary_Dark: "#213060",
+      themeColourSeconary_Mid: "#00a38a",
       sliderValue: this.value ? this.value : 0,
       tickLabels: [
-        'one', 
-        'two', 
-        'three'
+        "one",
+        "two",
+        "three"
         ////this.getTickLabels()
-      ],  
-    }
+      ]
+    };
   },
   methods: {
     getTickLabel(val) {
@@ -73,27 +74,28 @@ export default {
       //tickLabels = {};
       // add back to v-slider :tick-labels="tickLabels"
       for (let i = 0; i < this.items.length; i++) {
-          
-          this.tickLabels.push(this.items[i].title);
-          
+        this.tickLabels.push(this.items[i].title);
       }
       console.log(tickLabels);
     }
   },
-  mounted() {
-
-  }
-}
+  mounted() {}
+};
 </script>
 
 <style lang="stylus" scoped>
->>>.v-input--slider 
-  margin-top 6em
->>>.v-slider__thumb-label
-  height 78px!important
-  width 78px!important
-  text-align center
-  border-radius 60% 27% 0
-.scale 
-  margin 0 auto
+>>>.v-input--slider {
+  margin-top: 6em;
+}
+
+>>>.v-slider__thumb-label {
+  height: 78px !important;
+  width: 78px !important;
+  text-align: center;
+  border-radius: 60% 27% 0;
+}
+
+.scale {
+  margin: 0 auto;
+}
 </style>

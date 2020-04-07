@@ -34,7 +34,7 @@
         icon="done"
         outline
       >
-        Completed {{getDataUserProfile.stressRecoveryCompleted | formatDate}}
+        Submitted {{getDataUserProfile.stressRecoveryCompleted | formatDate}}
         <v-btn flat round outline @click="reRun">Re-Run</v-btn>
       </v-alert>
       <v-layout justify-center ma-0>
@@ -411,8 +411,10 @@ export default {
           verticalMaxSteps,
           horizontalMaxSteps
         )
-          .then(res => {})
-          .then(_ => {
+          .then(res => {
+            if (answerData.complete) {
+              this.$toast.success(`Completed`);
+            }
             this.isLoading = false;
             this.$forceUpdate();
           })
@@ -487,7 +489,7 @@ export default {
   },
   filters: {
     formatDate(date) {
-      return moment(date).format("YYYY-MM-DD hh:mm:ss");
+      return moment(date).format("Do MMMM, YYYY");
     },
     formatDateOnly(date) {
       return moment(date).format("YYYY-MM-DD");

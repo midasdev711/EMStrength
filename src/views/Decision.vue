@@ -25,7 +25,7 @@
         color="warning"
         icon="done"
         outline>
-        Completed {{getDataUserProfile.decisionCompleted | formatDate}} <v-btn flat round outline @click="reRun">Re-Run</v-btn>
+        Submitted {{getDataUserProfile.decisionCompleted | formatDate}} <v-btn flat round outline @click="reRun">Re-Run</v-btn>
       </v-alert>
       <v-layout justify-center ma-0>
         <v-dialog sm6 xs12 v-model="getNotification">
@@ -98,7 +98,7 @@
                     <v-stepper-content v-bind:step="vStepNum" :key="vStepNum + '-sub-content'">
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
                         <h3>
-                          {{$vuetify.theme.step.charAt(vStepNum-1)}}{{step.section}}</v-stepper-step>
+                          {{$vuetify.theme.step.charAt(vStepNum-1)}}{{step.section}}
                           <span
                             class="right"
                           >{{vStepNum}} of {{stepp.vertical.length}}</span>
@@ -395,6 +395,9 @@ export default {
 
       return this._saveAnswers(answerData)
         .then(res => {
+          if (answerData.complete) {
+            this.$toast.success(`Completed`);
+          }
           return res;
         })
         .catch(err => {
@@ -404,7 +407,7 @@ export default {
   },
   filters: {
     formatDate(date) {
-      return moment(date).format("YYYY-MM-DD hh:mm:ss");
+      return moment(date).format("Do MMMM, YYYY");
     },
     formatDateOnly(date) {
       return moment(date).format("YYYY-MM-DD");

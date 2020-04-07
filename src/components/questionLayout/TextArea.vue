@@ -13,8 +13,7 @@
 </template>
 
 <script>
-
-import debounce from "debounce"
+import debounce from "debounce";
 
 export default {
   name: "TextArea",
@@ -29,17 +28,25 @@ export default {
     section: Number,
     subsection: Number
   },
-  data () {
+  data() {
     return {
       textValue: this.text ? this.text : ""
-    }
+    };
   },
   methods: {
-    updateValue: debounce(function (e) {
+    updateValue: debounce(function(e) {
       console.log(e);
       this.textValue = e;
-      this.$emit('update-value', this.textValue, this.questionId, this.answerId, this.useText, this.section, this.subsection)
-    }, 500),
+      this.$emit(
+        "update-value",
+        this.textValue,
+        this.questionId,
+        this.answerId,
+        this.useText,
+        this.section,
+        this.subsection
+      );
+    }, 500)
   }
-}
+};
 </script>

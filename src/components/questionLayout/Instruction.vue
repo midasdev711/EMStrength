@@ -12,9 +12,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
-    //items:
-    //length: ,
+    disabled: Boolean
   }
 }
 </script>

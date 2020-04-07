@@ -2,7 +2,6 @@
  <v-flex xs12>
   <h1>
     {{title}}
-    <!--span class="title"><strong></strong>(ArticleSubheading)</span-->
   </h1>
   <p></p>
 </v-flex>
@@ -14,9 +13,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
-    //items:
-    //length: ,
+    disabled: Boolean
   }
 }
 </script>

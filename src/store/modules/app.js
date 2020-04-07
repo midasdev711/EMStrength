@@ -201,7 +201,6 @@ const actions = {
   },
 
   saveAnswers: ({ commit }, data) => {
-
     let lastAnswered = {
       sectionNo: data.sectionNo,
       subsectionNo: data.subsectionNo
@@ -209,10 +208,8 @@ const actions = {
 
     let verticalMaxSteps = data.verticalMaxSteps
     let horizontalMaxSteps = data.horizontalMaxSteps
-    let sectionNo = data.sectionNo
-    let subsectionNo = data.subsectionNo
 
-    if (subsectionNo < verticalMaxSteps - 1) {
+    if (data.subsectionNo < verticalMaxSteps - 1) {
       data.subsectionNo++;
     } else {
       if (data.sectionNo < horizontalMaxSteps - 1) {
@@ -319,7 +316,6 @@ const actions = {
         throw err;
       });
   },
-
 
   postResetPassword: ({ commit }, data) => {
     var headers = {
