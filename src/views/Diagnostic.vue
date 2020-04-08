@@ -47,11 +47,9 @@
                 <br />
                 <br />There are 2 key areas of the Stress-Recovery Analysis:
                 <br />
-                <br />1. Stress Measurement - how much energy you are spending daily,
-                <br />weekly, monthly
+                <br />1. Stress Measurement - how much energy you are spending daily, weekly, monthly
                 <br />
-                <br />2. Recovery Measurement - how much energy you are recovering
-                <br />daily, weekly, monthly
+                <br />2. Recovery Measurement - how much energy you are recovering daily, weekly, monthly
                 <br />
                 <br />The analysis asks for your ratings on activities, personal experiences and health issues, and you are encouraged to provide as much detail as you can, in order to create an accurate picture of your Stress-Recovery Balance. The accuracy will help with developing the most effective responses to manage your Energy Health. Nonetheless, there is no pressure to respond to questions with which you don't feel comfortable.
               </p>
@@ -503,6 +501,19 @@ export default {
   }
 };
 </script>
+
+<style lang="stylus">
+
+.v-dialog {
+  .v-card__actions {
+    padding-top: 0;
+  }
+
+  .notification .v-card__text {
+    padding-bottom: 0!important;
+  }
+}
+</style>
 
 <style lang="stylus" scoped>
 >>>.v-stepper__content {
