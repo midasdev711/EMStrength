@@ -65,6 +65,7 @@
               <v-stepper-step
                 :key="`${step.sectionNo}-step`"
                 :complete="hStepper > (step.sectionNo + 1)"
+                :editable="step.sectionNo <= getAnswerLimit.sectionNo"
                 :step="step.sectionNo + 1"
                 :color="$vuetify.theme.subheading1"
               >
@@ -91,12 +92,13 @@
                 </h3>
               </v-card>
               <v-card>
-                <v-stepper vertical v-model="vStepper">
+                <v-stepper vertical v-model="vStepper[stepp.sectionNo]">
                   <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
                     <v-stepper-step
                       v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                       :key="stepl.subsectionNo + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
+                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && stepl.subsectionNo <= getAnswerLimit.subsectionNo)"
                     >
                       <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
 
@@ -112,7 +114,7 @@
                           >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
-                      <v-card class="mb-5" v-if="stepl.subsectionNo + 1==vStepper">
+                      <v-card class="mb-5" v-if="vStepper[stepp.sectionNo] == stepl.subsectionNo + 1">
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div class="row" v-for="a in stepl.items" :key="a.id">
@@ -186,7 +188,7 @@ export default {
     notification: true,
     activeMeasurement: 0,
     hStepper: 1,
-    vStepper: 1,
+    vStepper: [],
     form1Valid: false,
     questions: [],
     answers: [],
@@ -199,7 +201,8 @@ export default {
     ...mapGetters("app", {
       getAnswersData: "getDiagnosticAnswersData",
       getDiagnosticLastAnswered: "getDiagnosticLastAnswered",
-      getNotificationStatus: "getNotificationStatus"
+      getNotificationStatus: "getNotificationStatus",
+      getAnswerLimit: "getStressRecoveryLimit"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
@@ -245,7 +248,11 @@ export default {
         this.getDiagnosticLastAnswered.sectionNo != null
           ? this.getDiagnosticLastAnswered.sectionNo + 1
           : 1;
-      this.vStepper =
+      this.vStepper = [];
+      for (let i = 0; i < this.getAnswersData.length; i++) {
+        this.vStepper.push(1);
+      }
+      this.vStepper[this.hStepper - 1] =
         this.getDiagnosticLastAnswered.subsectionNo != null
           ? this.getDiagnosticLastAnswered.subsectionNo + 1
           : 1;
@@ -333,7 +340,7 @@ export default {
       let currentTime = new Date().toISOString();
 
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == this.vStepper
+        v => v.section == this.hStepper && v.subsection == this.vStepper[this.hStepper-1]
       );
 
       let answerData = {
@@ -348,7 +355,7 @@ export default {
 
       if (
         this.hStepper == horizontalMaxSteps &&
-        this.vStepper == verticalMaxSteps
+        this.vStepper[this.hStepper-1] == verticalMaxSteps
       ) {
         answerData["complete"] = currentTime;
       }
@@ -363,20 +370,20 @@ export default {
         });
     },
     goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper < verticalMaxSteps) {
-        this.vStepper++;
+      if (this.vStepper[this.hStepper - 1] < verticalMaxSteps) {
+        this.vStepper[this.hStepper - 1]++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           this.hStepper++;
         }
-        this.vStepper = 1;
+        this.vStepper[this.hStepper - 1] = 1;
       }
     },
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
       let nextSectionNo = this.hStepper;
-      let nextSubsectionNo = this.vStepper;
-      if (this.vStepper < verticalMaxSteps) {
+      let nextSubsectionNo = this.vStepper[this.hStepper-1];
+      if (this.vStepper[this.hStepper-1] < verticalMaxSteps) {
         // nextSubsectionNo++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
@@ -386,14 +393,14 @@ export default {
       }
 
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == this.vStepper
+        v => v.section == this.hStepper && v.subsection == this.vStepper[this.hStepper-1]
       );
 
       let answerData = {
         answers: answers,
         article: "Diagnostic",
         nextSectionNo: this.hStepper - 1,
-        nextSubsectionNo: this.vStepper - 1
+        nextSubsectionNo: this.vStepper[this.hStepper-1] - 1
       };
       if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
         this.goToLastStep(
@@ -424,10 +431,10 @@ export default {
     prevVerticalStep() {
       let lastAnswered;
       if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
-        if (this.vStepper > 1) {
-          this.vStepper--;
+        if (this.vStepper[this.hStepper-1] > 1) {
+          this.vStepper[this.hStepper-1]--;
         } else {
-          this.vStepper = this.getFilteredQuestionData[
+          this.vStepper[this.hStepper-2] = this.getFilteredQuestionData[
             this.hStepper - 2
           ].vertical.length;
           this.hStepper--;

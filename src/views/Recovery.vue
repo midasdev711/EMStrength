@@ -111,7 +111,7 @@
                 <v-icon medium :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
                 <span class="pl-10">{{dialogData.rating | ratingFilter}}</span>
               </v-layout>
-              <p>Last assessed {{ getSymptomUpdated | daysAgo }}</p>
+              <p>Last assessed {{ dialogData.lastCompleted | daysAgo }}</p>
               <p v-html="dialogData.content"></p>
             </v-card-text>
 
@@ -221,7 +221,7 @@ export default {
   },
   filters: {
     daysAgo(when) {
-      if (when == undefined) return "never";
+      if (when == undefined || when == null) return "never";
       const date = moment(when);
       return date.fromNow();
     },
@@ -273,6 +273,7 @@ export default {
     showHelpDialog(questions) {
       this.dialogData.category = questions.categoryName;
       this.dialogData.rating = questions.rating;
+      console.log(this.dialogData.lastCompleted)
       this.dialogData.lastCompleted = questions.lastCompleted;
       if (questions.category == 'Physical' && questions.rating == 'CouldBeImproved') {
         this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 

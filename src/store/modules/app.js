@@ -38,6 +38,21 @@ const state = {
     items: [],  // all data with Tuple key of article, section, date
   },
 
+  decisionLimit: {
+    sectionNo: 0,
+    subsectionNo: 0
+  },
+
+  stressRecoveryLimit: {
+    sectionNo: 0,
+    subsectionNo: 0
+  },
+
+  symptomLimit: {
+    sectionNo: 0,
+    subsectionNo: 0
+  },
+
   // EXAMPLES
   dateWeight: null,
   checkoutStatus: null,
@@ -94,6 +109,10 @@ const getters = {
   getRecoveryCheck: state => state.recoveryCheck,
   getRecoveryData: state => state.recoveryData,
   getUserSummaryData: state => state.userSummaryData,
+
+  getDecisionLimit: state => state.decisionLimit,
+  getStressRecoveryLimit: state => state.stressRecoveryLimit,
+  getSymptomLimit: state => state.symptomLimit,
 
   // EXAMPLES
   getCheckoutStatus: state => state.checkoutStatus,
@@ -432,12 +451,17 @@ const mutations = {
   setQuestions: set("questions"),
   setDiagnosticAnswers: (state, data) => {
     state.diagnosticAnswers = Object.assign({}, data);
+    state.stressRecoveryLimit = Object.assign({}, data.lastAnswered);
   },
+
   setDecisionAnswers: (state, data) => {
     state.decisionAnswers = Object.assign({}, data);
+    state.decisionLimit = Object.assign({}, data.lastAnswered);
   },
+
   setSymptomAnswers: (state, data) => {
     state.symptomAnswers = Object.assign({}, data);
+    state.symptomLimit = Object.assign({}, data.lastAnswered);
   },
   setSummaryAnswers: (state, data) => {
     state.summaryAnswers = Object.assign({}, data);
