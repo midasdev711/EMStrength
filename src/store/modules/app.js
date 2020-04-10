@@ -43,7 +43,7 @@ const state = {
     subsectionNo: 0
   },
 
-  stressRecoveryLimit: {
+  diagnosticLimit: {
     sectionNo: 0,
     subsectionNo: 0
   },
@@ -111,7 +111,7 @@ const getters = {
   getUserSummaryData: state => state.userSummaryData,
 
   getDecisionLimit: state => state.decisionLimit,
-  getStressRecoveryLimit: state => state.stressRecoveryLimit,
+  getStressRecoveryLimit: state => state.diagnosticLimit,
   getSymptomLimit: state => state.symptomLimit,
 
   // EXAMPLES
@@ -248,6 +248,7 @@ const actions = {
       }
       commit("setArticleAnswer", { article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data });
       commit("set" + data.article + "LastAnswered", lastAnswered);
+      commit("setAnswerLimit", { article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo });
     }).catch(err => {
       throw err;
     });
@@ -265,10 +266,6 @@ const actions = {
   },
 
   reRunArticle: ({ commit }, data) => {
-    // let lastAnswered = {
-    //   sectionNo: null,
-    //   subsectionNo: null
-    // };
     return API.get(`api/user/answers/rerun/${data.article}`)
       .then(result => {
         commit("auth/reRunArticle", { article: data.article }, { root: true });
@@ -451,7 +448,7 @@ const mutations = {
   setQuestions: set("questions"),
   setDiagnosticAnswers: (state, data) => {
     state.diagnosticAnswers = Object.assign({}, data);
-    state.stressRecoveryLimit = Object.assign({}, data.lastAnswered);
+    state.diagnosticLimit = Object.assign({}, data.lastAnswered);
   },
 
   setDecisionAnswers: (state, data) => {
@@ -527,6 +524,15 @@ const mutations = {
         }
       }
     }
+  },
+
+  setAnswerLimit: (state, data) => {
+    let index = data.article.toLowerCase() + 'Limit';
+    if (state[index].sectionNo <= data.sectionNo) {
+      if (state[index].subsectionNo < data.subsectionNo) {
+        state[index] = Object.assign({}, data);
+      }
+    } 
   },
 
   enableNotification: (state) => {

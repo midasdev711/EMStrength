@@ -97,7 +97,7 @@
                       :step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                       :key="stepl.subsectionNo + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
-                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && stepl.subsectionNo <= getAnswerLimit.subsectionNo)"
+                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && stepl.subsectionNo <= (getAnswerLimit.subsectionNo))"
                     >
                       <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
 
@@ -241,17 +241,12 @@ export default {
   watch: {
     getDiagnosticLastAnswered (newProp, oldProp) {
       if (newProp != oldProp) {
-        console.log('vStepper', newProp);
-      }
-    },
-    hStepper (newProp, oldProp) {
-      if (newProp != oldProp) {
-        console.log('hStepper', newProp);
+        // console.log('vStepper', newProp);
       }
     },
     vStepper: {
       handler(val) {
-        console.log(val);
+        // console.log(val);
       },
       deep: true,
     },
@@ -278,10 +273,6 @@ export default {
       return "comp" + type + id;
     },
 
-    nameId(type, row, col) {
-      return `${type}_${row}x${col}`;
-    },
-    
     updateComponentValue(
       value,
       questionId,
@@ -320,9 +311,11 @@ export default {
       horizontalMaxSteps
     ) {
       let currentTime = new Date().toISOString();
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
 
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == this.vStepper[this.hStepper-1]
+        v => v.section == this.hStepper && v.subsection == (index + 1)
       );
 
       let answerData = {
@@ -337,7 +330,7 @@ export default {
 
       if (
         this.hStepper == horizontalMaxSteps &&
-        this.vStepper[this.hStepper-1] == verticalMaxSteps
+        (index + 1) == verticalMaxSteps
       ) {
         answerData["complete"] = currentTime;
       }
@@ -351,21 +344,14 @@ export default {
           throw err;
         });
     },
-    goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper[this.hStepper - 1] < verticalMaxSteps) {
-        this.vStepper[this.hStepper - 1]++;
-      } else {
-        if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper++;
-        }
-        this.vStepper[this.hStepper - 1] = 1;
-      }
-    },
+
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
+      let steps = this.$vuetify.theme.step;
       let nextSectionNo = this.hStepper;
-      let nextSubsectionNo = this.vStepper[this.hStepper-1];
-      if (this.vStepper[this.hStepper-1] < verticalMaxSteps) {
+      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+      let nextSubsectionNo = index + 1;
+      if (nextSubsectionNo < verticalMaxSteps) {
         // nextSubsectionNo++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
@@ -375,20 +361,17 @@ export default {
       }
 
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == this.vStepper[this.hStepper-1]
+        v => v.section == this.hStepper && v.subsection == (index + 1)
       );
 
       let answerData = {
         answers: answers,
         article: "Diagnostic",
         nextSectionNo: this.hStepper - 1,
-        nextSubsectionNo: this.vStepper[this.hStepper-1] - 1
+        nextSubsectionNo: index
       };
       if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
-        this.goToLastStep(
-          this.getFilteredQuestionData[this.hStepper - 1].vertical.length,
-          this.getFilteredQuestionData.length
-        );
+        this.goToNextStep();
         this.isLoading = false;
       } else {
         this._setAnswer(answerData);
@@ -402,6 +385,7 @@ export default {
             if (answerData.complete) {
               this.$toast.success(`Completed`);
             }
+            this.goToNextStep();
             this.isLoading = false;
             this.$forceUpdate();
           })
@@ -410,39 +394,32 @@ export default {
           });
       }
     },
+
     prevVerticalStep() {
       let lastAnswered;
-      if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
-        if (this.vStepper[this.hStepper-1] > 1) {
-          this.vStepper[this.hStepper-1]--;
-        } else {
-          this.vStepper[this.hStepper-2] = this.getFilteredQuestionData[
-            this.hStepper - 2
-          ].vertical.length;
-          this.hStepper--;
-        }
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
+      if (index > 0) {
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.hStepper-1] = steps.charAt(index - 1);
+        this.vStepper = Object.assign([], tmp);
       } else {
-        if (this.vStepper[this.hStepper-1] > 1) {
-          lastAnswered = {
-            sectionNo: this.hStepper - 1,
-            subsectionNo: this.vStepper[this.hStepper-1] > 2 ? this.vStepper[this.hStepper-1] - 3 : -1
-          };
-        } else {
-          lastAnswered = {
-            sectionNo: this.hStepper - 2,
-            subsectionNo:
-              this.getFilteredQuestionData[this.hStepper - 2].vertical.length -
-              2
-          };
-        }
-        this._setDiagnosticLastAnswered(lastAnswered);
+        this.vStepper[this.hStepper-2] = steps.charAt(this.getFilteredQuestionData[
+          this.hStepper - 2
+        ].vertical.length - 1);
+        this.hStepper--;
       }
     },
+
     goToNextStep() {
       let horizontalMaxSteps = this.questions.horizontal.length;
       let verticalMaxSteps = this.questions.horizontal[this.hStepper-1].vertical.length;
-      if (this.vStepper[this.hStepper - 1] < verticalMaxSteps) {
-        this.vStepper[this.hStepper - 1]++;
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
+      if ((index + 1) < verticalMaxSteps) {
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.hStepper-1] = steps.charAt(index + 1);
+        this.vStepper = Object.assign([], tmp);
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           this.hStepper++;
@@ -450,6 +427,7 @@ export default {
         this.vStepper[this.hStepper - 1] = "A";
       }
     },
+
     loadSubheading(activeMeasurement) {
       this.isLoading = true;
       let data = {
@@ -479,7 +457,6 @@ export default {
               this.vStepper[0] = 1;
               break;
           }
-          // this._setDiagnosticLastAnswered(lastAnswered);
         } else {
           // go to last answered section
           this.hStepper = this.questions.lastAnswered.sectionNo + 1;
@@ -499,6 +476,7 @@ export default {
       return moment(date).format("YYYY-MM-DD");
     }
   },
+
   mounted() {
     if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;

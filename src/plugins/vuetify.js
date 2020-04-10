@@ -18,7 +18,6 @@ Vue.use(Vuetify, {
     progressColor: "#47bbe9",
     "heading-font-family": 'Muli',
     step: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
   },
   customProperties: true
 })
