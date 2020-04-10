@@ -4,7 +4,6 @@ import APIService from '@/apiService/apiService.js';
 const API = new APIService()
 
 const state = {
-
   isLogined: false,
   isAdmin: false,
   userProfile: {

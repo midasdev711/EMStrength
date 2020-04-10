@@ -1,6 +1,5 @@
 <template>
   <v-container grid-list-xl>
-    {{getLastAnswered}}
     <v-tabs dark color="primary" v-model="activeMeasurement" :hide-slider="false">
       <v-tabs-slider :color="$vuetify.theme.subheading2"></v-tabs-slider>
       <v-tab @click="loadSubheading(0)">Stress Measurement</v-tab>
@@ -95,7 +94,7 @@
                 <v-stepper vertical v-model="vStepper[stepp.sectionNo]">
                   <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
                     <v-stepper-step
-                      v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
+                      :step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                       :key="stepl.subsectionNo + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
                       :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && stepl.subsectionNo <= getAnswerLimit.subsectionNo)"
@@ -105,7 +104,7 @@
                       <SectionPartStepper :data="stepl.items" />
                     </v-stepper-step>
 
-                    <v-stepper-content v-bind:step="stepl.subsectionNo + 1">
+                    <v-stepper-content :step="$vuetify.theme.step.charAt(stepl.subsectionNo)">
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
                         <h3>
                           {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
@@ -114,7 +113,7 @@
                           >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
-                      <v-card class="mb-5" v-if="vStepper[stepp.sectionNo] == stepl.subsectionNo + 1">
+                      <v-card class="mb-5" v-if="vStepper[stepp.sectionNo] == $vuetify.theme.step.charAt(stepl.subsectionNo)">
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div class="row" v-for="a in stepl.items" :key="a.id">
@@ -237,35 +236,25 @@ export default {
         result.push(newStepp);
       }
       return result;
-    },
-    getLastAnswered() {
-      if (this.getDiagnosticLastAnswered.sectionNo == undefined) {
-        this.notification = true;
-      } else {
-        this.notification = false;
-      }
-      this.hStepper =
-        this.getDiagnosticLastAnswered.sectionNo != null
-          ? this.getDiagnosticLastAnswered.sectionNo + 1
-          : 1;
-      this.vStepper = [];
-      for (let i = 0; i < this.getAnswersData.length; i++) {
-        this.vStepper.push(1);
-      }
-      this.vStepper[this.hStepper - 1] =
-        this.getDiagnosticLastAnswered.subsectionNo != null
-          ? this.getDiagnosticLastAnswered.subsectionNo + 1
-          : 1;
-      let pageHolder = this.getAnswersData[
-        this.getDiagnosticLastAnswered.sectionNo
-      ];
-      if (pageHolder != undefined) {
-        let page = pageHolder.vertical;
-        if (page != undefined) {
-          this.goToLastStep(page.length, this.getAnswersData.length);
-        }
-      }
     }
+  },
+  watch: {
+    getDiagnosticLastAnswered (newProp, oldProp) {
+      if (newProp != oldProp) {
+        console.log('vStepper', newProp);
+      }
+    },
+    hStepper (newProp, oldProp) {
+      if (newProp != oldProp) {
+        console.log('hStepper', newProp);
+      }
+    },
+    vStepper: {
+      handler(val) {
+        console.log(val);
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapActions("app", {
@@ -282,9 +271,7 @@ export default {
       let data = {
         article: "Diagnostic"
       };
-      return this._reRunArticle(data).then(res => {
-        console.log(res);
-      });
+      return this._reRunArticle(data);
     },
 
     compId(type, id) {
@@ -294,12 +281,7 @@ export default {
     nameId(type, row, col) {
       return `${type}_${row}x${col}`;
     },
-
-    nextStep(step) {
-      this.saveAnswers();
-      //this.hStepper = step + 1;
-    },
-
+    
     updateComponentValue(
       value,
       questionId,
@@ -440,10 +422,10 @@ export default {
           this.hStepper--;
         }
       } else {
-        if (this.vStepper > 1) {
+        if (this.vStepper[this.hStepper-1] > 1) {
           lastAnswered = {
             sectionNo: this.hStepper - 1,
-            subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
+            subsectionNo: this.vStepper[this.hStepper-1] > 2 ? this.vStepper[this.hStepper-1] - 3 : -1
           };
         } else {
           lastAnswered = {
@@ -456,6 +438,18 @@ export default {
         this._setDiagnosticLastAnswered(lastAnswered);
       }
     },
+    goToNextStep() {
+      let horizontalMaxSteps = this.questions.horizontal.length;
+      let verticalMaxSteps = this.questions.horizontal[this.hStepper-1].vertical.length;
+      if (this.vStepper[this.hStepper - 1] < verticalMaxSteps) {
+        this.vStepper[this.hStepper - 1]++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper++;
+        }
+        this.vStepper[this.hStepper - 1] = "A";
+      }
+    },
     loadSubheading(activeMeasurement) {
       this.isLoading = true;
       let data = {
@@ -465,33 +459,38 @@ export default {
       this._getQuestionsAnswers(data).then(data => {
         this.isLoading = false;
         this.questions = data;
+        this.vStepper = [];
+        for (let i = 0; i < this.questions.length; i++) {
+          this.vStepper.push(1);
+        }
         if (this.selectedSection.title) {
           let lastAnswered;
           switch (this.selectedSection.title) {
             case "Physical":
-              lastAnswered = {
-                sectionNo: 1,
-                subsectionNo: -1
-              };
+              this.hStepper = 2;
+              this.vStepper[1] = 1;
               break;
             case "Mental/Emotional":
-              lastAnswered = {
-                sectionNo: 0,
-                subsectionNo: -1
-              };
+              this.hStepper = 1;
+              this.vStepper[0] = 1;
               break;
             default:
-              lastAnswered = {
-                sectionNo: 0,
-                subsectionNo: -1
-              };
+              this.hStepper = 1;
+              this.vStepper[0] = 1;
               break;
           }
-          this._setDiagnosticLastAnswered(lastAnswered);
+          // this._setDiagnosticLastAnswered(lastAnswered);
+        } else {
+          // go to last answered section
+          this.hStepper = this.questions.lastAnswered.sectionNo + 1;
+          this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
+          // go to new section
+          this.goToNextStep();
         }
       });
     }
   },
+
   filters: {
     formatDate(date) {
       return moment(date).format("Do MMMM, YYYY");
