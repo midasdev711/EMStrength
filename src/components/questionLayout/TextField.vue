@@ -1,6 +1,10 @@
 <template>
   <v-flex xs12 sm10>
-    <v-text-field
+    <label for="">{{title}}
+      <input type="text" :name="id" v-bind:maxLength="length" :placeholder="title" v-model="textValue" v-validate="'required|max:' + length" @input="updateValue"
+      :disabled="disabled">
+    </label>
+    <!-- <v-text-field
       v-bind:name="id"
       v-bind:label="title"
       v-bind:placeholder="title"
@@ -10,7 +14,7 @@
       v-bind:maxLength="length"
       @input="updateValue"
       :disabled="disabled"
-    ></v-text-field>
+    ></v-text-field> -->
   </v-flex>
 </template>
 
@@ -45,7 +49,7 @@ export default {
   methods: {
     updateValue: debounce(function (e) {
       console.log(e);
-      this.textValue = e;
+      // this.textValue = e;
       this.$emit('update-value', this.textValue, this.questionId, this.answerId, this.useText, this.section, this.subsection)
     }, 500),
   },
@@ -59,3 +63,12 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+input 
+  font-size 14px
+  width 100%
+  border-bottom 1px solid grey
+  outline none
+  padding-top 5px
+</style>
