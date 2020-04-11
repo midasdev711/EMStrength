@@ -1,6 +1,5 @@
 <template>
   <v-container grid-list-xl>
-    {{getLastAnswered}}
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -53,6 +52,7 @@
               <v-stepper-step
                 :key="`${step.sectionNo}-step`"
                 :complete="hStepper > (step.sectionNo + 1)"
+                :editable="step.sectionNo <= getAnswerLimit.sectionNo"
                 :step="step.sectionNo + 1"
                 :color="$vuetify.theme.subheading1"
               >
@@ -79,19 +79,20 @@
                 </h3>
               </v-card>
               <v-card>
-                <v-stepper vertical v-model="vStepper">
+                <v-stepper vertical v-model="vStepper[stepp.sectionNo]">
                   <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
                     <!--stepl.subsectionNo + 1-->
                     <v-stepper-step
-                      v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
+                      :step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                       :key="stepl.subsectionNo + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
+                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && stepl.subsectionNo <= (getAnswerLimit.subsectionNo))"
                     >
                       <SectionPartStepper :data="stepl.items" />
                     </v-stepper-step>
 
                     <v-stepper-content
-                      v-bind:step="stepl.subsectionNo + 1"
+                      :step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                       :key="stepl.subsectionNo + '-sub-content'"
                     >
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
@@ -102,7 +103,7 @@
                           >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
-                      <v-card class="mb-5">
+                      <v-card class="mb-5" v-if="vStepper[stepp.sectionNo] == $vuetify.theme.step.charAt(stepl.subsectionNo)">
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div class="row" v-for="a in stepl.items" :key="a.id">
@@ -142,10 +143,10 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
+                        >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
                           flat
-                          v-if="!(vStepper == 1 && hStepper == 1)"
+                          v-if="!(vStepper[0] == 'A' && hStepper == 1)"
                           @click="prevVerticalStep"
                         >Back</v-btn>
                       </v-card>
@@ -179,7 +180,7 @@ export default {
       notification: true,
       isMobile: false,
       hStepper: 1,
-      vStepper: 1,
+      vStepper: [],
       form1Valid: false,
       questions: [],
       answers: [],
@@ -195,10 +196,10 @@ export default {
   },
   computed: {
     ...mapGetters("app", {
-      getAnswersData: "getSymptomAnswersData",
       getSymptomHorizontalData: "getSymptomHorizontalData",
       getSymptomLastAnswered: "getSymptomLastAnswered",
-      getNotificationStatus: "getNotificationStatus"
+      getNotificationStatus: "getNotificationStatus",
+      getAnswerLimit: "getSymptomLimit"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
@@ -234,30 +235,30 @@ export default {
       }
       return result;
     },
-    getLastAnswered() {
-      if (this.getSymptomLastAnswered.sectionNo == undefined) {
-        this.notification = true;
-      } else {
-        this.notification = false;
-      }
-      this.hStepper = this.getSymptomLastAnswered.sectionNo
-        ? this.getSymptomLastAnswered.sectionNo + 1
-        : 1;
-      this.vStepper = this.getSymptomLastAnswered.subsectionNo
-        ? this.getSymptomLastAnswered.subsectionNo + 1
-        : 1;
-      if (
-        this.getSymptomLastAnswered.sectionNo != null &&
-        this.getSymptomLastAnswered.subsectionNo != null
-      ) {
-        this.notification = false | this.getNotificationStatus;
-        this.goToLastStep(
-          this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo]
-            .vertical.length,
-          this.getSymptomHorizontalData.length
-        );
-      }
-    }
+    // getLastAnswered() {
+    //   if (this.getSymptomLastAnswered.sectionNo == undefined) {
+    //     this.notification = true;
+    //   } else {
+    //     this.notification = false;
+    //   }
+    //   this.hStepper = this.getSymptomLastAnswered.sectionNo
+    //     ? this.getSymptomLastAnswered.sectionNo + 1
+    //     : 1;
+    //   this.vStepper = this.getSymptomLastAnswered.subsectionNo
+    //     ? this.getSymptomLastAnswered.subsectionNo + 1
+    //     : 1;
+    //   if (
+    //     this.getSymptomLastAnswered.sectionNo != null &&
+    //     this.getSymptomLastAnswered.subsectionNo != null
+    //   ) {
+    //     this.notification = false | this.getNotificationStatus;
+    //     this.goToLastStep(
+    //       this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo]
+    //         .vertical.length,
+    //       this.getSymptomHorizontalData.length
+    //     );
+    //   }
+    // }
   },
   methods: {
     ...mapActions("app", {
@@ -266,8 +267,10 @@ export default {
       _setLastAnswered: "setSymptomLastAnswered",
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData",
-      _reRunArticle: "reRunArticle"
+      _reRunArticle: "reRunArticle",
+      _setArticleLimit: "setArticleLimit"
     }),
+
     reRun() {
       let data = {
         article: "Symptom"
@@ -309,25 +312,31 @@ export default {
 
       this.answers.push(tmp);
     },
-    goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper < verticalMaxSteps) {
-        this.vStepper++;
+
+    goToNextStep() {
+      let horizontalMaxSteps = this.questions.horizontal.length;
+      let verticalMaxSteps = this.questions.horizontal[this.hStepper-1].vertical.length;
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
+      if ((index + 1) < verticalMaxSteps) {
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.hStepper-1] = steps.charAt(index + 1);
+        this.vStepper = Object.assign([], tmp);
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           this.hStepper++;
         }
-        this.vStepper = 1;
+        this.vStepper[this.hStepper - 1] = "A";
       }
     },
-    nextVerticalStep(
-      verticalMaxSteps,
-      horizontalMaxSteps,
-      isSavingAnswer = true
-    ) {
+
+    nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
+      let steps = this.$vuetify.theme.step;
       let nextSectionNo = this.hStepper;
-      let nextSubsectionNo = this.vStepper;
-      if (this.vStepper < verticalMaxSteps) {
+      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+      let nextSubsectionNo = index + 1;
+      if (nextSubsectionNo < verticalMaxSteps) {
         // nextSubsectionNo++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
@@ -335,21 +344,19 @@ export default {
         }
         nextSubsectionNo = 0;
       }
+
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == this.vStepper
+        v => v.section == this.hStepper && v.subsection == (index + 1)
       );
 
       let answerData = {
         answers: answers,
         article: "Symptom",
         nextSectionNo: this.hStepper - 1,
-        nextSubsectionNo: this.vStepper - 1
+        nextSubsectionNo: index
       };
-      if (!this.symptomReruned && this.symptomCompleted) {
-        this.goToLastStep(
-          this.getFilteredQuestionData[this.hStepper - 1].vertical.length,
-          this.getFilteredQuestionData.length
-        );
+      if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
+        this.goToNextStep();
         this.isLoading = false;
       } else {
         this._setAnswer(answerData);
@@ -360,41 +367,35 @@ export default {
           horizontalMaxSteps
         )
           .then(res => {
+            if (answerData.complete) {
+              this.$toast.success(`Completed`);
+            }
+            this.goToNextStep();
             this.isLoading = false;
+            this.$forceUpdate();
           })
           .catch(err => {
             console.log(err);
           });
       }
     },
+
     prevVerticalStep() {
       let lastAnswered;
-      if (!this.symptomReruned && this.symptomCompleted) {
-        if (this.vStepper > 1) {
-          this.vStepper--;
-        } else {
-          this.vStepper = this.getFilteredQuestionData[
-            this.hStepper - 2
-          ].vertical.length;
-          this.hStepper--;
-        }
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
+      if (index > 0) {
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.hStepper-1] = steps.charAt(index - 1);
+        this.vStepper = Object.assign([], tmp);
       } else {
-        if (this.vStepper > 1) {
-          lastAnswered = {
-            sectionNo: this.hStepper - 1,
-            subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
-          };
-        } else {
-          lastAnswered = {
-            sectionNo: this.hStepper - 2,
-            subsectionNo:
-              this.getFilteredQuestionData[this.hStepper - 2].vertical.length -
-              2
-          };
-        }
-        this._setLastAnswered(lastAnswered);
+        this.vStepper[this.hStepper-2] = steps.charAt(this.getFilteredQuestionData[
+          this.hStepper - 2
+        ].vertical.length - 1);
+        this.hStepper--;
       }
     },
+
     saveAnswers(
       nextSectionNo,
       nextSubsectionNo,
@@ -402,9 +403,11 @@ export default {
       horizontalMaxSteps
     ) {
       let currentTime = new Date().toISOString();
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
 
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == this.vStepper
+        v => v.section == this.hStepper && v.subsection == (index + 1)
       );
 
       let answerData = {
@@ -419,22 +422,20 @@ export default {
 
       if (
         this.hStepper == horizontalMaxSteps &&
-        this.vStepper == verticalMaxSteps
+        (index + 1) == verticalMaxSteps
       ) {
         answerData["complete"] = currentTime;
       }
 
       return this._saveAnswers(answerData)
         .then(res => {
-          if (answerData.complete) {
-            this.$toast.success(`Completed`);
-          }
+          console.log(res);
           return res;
         })
         .catch(err => {
           throw err;
         });
-    }
+    },
   },
   filters: {
     formatDate(date) {
@@ -453,8 +454,28 @@ export default {
     };
 
     this._getQuestionsAnswers(params).then(data => {
-      this.isLoading = false;
+      
       this.questions = data;
+      this.vStepper = [];
+      for (let i = 0; i < this.questions.length; i++) {
+        this.vStepper.push(1);
+      }
+      // go to last answered section
+      this.hStepper = this.questions.lastAnswered.sectionNo + 1;
+      this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
+      // go to new section
+      this.goToNextStep();
+      this.isLoading = false;
+
+      let limit = {
+        article: 'Symptom',
+        sectionNo: this.questions.horizontal.length - 1,
+        subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
+      };
+
+      if (this.getDataUserProfile.symptomCompleted) {
+        this._setArticleLimit(limit);
+      }
     });
   }
 };

@@ -139,6 +139,10 @@ const actions = {
     commit("disableNotification");
   },
 
+  setArticleLimit: ({commit}, data) => {
+    commit("setAnswerLimit", data);
+  },
+
   visitRecovery: ({ commit }) => {
     var headers = {
       'Content-Type': 'application/json-patch+json',

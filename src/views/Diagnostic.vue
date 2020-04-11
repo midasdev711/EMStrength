@@ -152,10 +152,10 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
+                        >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
                           flat
-                          v-if="!(vStepper == 1 && hStepper == 1)"
+                          v-if="!(vStepper[0] == 'A' && hStepper == 1)"
                           @click="prevVerticalStep"
                         >Back</v-btn>
                       </v-card>
@@ -259,7 +259,8 @@ export default {
       _setDiagnosticLastAnswered: "setDiagnosticLastAnswered",
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData",
-      _reRunArticle: "reRunArticle"
+      _reRunArticle: "reRunArticle",
+      _setArticleLimit: "setArticleLimit"
     }),
 
     reRun() {
@@ -463,6 +464,16 @@ export default {
           this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
           // go to new section
           this.goToNextStep();
+
+          let limit = {
+            article: 'Diagnostic',
+            sectionNo: this.questions.horizontal.length - 1,
+            subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
+          };
+
+          if (this.getDataUserProfile.stressRecoveryCompleted) {
+            this._setArticleLimit(limit);
+          }
         }
       });
     }
