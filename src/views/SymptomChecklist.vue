@@ -234,31 +234,7 @@ export default {
         result.push(newStepp);
       }
       return result;
-    },
-    // getLastAnswered() {
-    //   if (this.getSymptomLastAnswered.sectionNo == undefined) {
-    //     this.notification = true;
-    //   } else {
-    //     this.notification = false;
-    //   }
-    //   this.hStepper = this.getSymptomLastAnswered.sectionNo
-    //     ? this.getSymptomLastAnswered.sectionNo + 1
-    //     : 1;
-    //   this.vStepper = this.getSymptomLastAnswered.subsectionNo
-    //     ? this.getSymptomLastAnswered.subsectionNo + 1
-    //     : 1;
-    //   if (
-    //     this.getSymptomLastAnswered.sectionNo != null &&
-    //     this.getSymptomLastAnswered.subsectionNo != null
-    //   ) {
-    //     this.notification = false | this.getNotificationStatus;
-    //     this.goToLastStep(
-    //       this.getSymptomHorizontalData[this.getSymptomLastAnswered.sectionNo]
-    //         .vertical.length,
-    //       this.getSymptomHorizontalData.length
-    //     );
-    //   }
-    // }
+    }
   },
   methods: {
     ...mapActions("app", {
@@ -279,9 +255,11 @@ export default {
         console.log(res);
       });
     },
+
     compId(type, id) {
       return "comp" + type + id;
     },
+
     updateComponentValue(
       value,
       questionId,
@@ -465,7 +443,12 @@ export default {
       this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
       // go to new section
       this.goToNextStep();
-      this.isLoading = false;
+
+      if (this.questions.lastAnswered.sectionNo == undefined || this.questions.lastAnswered.sectionNo == null) {
+        this.notification = true;
+      } else {
+        this.notification = false;
+      }
 
       let limit = {
         article: 'Symptom',
@@ -476,6 +459,8 @@ export default {
       if (this.getDataUserProfile.symptomCompleted) {
         this._setArticleLimit(limit);
       }
+
+      this.isLoading = false;
     });
   }
 };

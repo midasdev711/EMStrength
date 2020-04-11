@@ -436,7 +436,6 @@ export default {
         article: "Diagnostic"
       };
       this._getQuestionsAnswers(data).then(data => {
-        this.isLoading = false;
         this.questions = data;
         this.vStepper = [];
         for (let i = 0; i < this.questions.length; i++) {
@@ -475,6 +474,13 @@ export default {
             this._setArticleLimit(limit);
           }
         }
+
+        if (this.questions.lastAnswered.sectionNo == undefined || this.questions.lastAnswered.sectionNo == null) {
+          this.notification = true;
+        } else {
+          this.notification = false;
+        }
+        this.isLoading = false;
       });
     }
   },
