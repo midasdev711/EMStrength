@@ -1,6 +1,5 @@
 <template>
   <v-container grid-list-xl>
-    {{getLastAnswered}}
     <div class="text-xs-center" v-if="isLoading">
       <vue-circle
         :progress="100"
@@ -82,20 +81,21 @@
                 </h3>
               </v-card>
               <v-card>
-                <v-stepper vertical v-model="vStepper">
+                <v-stepper vertical v-model="vStepper[stepp.sectionNo]">
                   <div
                     v-for="vStepNum in stepp.vertical.length"
                     :key="`${stepp.sectionNo}-${vStepNum}`"
                   >
                     <v-stepper-step
-                      v-bind:step="$vuetify.theme.step.charAt(vStepNum-1)"
+                      v-bind:step="$vuetify.theme.step.charAt(vStepNum - 1)"
                       :key="vStepNum + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
+                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && vStepNum <= (getAnswerLimit.subsectionNo))"
                     >
                       <SectionPartStepper :data="stepp.vertical[vStepNum-1].items" />
                     </v-stepper-step>
 
-                    <v-stepper-content v-bind:step="vStepNum" :key="vStepNum + '-sub-content'">
+                    <v-stepper-content :step="$vuetify.theme.step.charAt(vStepNum - 1)" :key="vStepNum + '-sub-content'">
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
                         <h3>
                           {{$vuetify.theme.step.charAt(vStepNum-1)}}{{step.section}}
@@ -104,7 +104,7 @@
                           >{{vStepNum}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
-                      <v-card class="mb-5" v-if="vStepNum == vStepper">
+                      <v-card class="mb-5" v-if="vStepper[stepp.sectionNo] == $vuetify.theme.step.charAt(vStepNum - 1)">
                         <span class="dev-hint">P {{vStepNum-1}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div
@@ -147,8 +147,12 @@
                         <v-btn
                           color="primary"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >{{vStepper == stepp.vertical.length && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
-                        <v-btn flat v-if="!(vStepper == 1 && hStepper == 1)" @click="prevVerticalStep">Back</v-btn>
+                        >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
+                        <v-btn
+                          flat
+                          v-if="!(vStepper[0] == 'A' && hStepper == 1)"
+                          @click="prevVerticalStep"
+                        >Back</v-btn>
                       </v-card>
                     </v-stepper-content>
                   </div>
@@ -180,7 +184,7 @@ export default {
       notification: true,
       isMobile: false,
       hStepper: 1,
-      vStepper: 1,
+      vStepper: [],
       form1Valid: false,
       questions: [],
       answers: [],
@@ -188,18 +192,13 @@ export default {
       fill: { gradient: ["#48cba2", "#47bbe9"] }
     };
   },
-  filters: {
-    decNum(amount) {
-      const amt = Number(amount);
-      return (amt && amt.toFixed(2)) || "0.00";
-    }
-  },
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getDecisionAnswersData",
       getDecisionHorizontalData: "getDecisionHorizontalData",
       getDecisionLastAnswered: "getDecisionLastAnswered",
       getNotificationStatus: "getNotificationStatus",
+      getAnswerLimit: "getDecisionLimit"
     }),
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
@@ -218,7 +217,6 @@ export default {
       }
     },
     getFilteredQuestionData() {
-      console.log(new Date())
       let result = []
       for (let i = 0; i < this.getDecisionHorizontalData.length; i ++) {
         let stepp = this.getDecisionHorizontalData[i]
@@ -235,31 +233,6 @@ export default {
         result.push(newStepp)
       }
       return result
-    },
-    getLastAnswered() {
-      if (this.getDecisionLastAnswered.sectionNo == undefined) {
-        this.notification = true;
-      } else {
-        this.notification = false;
-      }
-      this.hStepper = this.getDecisionLastAnswered.sectionNo
-        ? this.getDecisionLastAnswered.sectionNo + 1
-        : 1;
-      this.vStepper = this.getDecisionLastAnswered.subsectionNo
-        ? this.getDecisionLastAnswered.subsectionNo + 1
-        : 1;
-
-      if (
-        this.getDecisionLastAnswered.sectionNo != null &&
-        this.getDecisionLastAnswered.subsectionNo != null
-      ) {
-        this.goToLastStep(
-          this.getDecisionHorizontalData[
-            this.getDecisionLastAnswered.sectionNo || 0
-          ].vertical.length,
-          this.getDecisionHorizontalData.length
-        );
-      }
     }
   },
   methods: {
@@ -305,21 +278,31 @@ export default {
 
       this.answers.push(tmp);
     },
-    goToLastStep(verticalMaxSteps, horizontalMaxSteps) {
-      if (this.vStepper < verticalMaxSteps) {
-        this.vStepper++;
+
+    goToNextStep() {
+      let horizontalMaxSteps = this.questions.horizontal.length;
+      let verticalMaxSteps = this.questions.horizontal[this.hStepper-1].vertical.length;
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
+      if ((index + 1) < verticalMaxSteps) {
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.hStepper-1] = steps.charAt(index + 1);
+        this.vStepper = Object.assign([], tmp);
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           this.hStepper++;
         }
-        this.vStepper = 1;
+        this.vStepper[this.hStepper - 1] = "A";
       }
     },
+
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
+      let steps = this.$vuetify.theme.step;
       let nextSectionNo = this.hStepper;
-      let nextSubsectionNo = this.vStepper;
-      if (this.vStepper < verticalMaxSteps) {
+      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+      let nextSubsectionNo = index + 1;
+      if (nextSubsectionNo < verticalMaxSteps) {
         // nextSubsectionNo++;
       } else {
         if (this.hStepper < horizontalMaxSteps) {
@@ -327,21 +310,33 @@ export default {
         }
         nextSubsectionNo = 0;
       }
-      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+
+      let answers = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == (index + 1)
+      );
 
       let answerData = {
         answers: answers,
         article: "Decision",
         nextSectionNo: this.hStepper - 1,
-        nextSubsectionNo: this.vStepper - 1
+        nextSubsectionNo: index
       };
-      if (!this.decisionReruned && this.decisionCompleted) {
-        this.goToLastStep(this.getFilteredQuestionData[this.hStepper - 1].vertical.length, this.getFilteredQuestionData.length);
+      if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
+        this.goToNextStep();
         this.isLoading = false;
       } else {
-        this._setAnswer(answerData)
-        return this.saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps)
+        this._setAnswer(answerData);
+        return this.saveAnswers(
+          nextSectionNo,
+          nextSubsectionNo,
+          verticalMaxSteps,
+          horizontalMaxSteps
+        )
           .then(res => {
+            if (answerData.complete) {
+              this.$toast.success(`Completed`);
+            }
+            this.goToNextStep();
             this.isLoading = false;
             this.$forceUpdate();
           })
@@ -350,34 +345,36 @@ export default {
           });
       }
     },
+
     prevVerticalStep() {
       let lastAnswered;
-      if (!this.decisionReruned && this.decisionCompleted) {
-        if (this.vStepper > 1) {
-          this.vStepper --;
-        } else {
-          this.vStepper = this.getFilteredQuestionData[this.hStepper - 2].vertical.length;
-          this.hStepper --;
-        }
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
+      if (index > 0) {
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.hStepper-1] = steps.charAt(index - 1);
+        this.vStepper = Object.assign([], tmp);
       } else {
-        if (this.vStepper > 1) {
-          lastAnswered = {
-            sectionNo: this.hStepper - 1,
-            subsectionNo: this.vStepper > 2 ? this.vStepper - 3 : -1
-          };
-        } else {
-          lastAnswered = {
-            sectionNo: this.hStepper - 2,
-            subsectionNo: this.getFilteredQuestionData[this.hStepper - 2].vertical.length - 2
-          };
-        }
-        this._setDecisionLastAnswered(lastAnswered);
+        this.vStepper[this.hStepper-2] = steps.charAt(this.getFilteredQuestionData[
+          this.hStepper - 2
+        ].vertical.length - 1);
+        this.hStepper--;
       }
     },
-    saveAnswers(nextSectionNo, nextSubsectionNo, verticalMaxSteps, horizontalMaxSteps) {
-      let currentTime = new Date().toISOString();
 
-      let answers = this.answers.filter( v => v.section == this.hStepper && v.subsection == this.vStepper );
+    saveAnswers(
+      nextSectionNo,
+      nextSubsectionNo,
+      verticalMaxSteps,
+      horizontalMaxSteps
+    ) {
+      let currentTime = new Date().toISOString();
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+
+      let answers = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == (index + 1)
+      );
 
       let answerData = {
         userId: this.getDataUserProfile.id,
@@ -389,21 +386,22 @@ export default {
         horizontalMaxSteps: horizontalMaxSteps
       };
 
-      if (this.hStepper == horizontalMaxSteps && this.vStepper == verticalMaxSteps) {
-        answerData['complete'] = currentTime
+      if (
+        this.hStepper == horizontalMaxSteps &&
+        (index + 1) == verticalMaxSteps
+      ) {
+        answerData["complete"] = currentTime;
       }
 
       return this._saveAnswers(answerData)
         .then(res => {
-          if (answerData.complete) {
-            this.$toast.success(`Completed`);
-          }
+          console.log(res);
           return res;
         })
         .catch(err => {
           throw err;
         });
-    }
+    },
   },
   filters: {
     formatDate(date) {
@@ -424,6 +422,31 @@ export default {
     this._getQuestionsAnswers(params).then(data => {
       this.isLoading = false;
       this.questions = data;
+      this.vStepper = [];
+      for (let i = 0; i < this.questions.length; i++) {
+        this.vStepper.push(1);
+      }
+      // go to last answered section
+      this.hStepper = this.questions.lastAnswered.sectionNo + 1;
+      this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
+      // go to new section
+      this.goToNextStep();
+
+      if (this.questions.lastAnswered.sectionNo == undefined || this.questions.lastAnswered.sectionNo == null) {
+        this.notification = true;
+      } else {
+        this.notification = false;
+      }
+
+      let limit = {
+        article: 'Decision',
+        sectionNo: this.questions.horizontal.length - 1,
+        subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
+      };
+
+      if (this.getDataUserProfile.decisionCompleted) {
+        this._setArticleLimit(limit);
+      }
     });
   }
 };
