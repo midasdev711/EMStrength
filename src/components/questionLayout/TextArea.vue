@@ -1,14 +1,15 @@
 <template>
   <v-flex xs12 sm10>
-    <v-textarea
-      v-bind:name="id"
-      v-bind:label="title"
-      placeholder="enter here..."
-      v-model="textValue"
-      v-validate="'required'"
-      @input="updateValue"
-      :disabled="disabled"
-    ></v-textarea>
+    <label for="">{{title}}
+      <textarea :name="id" 
+        placeholder="enter here..." 
+        v-validate="'required'"
+        @input="updateValue"
+        :disabled="disabled" 
+        v-model="textValue"
+        rows="4">
+      </textarea>
+    </label>
   </v-flex>
 </template>
 
@@ -35,8 +36,6 @@ export default {
   },
   methods: {
     updateValue: debounce(function(e) {
-      console.log(e);
-      this.textValue = e;
       this.$emit(
         "update-value",
         this.textValue,
@@ -50,3 +49,12 @@ export default {
   }
 };
 </script>
+
+<style lang="stylus" scoped>
+textarea 
+  font-size 14px
+  width 100%
+  border-bottom 1px solid grey
+  outline none
+  padding-top 5px
+</style>

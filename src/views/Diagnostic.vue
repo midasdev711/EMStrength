@@ -254,7 +254,12 @@ export default {
           v => v.section == this.hStepper && v.subsection == (index + 1) && v.value > 0
         );
 
-        if (answers.length > 0) {
+        let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
+        let currentAnswered = currentSection.filter(
+          v => v.value > 0
+        );
+
+        if (answers.length > 0 || currentAnswered.length > 0) {
           this.disableContinue = false;
         } else {
           this.disableContinue = true;
