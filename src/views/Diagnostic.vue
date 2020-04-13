@@ -151,6 +151,7 @@
                         </v-form>
                         <v-btn
                           color="primary"
+                          :disabled="disableContinue"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
@@ -194,7 +195,8 @@ export default {
     isLoading: true,
     saved: false,
     fill: { gradient: ["#48cba2", "#47bbe9"] },
-    selectedSection: null
+    selectedSection: null,
+    disableContinue: true
   }),
   computed: {
     ...mapGetters("app", {
@@ -244,9 +246,19 @@ export default {
         // console.log('vStepper', newProp);
       }
     },
-    vStepper: {
+    answers: {
       handler(val) {
-        // console.log(val);
+        let steps = this.$vuetify.theme.step;
+        let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+        let answers = val.filter(
+          v => v.section == this.hStepper && v.subsection == (index + 1) && v.value > 0
+        );
+
+        if (answers.length > 0) {
+          this.disableContinue = false;
+        } else {
+          this.disableContinue = true;
+        }
       },
       deep: true,
     },
@@ -439,30 +451,36 @@ export default {
         this.questions = data;
         this.vStepper = [];
         for (let i = 0; i < this.questions.length; i++) {
-          this.vStepper.push(1);
+          this.vStepper.push('A');
         }
         if (this.selectedSection.title) {
           let lastAnswered;
           switch (this.selectedSection.title) {
             case "Physical":
               this.hStepper = 2;
-              this.vStepper[1] = 1;
+              this.vStepper[1] = 'A';
               break;
             case "Mental/Emotional":
               this.hStepper = 1;
-              this.vStepper[0] = 1;
+              this.vStepper[0] = 'A';
               break;
             default:
               this.hStepper = 1;
-              this.vStepper[0] = 1;
+              this.vStepper[0] = 'A';
               break;
           }
         } else {
-          // go to last answered section
-          this.hStepper = this.questions.lastAnswered.sectionNo + 1;
-          this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
-          // go to new section
-          this.goToNextStep();
+          if (this.questions.lastAnswered.sectionNo != null) {
+            // go to last answered section
+            this.hStepper = this.questions.lastAnswered.sectionNo + 1;
+            this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
+            // go to new section
+            this.goToNextStep();
+          } else {
+            // for new user
+            this.hStepper = 1;
+            this.vStepper[0] = 'A';
+          }
 
           let limit = {
             article: 'Diagnostic',

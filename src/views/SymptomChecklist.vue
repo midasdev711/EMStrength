@@ -142,6 +142,7 @@
                         </v-form>
                         <v-btn
                           color="primary"
+                          :disabled="disableContinue"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
@@ -185,13 +186,31 @@ export default {
       questions: [],
       answers: [],
       isLoading: true,
-      fill: { gradient: ["#48cba2", "#47bbe9"] }
+      fill: { gradient: ["#48cba2", "#47bbe9"] },
+      disableContinue: true
     };
   },
-  filters: {
-    decNum(amount) {
-      const amt = Number(amount);
-      return (amt && amt.toFixed(2)) || "0.00";
+  watch: {
+    answers: {
+      handler(val) {
+        let steps = this.$vuetify.theme.step;
+        let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+        let answers = val.filter(
+          v => v.section == this.hStepper && v.subsection == (index + 1) && v.value > 0
+        );
+
+        let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
+        let currentAnswered = currentSection.filter(
+          v => v.value > 0
+        );
+
+        if (answers.length > 0 || currentAnswered.length > 0) {
+          this.disableContinue = false;
+        } else {
+          this.disableContinue = true;
+        }
+      },
+      deep: true,
     }
   },
   computed: {
@@ -333,7 +352,7 @@ export default {
         nextSectionNo: this.hStepper - 1,
         nextSubsectionNo: index
       };
-      if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
+      if (!this.symptomReruned && this.symptomCompleted) {
         this.goToNextStep();
         this.isLoading = false;
       } else {
@@ -345,9 +364,7 @@ export default {
           horizontalMaxSteps
         )
           .then(res => {
-            if (answerData.complete) {
-              this.$toast.success(`Completed`);
-            }
+            
             this.goToNextStep();
             this.isLoading = false;
             this.$forceUpdate();
@@ -407,7 +424,10 @@ export default {
 
       return this._saveAnswers(answerData)
         .then(res => {
-          console.log(res);
+          if (answerData.complete) {
+            this.$toast.success(`Completed`);
+            this.$router.push({name: "Recovery"});
+          }
           return res;
         })
         .catch(err => {
@@ -438,11 +458,18 @@ export default {
       for (let i = 0; i < this.questions.length; i++) {
         this.vStepper.push(1);
       }
-      // go to last answered section
-      this.hStepper = this.questions.lastAnswered.sectionNo + 1;
-      this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
-      // go to new section
-      this.goToNextStep();
+
+      if (this.questions.lastAnswered.sectionNo != null) {
+        // go to last answered section
+        this.hStepper = this.questions.lastAnswered.sectionNo + 1;
+        this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
+        // go to new section
+        this.goToNextStep();
+      } else {
+        // for new user
+        this.hStepper = 1;
+        this.vStepper[0] = 'A';
+      }
 
       if (this.questions.lastAnswered.sectionNo == undefined || this.questions.lastAnswered.sectionNo == null) {
         this.notification = true;
