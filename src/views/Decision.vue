@@ -50,7 +50,7 @@
               </p>
             </v-card-text>
             <v-card-actions>
-              <v-btn flat @click="notification = false;_disableNotification();">Got it!</v-btn>
+              <v-btn flat color="green darken-1" @click="notification = false;_disableNotification();">Got it!</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
