@@ -241,11 +241,6 @@ export default {
     }
   },
   watch: {
-    getDiagnosticLastAnswered (newProp, oldProp) {
-      if (newProp != oldProp) {
-        // console.log('vStepper', newProp);
-      }
-    },
     answers: {
       handler(val) {
         let steps = this.$vuetify.theme.step;
@@ -254,10 +249,13 @@ export default {
           v => v.section == this.hStepper && v.subsection == (index + 1) && v.value > 0
         );
 
-        let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
+        let currentSection = this.getAnswersData[this.hStepper - 1].vertical[index].items;
+        
         let currentAnswered = currentSection.filter(
-          v => v.value > 0
+          v => v.value > 0 || v.value != null
         );
+
+        console.log(currentAnswered);
 
         if (answers.length > 0 || currentAnswered.length > 0) {
           this.disableContinue = false;
@@ -348,14 +346,21 @@ export default {
 
       if (
         this.hStepper == horizontalMaxSteps &&
-        (index + 1) == verticalMaxSteps
+        (index + 1) == verticalMaxSteps && this.activeMeasurement == 1
       ) {
         answerData["complete"] = currentTime;
       }
 
       return this._saveAnswers(answerData)
         .then(res => {
-          console.log(res);
+          if (
+            this.hStepper == horizontalMaxSteps &&
+            (index + 1) == verticalMaxSteps && this.activeMeasurement == 0
+          ) {
+            this.answers = [];
+            this.activeMeasurement = 1;
+            this.loadSubheading(1);
+          }
           return res;
         })
         .catch(err => {
@@ -441,6 +446,15 @@ export default {
       } else {
         if (this.hStepper < horizontalMaxSteps) {
           this.hStepper++;
+        }
+        if (this.hStepper == horizontalMaxSteps) {
+          if (this.activeMeasurement == 0) {
+            this.activeMeasurement = 1;
+            this.loadSubheading(1);
+          } else {
+            this.activeMeasurement = 0;
+            this.loadSubheading(0);
+          }
         }
         this.vStepper[this.hStepper - 1] = "A";
       }
