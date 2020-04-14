@@ -76,7 +76,7 @@
         <template v-if="getQuestionData.length > 0">
           <v-card
             dark
-            v-bind:color="questions.rating | shadeBackgroundColor(colorRating)"
+            v-bind:color="questions.userScore | shadeBackgroundColor"
             v-for="(questions, index) in getQuestionData"
             :key="index + '-recoverysection'"
             class="question-box mb-2 mt-2"
@@ -108,7 +108,7 @@
 
             <v-card-text>
               <v-layout>
-                <v-icon medium :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
+                <v-icon medium :color="dialogData.userScore | shadeBackgroundColor">label</v-icon>
                 <span class="pl-10">{{dialogData.rating | ratingFilter}}</span>
               </v-layout>
               <p>Last assessed {{ dialogData.lastCompleted | daysAgo }}</p>
@@ -149,17 +149,11 @@ export default {
         category: "",
         rating: "",
         lastCompleted: "",
-        content: ""
+        content: "",
+        userScore: 0
       },
       showNotification: true,
       topNotification: true,
-      colorRating: {
-        Default: "#c3e2ef",
-        Poor: "#f94e83",
-        NeedsImproving: "#ff9d00",
-        CouldBeImproved: "#8fcb64",
-        Excellent: "#47bbe9"
-      },
       questionLists: [],
       checkbox1: true,
       checkbox2: false,
@@ -225,8 +219,10 @@ export default {
       const date = moment(when);
       return date.fromNow();
     },
-    shadeBackgroundColor(rating, colorRating) {
-      return colorRating[rating];
+    shadeBackgroundColor(userScore) {
+      let colorDecimalValue = Math.floor(249 - 2.55 * userScore);
+      let minValue = colorDecimalValue.toString(16);
+      return "#" + minValue + '4e83';
     },
     ratingFilter(rating) {
       if (rating == 'CouldBeImproved') {
@@ -273,7 +269,7 @@ export default {
     showHelpDialog(questions) {
       this.dialogData.category = questions.categoryName;
       this.dialogData.rating = questions.rating;
-      console.log(this.dialogData.lastCompleted)
+      this.dialogData.userScore = questions.userScore;
       this.dialogData.lastCompleted = questions.lastCompleted;
       if (questions.category == 'Physical' && questions.rating == 'CouldBeImproved') {
         this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 
@@ -353,13 +349,10 @@ export default {
       return this.shade(color, 0.7);
     },
     updateComponentValue(id, done) {
-      if (done == false) {
-        return;
-      }
       let currentTime = new Date().toISOString();
       let data = {
         itemId: id,
-        done: currentTime
+        done: !done ? done : currentTime
       };
       return this.saveRecovery(data)
         .then(res => {
