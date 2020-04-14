@@ -66,7 +66,7 @@ export default {
     getTickLabel(val) {
       for (let i = 0; i < this.items.length; i++) {
         if (this.items[i].value == val) {
-          return this.items[i].title;
+          return this.items[i].title.replace(/\u00a0/g, " ");
         }
       }
     },
@@ -74,9 +74,9 @@ export default {
       //tickLabels = {};
       // add back to v-slider :tick-labels="tickLabels"
       for (let i = 0; i < this.items.length; i++) {
-        this.tickLabels.push(this.items[i].title);
+        let tmp = this.items[i].title.replace(/\u00a0/g, " ");
+        this.tickLabels.push(tmp);
       }
-      console.log(tickLabels);
     }
   },
   mounted() {}
@@ -93,6 +93,7 @@ export default {
   width: 78px !important;
   text-align: center;
   border-radius: 60% 27% 0;
+  white-space: pre-wrap;
 }
 
 .scale {
