@@ -20,6 +20,25 @@
     </div>
     <v-flex xs12 sm6 v-else>
       <template v-if="!getSymptomUpdated">
+        <v-dialog v-model="getEmptyNotification" class="notification-dialog">
+          <v-card>
+            <v-card-title class="headline">Building your Energy Health through Recovery</v-card-title>
+            <v-card-text>
+              <p>
+                There are 2 essential steps in balancing your Energy Health to sustain Wellbeing and ensure you can Perform at your Best:
+                <br><br>
+                1. Diagnosing your current Energy Health<br>
+                2. Responding to energy imbalances with Increased Recovery
+                <br><br>
+                Get started with the Diagnostic by going through the Energy Health Symptom Checklist, and then kickstart your Energy Wellbeing and Performance with our guided Recovery To-DO List.
+              </p>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn color="green darken-1" flat="flat" @click="notificationDialog = false; _disableNotification();">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-card>
           <v-card-title align-center justify-center>
             <h2 class="text-center">Let's get going on your energy management!</h2>
@@ -39,26 +58,27 @@
         </v-card>
       </template>
       <template v-else>
-        <v-dialog v-model="getNotification" class="notification-dialog">
+        <v-dialog v-model="getFullNotification" class="notification-dialog">
           <v-card>
             <v-card-title class="headline">Building your Energy Health through Recovery</v-card-title>
             <v-card-text>
               <p>
-                There are 2 essential steps in balancing your Energy Health to sustain Wellbeing and ensure you can Perform at your Best:
+                These are Recovery Activity Lists for
                 <br><br>
-                1. Diagnosing your current Energy Health<br>
-                2. Responding to energy imbalances with Increased Recovery
+                (1) Mental/Emotional Recovery<br>
+                (2) Physical Recovery<br><br>
+
+                The lists are 30 items long, presented 6 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance. 
                 <br><br>
-                Get started with the Diagnostic by going through the Energy Health Symptom Checklist, and then kickstart your Energy Wellbeing and Performance with our guided Recovery To-DO List.
+                Adopt 1-3 activities at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance.
               </p>
             </v-card-text>
-
             <v-card-actions>
-              <v-btn color="green darken-1" flat="flat" @click="notificationDialog = false; _disableNotification();">OK</v-btn>
+              <v-btn color="green darken-1" flat="flat" @click="fullNotification = false; _disableNotification();">OK</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-card
+        <!-- <v-card
           color
           class="black--text mt-2"
           v-if="!getDataUserProfile.recoveryChecked & getRecoveryData.length > 0"
@@ -72,7 +92,7 @@
             <v-btn flat v-if="!moreTips" @click="moreText">More</v-btn>
             <v-btn flat @click="visitRecovery">Got it!</v-btn>
           </v-card-actions>
-        </v-card>
+        </v-card> -->
         <template v-if="getQuestionData.length > 0">
           <v-card
             dark
@@ -140,7 +160,8 @@ import moment from "moment";
 export default {
   data() {
     return {
-      notificationDialog: false,
+      notificationDialog: true,
+      fullNotification: false,
       moreTips: false,
       tipText: "",
       firstTime: true,
@@ -178,9 +199,9 @@ export default {
     }),
     getQuestionData() {
       if (this.getRecoveryUpdated == null) {
-        this.notificationDialog = true
+        this.fullNotification = true
       } else {
-        this.notificationDialog = false
+        this.fullNotification = false
       }
       let newRecoveryData = []
       for (let i = 0; i < this.getRecoveryData.length; i ++) {
@@ -201,7 +222,7 @@ export default {
     toolbarColor() {
       return this.$vuetify.options.extra.mainNav;
     },
-    getNotification: {
+    getEmptyNotification: {
       get() {
         return this.notificationDialog | this.getNotificationStatus
       },
@@ -211,7 +232,18 @@ export default {
           this.notificationDialog = false
         }
       }
-    }
+    },
+    getFullNotification: {
+      get() {
+        return this.fullNotification | this.getNotificationStatus
+      },
+      set(val) {
+        if (!val) {
+          this._disableNotification();
+          this.fullNotification = false
+        }
+      }
+    },
   },
   filters: {
     daysAgo(when) {
@@ -352,7 +384,7 @@ export default {
       let currentTime = new Date().toISOString();
       let data = {
         itemId: id,
-        done: !done ? done : currentTime
+        done: !done ? null : currentTime
       };
       return this.saveRecovery(data)
         .then(res => {
