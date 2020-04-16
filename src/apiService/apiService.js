@@ -61,9 +61,10 @@ export default class APIService {
           } else {
             router.push({ name: 'Auth' })
           }
-        } else if (e.response.status == 403) {
-          router.push({ name: 'Forbidden' })
         }
+        // } else if (e.response.status == 403) {
+        //   router.push({ name: 'Forbidden' })
+        // }
         // this.errors.push(e)
         throw e;
       });

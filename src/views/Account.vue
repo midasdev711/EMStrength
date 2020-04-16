@@ -162,6 +162,8 @@ export default {
             })
             .catch(err => {
               this.$toast.error(err.response.data.errors[0].errorMessage);
+              
+              return err;
             });
         }
       }
