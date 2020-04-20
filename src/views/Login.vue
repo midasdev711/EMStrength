@@ -63,8 +63,7 @@ export default {
   data: () => ({
     loading: false,
     model: {
-      UserName: "midasdev711@gmail.com",
-      //UserName: "data@energy.app",
+      UserName: "newtest15@gmail.com",
       Password: "N123456"
     }
   }),

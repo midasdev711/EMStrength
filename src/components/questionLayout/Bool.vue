@@ -1,7 +1,7 @@
 <template>
   <v-flex xs12 sm10>
     <span>{{title}}</span>
-    <v-radio-group v-model="valueStatus" :disabled="disabled" row>
+    <v-radio-group v-model="valueStatus" :readonly="disabled ? true : false" row>
       <v-radio :label="'Yes'" :value="true"></v-radio>
       <v-radio :label="'No'" :value="false"></v-radio>
     </v-radio-group>
@@ -14,7 +14,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
+    disabled: [String, Boolean],
     value: Number,
     questionId: String,
     answerId: String,

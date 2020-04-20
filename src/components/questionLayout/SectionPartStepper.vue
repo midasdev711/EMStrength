@@ -11,7 +11,7 @@ export default {
   name: "SectionPartStepper",
   props: {
     data: Array,
-    disabled: Boolean,
+    disabled: [String, Boolean],
   },
   data: () => ({
     title: "",

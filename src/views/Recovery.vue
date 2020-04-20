@@ -58,7 +58,7 @@
         </v-card>
       </template>
       <template v-else>
-        <v-dialog v-model="getFullNotification" class="notification-dialog">
+        <!-- <v-dialog v-model="getFullNotification" class="notification-dialog">
           <v-card>
             <v-card-title class="headline">Building your Energy Health through Recovery</v-card-title>
             <v-card-text>
@@ -77,26 +77,39 @@
               <v-btn color="green darken-1" flat="flat" @click="fullNotification = false; _disableNotification();">OK</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
-        <!-- <v-card
+        </v-dialog> -->
+        <v-card
           color
           class="black--text mt-2"
           v-if="!getDataUserProfile.recoveryChecked & getRecoveryData.length > 0"
         >
-          <v-card-title primary-title>
+          <v-card-text>
+            <p>
+              Below is a Recovery Activities Checklist for
+              <br>
+              (1) Mental/Emotional Recovery<br>
+              (2) Physical Recovery<br><br>
+              The lists are presented five items at a time, in order of positive impact on your energy health, stress-recovery balance.
+              <br><br>
+              You can view full list of recovery items by clicking the tick-box in the top-right hand corner of the header on this page.
+              <br><br>
+              Adopt 1-2 items at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance.
+            </p>
+          </v-card-text>
+          <!-- <v-card-title primary-title>
             <div>
               <p v-html="tipText"></p>
             </div>
-          </v-card-title>
+          </v-card-title> -->
           <v-card-actions>
-            <v-btn flat v-if="!moreTips" @click="moreText">More</v-btn>
-            <v-btn flat @click="visitRecovery">Got it!</v-btn>
+            <!-- <v-btn flat v-if="!moreTips" @click="moreText">More</v-btn> -->
+            <v-btn color="green darken-1" flat @click="visitRecovery">Got it!</v-btn>
           </v-card-actions>
-        </v-card> -->
+        </v-card>
         <template v-if="getQuestionData.length > 0">
           <v-card
             dark
-            v-bind:color="questions.userScore | shadeBackgroundColor"
+            v-bind:color="questions.rating | shadeBackgroundColor"
             v-for="(questions, index) in getQuestionData"
             :key="index + '-recoverysection'"
             class="question-box mb-2 mt-2"
@@ -128,7 +141,7 @@
 
             <v-card-text>
               <v-layout>
-                <v-icon medium :color="dialogData.userScore | shadeBackgroundColor">label</v-icon>
+                <v-icon medium :color="dialogData.rating | shadeBackgroundColor(colorRating)">label</v-icon>
                 <span class="pl-10">{{dialogData.rating | ratingFilter}}</span>
               </v-layout>
               <p>Last assessed {{ dialogData.lastCompleted | daysAgo }}</p>
@@ -139,7 +152,7 @@
               <v-btn
                 color="green darken-1"
                 flat="flat"
-                @click="dialog = false; commenceQuestionnaire();"
+                @click="commenceQuestionnaire();"
               >RE-RUN</v-btn>
 
               <v-btn color="green darken-1" flat="flat" @click="dialog = false">OK</v-btn>
@@ -173,6 +186,13 @@ export default {
         content: "",
         userScore: 0
       },
+      colorRating: {
+        Default: "#c3e2ef",
+        Poor: "#f94e83",
+        NeedsImproving: "#ff9d00",
+        CouldBeImproved: "#8fcb64",
+        Excellent: "#47bbe9"
+      },
       showNotification: true,
       topNotification: true,
       questionLists: [],
@@ -190,7 +210,8 @@ export default {
     ...mapGetters("auth", {
       getDataUserProfile: "getDataUserProfile",
       getSymptomUpdated: "getSymptomUpdated",
-      getRecoveryUpdated: "getRecoveryUpdated"
+      getRecoveryUpdated: "getRecoveryUpdated",
+      getSymptomCompleted: "getSymptomCompleted"
     }),
     ...mapGetters("app", {
       getRecoveryCheck: "getRecoveryCheck",
@@ -251,10 +272,18 @@ export default {
       const date = moment(when);
       return date.fromNow();
     },
-    shadeBackgroundColor(userScore) {
-      let colorDecimalValue = Math.floor(249 - 2.55 * userScore);
-      let minValue = colorDecimalValue.toString(16);
-      return "#" + minValue + '4e83';
+    shadeBackgroundColor(rating, colorRating) {
+      let colors = {
+        Default: "#c3e2ef",
+        Poor: "#f94e83",
+        NeedsImproving: "#ff9d00",
+        CouldBeImproved: "#8fcb64",
+        Excellent: "#47bbe9"
+      };
+      return colors[rating];
+      // let colorDecimalValue = Math.floor(249 - 2.55 * userScore);
+      // let minValue = colorDecimalValue.toString(16);
+      // return "#" + minValue + '4e83';
     },
     ratingFilter(rating) {
       if (rating == 'CouldBeImproved') {
@@ -274,7 +303,8 @@ export default {
       getAllRecovery: "getAllRecovery",
       saveRecovery: "saveRecovery",
       _visitRecovery: "visitRecovery",
-      _disableNotification: "disableNotification"
+      _disableNotification: "disableNotification",
+      _reRunArticle: "reRunArticle",
     }),
 
     moreText() {
@@ -295,14 +325,21 @@ export default {
     },
 
     commenceQuestionnaire() {
-      this.$router.push({name: "StressRecovery", params: {title: this.dialogData.category}})
+      let data = {
+        article: "Symptom"
+      };
+      return this._reRunArticle(data).then(res => {
+        this.dialog = false;
+        this.$router.push({name: "Symptom Checklist"})
+      });
     },
 
     showHelpDialog(questions) {
       this.dialogData.category = questions.categoryName;
       this.dialogData.rating = questions.rating;
       this.dialogData.userScore = questions.userScore;
-      this.dialogData.lastCompleted = questions.lastCompleted;
+      // this.dialogData.lastCompleted = questions.lastCompleted;
+      this.dialogData.lastCompleted = this.getSymptomCompleted;
       if (questions.category == 'Physical' && questions.rating == 'CouldBeImproved') {
         this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 
         <br><br>

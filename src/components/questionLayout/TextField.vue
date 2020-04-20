@@ -2,7 +2,7 @@
   <v-flex xs12 sm10>
     <label for="">{{title}}
       <input type="text" :name="id" v-bind:maxLength="length" :placeholder="title" v-model="textValue" v-validate="'required|max:' + length" @input="updateValue"
-      :disabled="disabled">
+      :readonly="disabled ? true : false">
     </label>
     <!-- <v-text-field
       v-bind:name="id"
@@ -26,7 +26,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
+    disabled: [String, Boolean],
     text: {
       type: String,
       default: ''

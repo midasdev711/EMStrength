@@ -1,7 +1,7 @@
 <template>
  <v-flex xs12>
   <p>
-    <v-chip :color="$vuetify.theme.subheading3" :disabled="disabled">
+    <v-chip :color="$vuetify.theme.subheading3" :disabled="disabled ? true : false">
       <span class="white--text subheading">{{prefix(title)}}</span>
     </v-chip>
     <span class="subheading">{{heading(title)}}</span>
@@ -15,7 +15,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
+    disabled: [String, Boolean],
     //items:
     //length: ,
   },

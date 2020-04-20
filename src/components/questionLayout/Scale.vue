@@ -13,7 +13,7 @@
       ticks="always"
       tick-size="7"
       :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection)"
-      :disabled="disabled"
+      :readonly="disabled ? true : false"
     >
       <template v-slot:thumb-label="props">
         <span>{{ getTickLabel(props.value) }}</span>
@@ -29,7 +29,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
+    disabled: [String, Boolean],
     value: {
       type: Number,
       default: 1

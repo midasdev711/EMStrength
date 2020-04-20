@@ -13,7 +13,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean
+    disabled: [String, Boolean]
   }
 }
 </script>

@@ -125,6 +125,7 @@
                               :text="a.text"
                               :section="stepp.sectionNo + 1"
                               :subsection="vStepNum"
+                              :disabled="!decisionReruned && decisionCompleted"
                               @update-value="updateComponentValue"
                             />
                             <components
@@ -140,6 +141,7 @@
                               :value="a.value"
                               :section="stepp.sectionNo + 1"
                               :subsection="vStepNum"
+                              :disabled="!decisionReruned && decisionCompleted"
                               @update-value="updateComponentValue"
                             />
                           </div>

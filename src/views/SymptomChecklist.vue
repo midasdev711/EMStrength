@@ -121,6 +121,7 @@
                               :text="a.text"
                               :section="stepp.sectionNo + 1"
                               :subsection="stepl.subsectionNo + 1"
+                              :disabled="!symptomReruned && symptomCompleted"
                               @update-value="updateComponentValue"
                             />
                             <components
@@ -136,6 +137,7 @@
                               :value="a.value"
                               :section="stepp.sectionNo + 1"
                               :subsection="stepl.subsectionNo + 1"
+                              :disabled="!symptomReruned && symptomCompleted"
                               @update-value="updateComponentValue"
                             />
                           </div>

@@ -52,7 +52,7 @@ const Menu = [
     title: "Contact Us",
     icon: "mail_outline",
     name: "EnergyHealth_shop",
-    href: "https://coaching.site.com.au/",
+    href: "mailto:EHteam@energyhealthinc.com",
     key: "key-EnergyHealth"
   }
 ]

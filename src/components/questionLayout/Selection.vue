@@ -16,7 +16,7 @@
       :item-text="'title'"
       :item-value="'value'"
       :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection)"
-      :disabled="disabled"
+      :readonly="disabled ? true : false"
     >
       
     </v-select>
@@ -29,7 +29,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
+    disabled: [String, Boolean],
     value: {
       type: Number,
       default: 1

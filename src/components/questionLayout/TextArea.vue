@@ -5,7 +5,7 @@
         placeholder="enter here..." 
         v-validate="'required'"
         @input="updateValue"
-        :disabled="disabled" 
+        :readonly="disabled ? true : false" 
         v-model="textValue"
         rows="4">
       </textarea>
@@ -21,7 +21,7 @@ export default {
   props: {
     title: String,
     id: String,
-    disabled: Boolean,
+    disabled: [String, Boolean],
     text: String,
     questionId: String,
     answerId: String,
