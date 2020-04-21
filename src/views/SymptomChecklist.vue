@@ -203,8 +203,11 @@ export default {
 
         let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
         let currentQuestions = currentSection.filter(
-          v => v.question.type == "Bool" || v.question.type == "Scale" || v.question.type == "Selection"
+          v => v.question.type == "Bool" 
+          // || v.question.type == "Scale" || v.question.type == "Selection"
         );
+
+        let yesCount = 0;
 
         for (let i = 0; i < currentQuestions.length ; i ++) {
           const element = currentQuestions[i];
@@ -216,31 +219,43 @@ export default {
               if (answered.length == 0) {
                 this.disableContinue = true;
                 return;
+              } else {
+                if (answered[0].value == 1) {
+                  yesCount ++;
+                }
               }
+            } else if (element.value == 1) {
+              yesCount ++;
             }
-          } else if (element.question.type == "Scale") {
-            if (element.value == null || element.value == 0) {
-              let answered = currentAnswered.filter(
-                v => v.questionId == element.questionId && v.value > 0
-              );
-              if (answered.length == 0) {
-                this.disableContinue = true;
-                return;
-              }
-            }
-          } else if (element.question.type == "Selection") {
-            // if (element.value == null) {
-            //   let answered = currentAnswered.filter(
-            //     v => v.questionId == element.questionId && v.value > 0
-            //   );
-            //   if (answered.length == 0) {
-            //     this.disableContinue = true;
-            //     return;
-            //   }
-            // }
-          }
+          } 
+
+          // else if (element.question.type == "Scale") {
+          //   if (element.value == null || element.value == 0) {
+          //     let answered = currentAnswered.filter(
+          //       v => v.questionId == element.questionId && v.value > 0
+          //     );
+          //     if (answered.length == 0) {
+          //       this.disableContinue = true;
+          //       return;
+          //     }
+          //   }
+          // } else if (element.question.type == "Selection") {
+          //   if (element.value == null) {
+          //     let answered = currentAnswered.filter(
+          //       v => v.questionId == element.questionId && v.value > 0
+          //     );
+          //     if (answered.length == 0) {
+          //       this.disableContinue = true;
+          //       return;
+          //     }
+          //   }
+          // }
         }
-        this.disableContinue = false;
+        if (currentQuestions.length > 0 && yesCount == 0) {
+          this.disableContinue = true;
+        } else {
+          this.disableContinue = false;
+        }
       },
       deep: true,
     }
