@@ -253,7 +253,7 @@ export default {
 
         let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
         let currentQuestions = currentSection.filter(
-          v => v.question.type == "Bool" 
+          v => v.question.type == "Bool" || v.question.type == "Scale"
           // || v.question.type == "Scale" || v.question.type == "Selection"
         );
 
@@ -261,34 +261,36 @@ export default {
 
         for (let i = 0; i < currentQuestions.length ; i ++) {
           const element = currentQuestions[i];
+          let answered = currentAnswered.filter(
+            v => v.questionId == element.questionId
+          );
           if (element.question.type == "Bool") {
-            if (element.value == null) {
-              let answered = currentAnswered.filter(
-                v => v.questionId == element.questionId
-              );
-              if (answered.length == 0) {
-                this.disableContinue = true;
-                return;
-              } else {
-                if (answered[0].value == 1) {
-                  yesCount ++;
-                }
-              }
-            } else if (element.value == 1) {
+            if (answered.length == 0 && element.value == null) {
+              this.disableContinue = true;
+              return;
+            } else if (answered.length == 0 && element.value == 1) {
+              yesCount ++;
+            } else if (answered.length > 0 && answered[0].value == 1) {
               yesCount ++;
             }
-          } 
+          }
 
-          // else if (element.question.type == "Scale") {
-          //   if (element.value == null || element.value == 0) {
-          //     let answered = currentAnswered.filter(
-          //       v => v.questionId == element.questionId && v.value > 0
-          //     );
-          //     if (answered.length == 0) {
-          //       this.disableContinue = true;
-          //       return;
-          //     }
-          //   }
+          else if (element.question.type == "Scale") {
+            if (answered.length == 0 && element.value == null) {
+              this.disableContinue = true;
+              return;
+            } else if (answered.length == 0 && element.value > 0) {
+              yesCount ++;
+            } else if (answered.length == 0 && element.value == 0) {
+              this.disableContinue = true;
+              return;
+            } else if (answered.length > 0 && answered[0].value > 0) {
+              yesCount ++;
+            } else if (answered.length > 0 && answered[0].value == 0) {
+              this.disableContinue = true;
+              return;
+            }
+          }
           // } else if (element.question.type == "Selection") {
           //   if (element.value == null) {
           //     let answered = currentAnswered.filter(
@@ -302,7 +304,6 @@ export default {
           // }
         }
 
-        console.log(currentQuestions.length, yesCount)
         if (currentQuestions.length > 0 && yesCount == 0) {
           this.disableContinue = true;
         } else {
@@ -478,6 +479,8 @@ export default {
         ].vertical.length - 1);
         this.hStepper--;
       }
+      this.answers = [];
+      this.disableContinue = true;
     },
 
     goToNextStep() {
@@ -504,6 +507,8 @@ export default {
         }
         this.vStepper[this.hStepper - 1] = "A";
       }
+      this.answers = [];
+      this.disableContinue = true;
     },
 
     loadSubheading(activeMeasurement) {
