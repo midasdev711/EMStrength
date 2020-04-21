@@ -203,8 +203,7 @@ export default {
 
         let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
         let currentQuestions = currentSection.filter(
-          v => v.question.type == "Bool" || v.question.type == "Scale"
-          // || v.question.type == "Scale" || v.question.type == "Selection"
+          v => v.question.type == "Bool" || v.question.type == "Scale" || v.question.type == "Selection"
         );
 
         let yesCount = 0;
@@ -223,9 +222,22 @@ export default {
             } else if (answered.length > 0 && answered[0].value == 1) {
               yesCount ++;
             }
-          }
-
-          else if (element.question.type == "Scale") {
+          } else if (element.question.type == "Scale") {
+            if (answered.length == 0 && element.value == null) {
+              this.disableContinue = true;
+              return;
+            } else if (answered.length == 0 && element.value > 0) {
+              yesCount ++;
+            } else if (answered.length == 0 && element.value == 0) {
+              this.disableContinue = true;
+              return;
+            } else if (answered.length > 0 && answered[0].value > 0) {
+              yesCount ++;
+            } else if (answered.length > 0 && answered[0].value == 0) {
+              this.disableContinue = true;
+              return;
+            }
+          } else if (element.question.type == "Selection") {
             if (answered.length == 0 && element.value == null) {
               this.disableContinue = true;
               return;
@@ -241,17 +253,6 @@ export default {
               return;
             }
           }
-          // } else if (element.question.type == "Selection") {
-          //   if (element.value == null) {
-          //     let answered = currentAnswered.filter(
-          //       v => v.questionId == element.questionId && v.value > 0
-          //     );
-          //     if (answered.length == 0) {
-          //       this.disableContinue = true;
-          //       return;
-          //     }
-          //   }
-          // }
         }
 
         if (currentQuestions.length > 0 && yesCount == 0) {
@@ -509,8 +510,9 @@ export default {
       
       this.questions = data;
       this.vStepper = [];
-      for (let i = 0; i < this.questions.length; i++) {
-        this.vStepper.push(1);
+      this.hStepper = 1;
+      for (let i = 0; i < this.questions.horizontal.length; i++) {
+        this.vStepper.push('A');
       }
 
       if (this.questions.lastAnswered.sectionNo != null) {
@@ -519,12 +521,8 @@ export default {
         this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
         // go to new section
         this.goToNextStep();
-      } else {
-        // for new user
-        this.hStepper = 1;
-        this.vStepper[0] = 'A';
-      }
-
+      } 
+      
       if (this.questions.lastAnswered.sectionNo == undefined || this.questions.lastAnswered.sectionNo == null) {
         this.notification = true;
       } else {

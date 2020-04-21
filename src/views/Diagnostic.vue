@@ -253,8 +253,7 @@ export default {
 
         let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
         let currentQuestions = currentSection.filter(
-          v => v.question.type == "Bool" || v.question.type == "Scale"
-          // || v.question.type == "Scale" || v.question.type == "Selection"
+          v => v.question.type == "Bool" || v.question.type == "Scale" || v.question.type == "Selection"
         );
 
         let yesCount = 0;
@@ -273,9 +272,22 @@ export default {
             } else if (answered.length > 0 && answered[0].value == 1) {
               yesCount ++;
             }
-          }
-
-          else if (element.question.type == "Scale") {
+          } else if (element.question.type == "Scale") {
+            if (answered.length == 0 && element.value == null) {
+              this.disableContinue = true;
+              return;
+            } else if (answered.length == 0 && element.value > 0) {
+              yesCount ++;
+            } else if (answered.length == 0 && element.value == 0) {
+              this.disableContinue = true;
+              return;
+            } else if (answered.length > 0 && answered[0].value > 0) {
+              yesCount ++;
+            } else if (answered.length > 0 && answered[0].value == 0) {
+              this.disableContinue = true;
+              return;
+            }
+          } else if (element.question.type == "Selection") {
             if (answered.length == 0 && element.value == null) {
               this.disableContinue = true;
               return;
@@ -291,17 +303,6 @@ export default {
               return;
             }
           }
-          // } else if (element.question.type == "Selection") {
-          //   if (element.value == null) {
-          //     let answered = currentAnswered.filter(
-          //       v => v.questionId == element.questionId && v.value > 0
-          //     );
-          //     if (answered.length == 0) {
-          //       this.disableContinue = true;
-          //       return;
-          //     }
-          //   }
-          // }
         }
 
         if (currentQuestions.length > 0 && yesCount == 0) {
@@ -400,14 +401,14 @@ export default {
 
       return this._saveAnswers(answerData)
         .then(res => {
-          if (
-            this.hStepper == horizontalMaxSteps &&
-            (index + 1) == verticalMaxSteps && this.activeMeasurement == 0
-          ) {
-            this.answers = [];
-            this.activeMeasurement = 1;
-            this.loadSubheading(1);
-          }
+          // if (
+          //   this.hStepper == horizontalMaxSteps &&
+          //   (index + 1) == verticalMaxSteps && this.activeMeasurement == 0
+          // ) {
+          //   this.answers = [];
+          //   this.activeMeasurement = 1;
+          //   this.loadSubheading(1);
+          // }
           return res;
         })
         .catch(err => {
@@ -493,19 +494,22 @@ export default {
         tmp[this.hStepper-1] = steps.charAt(index + 1);
         this.vStepper = Object.assign([], tmp);
       } else {
-        if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper++;
-        }
+        // if (this.hStepper < horizontalMaxSteps) {
+        //   this.hStepper++;
+        // }
         if (this.hStepper == horizontalMaxSteps) {
           if (this.activeMeasurement == 0) {
-            this.activeMeasurement = 1;
+            // this.activeMeasurement = 1;
             this.loadSubheading(1);
           } else {
-            this.activeMeasurement = 0;
+            // this.activeMeasurement = 0;
             this.loadSubheading(0);
           }
         }
-        this.vStepper[this.hStepper - 1] = "A";
+        else if (this.hStepper < horizontalMaxSteps) {
+          this.hStepper++;
+          this.vStepper[this.hStepper - 1] = "A";
+        }
       }
       this.answers = [];
       this.disableContinue = true;
@@ -513,54 +517,34 @@ export default {
 
     loadSubheading(activeMeasurement) {
       this.isLoading = true;
-      let data = {
+      let params = {
         params: `?Article=Diagnostic&ArticleSubheading=${activeMeasurement}`,
         article: "Diagnostic"
       };
-      this._getQuestionsAnswers(data).then(data => {
-        this.questions = data;
+      this._getQuestionsAnswers(params).then(data => {
+        this.questions = Object.assign([], data);
         this.vStepper = [];
-        for (let i = 0; i < this.questions.length; i++) {
+        this.hStepper = 1;
+        for (let i = 0; i < this.questions.horizontal.length; i++) {
           this.vStepper.push('A');
         }
-        if (this.selectedSection.title) {
-          let lastAnswered;
-          switch (this.selectedSection.title) {
-            case "Physical":
-              this.hStepper = 2;
-              this.vStepper[1] = 'A';
-              break;
-            case "Mental/Emotional":
-              this.hStepper = 1;
-              this.vStepper[0] = 'A';
-              break;
-            default:
-              this.hStepper = 1;
-              this.vStepper[0] = 'A';
-              break;
-          }
-        } else {
-          if (this.questions.lastAnswered.sectionNo != null) {
-            // go to last answered section
-            this.hStepper = this.questions.lastAnswered.sectionNo + 1;
-            this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
-            // go to new section
-            this.goToNextStep();
-          } else {
-            // for new user
-            this.hStepper = 1;
-            this.vStepper[0] = 'A';
-          }
 
-          let limit = {
-            article: 'Diagnostic',
-            sectionNo: this.questions.horizontal.length - 1,
-            subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
-          };
+        if (this.questions.lastAnswered.sectionNo != null) {
+          // go to last answered section
+          this.hStepper = this.questions.lastAnswered.sectionNo + 1;
+          this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
+          // go to new section
+          this.goToNextStep();
+        }
 
-          if (this.getDataUserProfile.stressRecoveryCompleted) {
-            this._setArticleLimit(limit);
-          }
+        let limit = {
+          article: 'Diagnostic',
+          sectionNo: this.questions.horizontal.length - 1,
+          subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
+        };
+
+        if (this.getDataUserProfile.stressRecoveryCompleted) {
+          this._setArticleLimit(limit);
         }
 
         if (this.questions.lastAnswered.sectionNo == undefined || this.questions.lastAnswered.sectionNo == null) {
