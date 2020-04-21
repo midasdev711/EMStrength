@@ -247,23 +247,50 @@ export default {
       handler(val) {
         let steps = this.$vuetify.theme.step;
         let index = steps.indexOf(this.vStepper[this.hStepper-1]);
-        let answers = val.filter(
-          v => v.section == this.hStepper && v.subsection == (index + 1) && v.value > 0
+        let currentAnswered = val.filter(
+          v => v.section == this.hStepper && v.subsection == (index + 1)
         );
 
-        let currentSection = this.getAnswersData[this.hStepper - 1].vertical[index].items;
-        
-        let currentAnswered = currentSection.filter(
-          v => v.value > 0 || v.value != null
+        let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
+        let currentQuestions = currentSection.filter(
+          v => v.question.type == "Bool" || v.question.type == "Scale" || v.question.type == "Selection"
         );
 
-        console.log(currentAnswered);
-
-        if (answers.length > 0 || currentAnswered.length > 0) {
-          this.disableContinue = false;
-        } else {
-          this.disableContinue = true;
+        for (let i = 0; i < currentQuestions.length ; i ++) {
+          const element = currentQuestions[i];
+          if (element.question.type == "Bool") {
+            if (element.value == null) {
+              let answered = currentAnswered.filter(
+                v => v.questionId == element.questionId
+              );
+              if (answered.length == 0) {
+                this.disableContinue = true;
+                return;
+              }
+            }
+          } else if (element.question.type == "Scale") {
+            if (element.value == null || element.value == 0) {
+              let answered = currentAnswered.filter(
+                v => v.questionId == element.questionId && v.value > 0
+              );
+              if (answered.length == 0) {
+                this.disableContinue = true;
+                return;
+              }
+            }
+          } else if (element.question.type == "Selection") {
+            // if (element.value == null) {
+            //   let answered = currentAnswered.filter(
+            //     v => v.questionId == element.questionId && v.value > 0
+            //   );
+            //   if (answered.length == 0) {
+            //     this.disableContinue = true;
+            //     return;
+            //   }
+            // }
+          }
         }
+        this.disableContinue = false;
       },
       deep: true,
     },
