@@ -2,9 +2,9 @@
   <v-container grid-list-xl>
     <v-tabs dark color="primary" v-model="activeMeasurement" :hide-slider="false">
       <v-tabs-slider :color="$vuetify.theme.subheading2"></v-tabs-slider>
-      <v-tab @click="loadSubheading(0)">Stress Measurement</v-tab>
+      <v-tab>Stress Measurement</v-tab>
 
-      <v-tab @click="loadSubheading(1)">Recovery Measurement</v-tab>
+      <v-tab>Recovery Measurement</v-tab>
     </v-tabs>
     <p>&nbsp;</p>
 
@@ -54,17 +54,21 @@
               </p>
             </v-card-text>
             <v-card-actions>
-              <v-btn flat color="green darken-1" @click="notification = false;_disableNotification();">Got it!</v-btn>
+              <v-btn
+                flat
+                color="green darken-1"
+                @click="notification = false;_disableNotification();"
+              >Got it!</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-stepper v-model="hStepper">
+        <v-stepper v-model="hStepper[activeMeasurement]">
           <v-stepper-header>
-            <template v-for="step in getFilteredQuestionData">
+            <template v-for="step in getFilteredQuestionData[activeMeasurement]">
               <v-stepper-step
                 :key="`${step.sectionNo}-step`"
-                :complete="hStepper > (step.sectionNo + 1)"
-                :editable="step.sectionNo <= getAnswerLimit.sectionNo"
+                :complete="hStepper[activeMeasurement] > (step.sectionNo + 1)"
+                :editable="step.sectionNo <= getAnswerLimit[activeMeasurement].sectionNo"
                 :step="step.sectionNo + 1"
                 :color="$vuetify.theme.subheading1"
               >
@@ -78,7 +82,7 @@
 
           <v-stepper-items>
             <v-stepper-content
-              v-for="stepp in getFilteredQuestionData"
+              v-for="stepp in getFilteredQuestionData[activeMeasurement]"
               :key="`${stepp.sectionNo}-content`"
               :step="stepp.sectionNo + 1"
             >
@@ -87,17 +91,17 @@
                   {{stepp.section}}
                   <span
                     class="right"
-                  >{{stepp.sectionNo + 1}} of {{getFilteredQuestionData.length}}</span>
+                  >{{stepp.sectionNo + 1}} of {{getFilteredQuestionData[activeMeasurement].length}}</span>
                 </h3>
               </v-card>
               <v-card>
-                <v-stepper vertical v-model="vStepper[stepp.sectionNo]">
+                <v-stepper vertical v-model="vStepper[activeMeasurement][stepp.sectionNo]">
                   <div v-for="stepl in stepp.vertical" :key="stepl.subsectionNo + '-sub'">
                     <v-stepper-step
                       :step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
                       :key="stepl.subsectionNo + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
-                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && stepl.subsectionNo <= (getAnswerLimit.subsectionNo))"
+                      :editable="stepp.sectionNo < getAnswerLimit[activeMeasurement].sectionNo || (stepp.sectionNo == getAnswerLimit[activeMeasurement].sectionNo && stepl.subsectionNo <= (getAnswerLimit[activeMeasurement].subsectionNo))"
                     >
                       <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
 
@@ -113,7 +117,10 @@
                           >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
-                      <v-card class="mb-5" v-if="vStepper[stepp.sectionNo] == $vuetify.theme.step.charAt(stepl.subsectionNo)">
+                      <v-card
+                        class="mb-5"
+                        v-if="vStepper[activeMeasurement][stepp.sectionNo] == $vuetify.theme.step.charAt(stepl.subsectionNo)"
+                      >
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div class="row" v-for="a in stepl.items" :key="a.id">
@@ -154,11 +161,11 @@
                         <v-btn
                           color="primary"
                           :disabled="disableContinue"
-                          @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
-                        >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
+                          @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData[activeMeasurement].length)"
+                        >{{vStepper[activeMeasurement][hStepper[activeMeasurement]-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper[activeMeasurement] == getFilteredQuestionData[activeMeasurement].length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
                           flat
-                          v-if="!(vStepper[0] == 'A' && hStepper == 1)"
+                          v-if="!(vStepper[activeMeasurement][0] == 'A' && hStepper[activeMeasurement] == 1)"
                           @click="prevVerticalStep"
                         >Back</v-btn>
                       </v-card>
@@ -189,8 +196,8 @@ export default {
   data: () => ({
     notification: true,
     activeMeasurement: 0,
-    hStepper: 1,
-    vStepper: [],
+    hStepper: [1, 1],
+    vStepper: [[], []],
     form1Valid: false,
     questions: [],
     answers: [],
@@ -203,7 +210,7 @@ export default {
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getDiagnosticAnswersData",
-      getDiagnosticLastAnswered: "getDiagnosticLastAnswered",
+      // getDiagnosticLastAnswered: "getDiagnosticLastAnswered",
       getNotificationStatus: "getNotificationStatus",
       getAnswerLimit: "getStressRecoveryLimit"
     }),
@@ -225,19 +232,28 @@ export default {
     },
     getFilteredQuestionData() {
       let result = [];
-      for (let i = 0; i < this.getAnswersData.length; i++) {
-        let stepp = this.getAnswersData[i];
-        let newVertical = [];
-        for (let j = 0; j < stepp.vertical.length; j++) {
-          let stepl = stepp.vertical[j];
-          let items = stepl.items.filter(v => v.isConditionQuestionMet);
-          let newStepl = Object.assign({}, stepl);
-          newStepl.items = Object.assign([], items);
-          newVertical.push(newStepl);
+      for (let tab = 0; tab < this.getAnswersData.length; tab++) {
+        let tmp = this.getAnswersData[tab].horizontal
+          ? this.getAnswersData[tab].horizontal
+          : [];
+        let tmpResult = [];
+        if (tmp.length > 0) {
+          for (let i = 0; i < tmp.length; i++) {
+            let stepp = tmp[i];
+            let newVertical = [];
+            for (let j = 0; j < stepp.vertical.length; j++) {
+              let stepl = stepp.vertical[j];
+              let items = stepl.items.filter(v => v.isConditionQuestionMet);
+              let newStepl = Object.assign({}, stepl);
+              newStepl.items = Object.assign([], items);
+              newVertical.push(newStepl);
+            }
+            let newStepp = Object.assign({}, stepp);
+            newStepp.vertical = Object.assign([], newVertical);
+            tmpResult.push(newStepp);
+          }
         }
-        let newStepp = Object.assign({}, stepp);
-        newStepp.vertical = Object.assign([], newVertical);
-        result.push(newStepp);
+        result.push(tmpResult);
       }
       return result;
     }
@@ -246,73 +262,92 @@ export default {
     answers: {
       handler(val) {
         let steps = this.$vuetify.theme.step;
-        let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+        let index = steps.indexOf(
+          this.vStepper[this.activeMeasurement][
+            this.hStepper[this.activeMeasurement] - 1
+          ]
+        );
         let currentAnswered = val.filter(
-          v => v.section == this.hStepper && v.subsection == (index + 1)
+          v =>
+            v.section == this.hStepper[this.activeMeasurement] &&
+            v.subsection == index + 1
         );
 
-        let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
-        let currentQuestions = currentSection.filter(
-          v => v.question.type == "Bool" || v.question.type == "Scale" || v.question.type == "Selection"
-        );
+        let currentHStepItems = this.getFilteredQuestionData[
+          this.activeMeasurement
+        ];
 
-        let yesCount = 0;
-
-        for (let i = 0; i < currentQuestions.length ; i ++) {
-          const element = currentQuestions[i];
-          let answered = currentAnswered.filter(
-            v => v.questionId == element.questionId
+        if (currentHStepItems.length > 0) {
+          let currentSection = this.getFilteredQuestionData[
+            this.activeMeasurement
+          ][this.hStepper[this.activeMeasurement] - 1].vertical[index].items;
+          let currentQuestions = currentSection.filter(
+            v =>
+              v.question.type == "Bool" ||
+              v.question.type == "Scale" ||
+              v.question.type == "Selection"
           );
-          if (element.question.type == "Bool") {
-            if (answered.length == 0 && element.value == null) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length == 0 && element.value == 1) {
-              yesCount ++;
-            } else if (answered.length > 0 && answered[0].value == 1) {
-              yesCount ++;
-            }
-          } else if (element.question.type == "Scale") {
-            if (answered.length == 0 && element.value == null) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length == 0 && element.value > 0) {
-              yesCount ++;
-            } else if (answered.length == 0 && element.value == 0) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length > 0 && answered[0].value > 0) {
-              yesCount ++;
-            } else if (answered.length > 0 && answered[0].value == 0) {
-              this.disableContinue = true;
-              return;
-            }
-          } else if (element.question.type == "Selection") {
-            if (answered.length == 0 && element.value == null) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length == 0 && element.value > 0) {
-              yesCount ++;
-            } else if (answered.length == 0 && element.value == 0) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length > 0 && answered[0].value > 0) {
-              yesCount ++;
-            } else if (answered.length > 0 && answered[0].value == 0) {
-              this.disableContinue = true;
-              return;
+
+          let yesCount = 0;
+
+          for (let i = 0; i < currentQuestions.length; i++) {
+            const element = currentQuestions[i];
+            let answered = currentAnswered.filter(
+              v => v.questionId == element.questionId
+            );
+            if (element.question.type == "Bool") {
+              if (answered.length == 0 && element.value == null) {
+                this.disableContinue = true;
+                return;
+              } else if (answered.length == 0 && element.value == 1) {
+                yesCount++;
+              } else if (answered.length > 0 && answered[0].value == 1) {
+                yesCount++;
+              }
+            } else if (element.question.type == "Scale") {
+              if (answered.length == 0 && element.value == null) {
+                this.disableContinue = true;
+                return;
+              } else if (answered.length == 0 && element.value > 0) {
+                yesCount++;
+              } else if (answered.length == 0 && element.value == 0) {
+                this.disableContinue = true;
+                return;
+              } else if (answered.length > 0 && answered[0].value > 0) {
+                yesCount++;
+              } else if (answered.length > 0 && answered[0].value == 0) {
+                this.disableContinue = true;
+                return;
+              }
+            } else if (element.question.type == "Selection") {
+              if (answered.length == 0 && element.value == null) {
+                this.disableContinue = true;
+                return;
+              } else if (answered.length == 0 && element.value > 0) {
+                yesCount++;
+              } else if (answered.length == 0 && element.value == 0) {
+                this.disableContinue = true;
+                return;
+              } else if (answered.length > 0 && answered[0].value > 0) {
+                yesCount++;
+              } else if (answered.length > 0 && answered[0].value == 0) {
+                this.disableContinue = true;
+                return;
+              }
             }
           }
-        }
 
-        if (currentQuestions.length > 0 && yesCount == 0) {
-          this.disableContinue = true;
+          if (currentQuestions.length > 0 && yesCount == 0) {
+            this.disableContinue = true;
+          } else {
+            this.disableContinue = false;
+          }
         } else {
-          this.disableContinue = false;
+          this.disableContinue = true;
         }
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     ...mapActions("app", {
@@ -376,10 +411,16 @@ export default {
     ) {
       let currentTime = new Date().toISOString();
       let steps = this.$vuetify.theme.step;
-      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+      let index = steps.indexOf(
+        this.vStepper[this.activeMeasurement][
+          this.hStepper[this.activeMeasurement] - 1
+        ]
+      );
 
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == (index + 1)
+        v =>
+          v.section == this.hStepper[this.activeMeasurement] &&
+          v.subsection == index + 1
       );
 
       let answerData = {
@@ -389,12 +430,14 @@ export default {
         sectionNo: nextSectionNo - 1,
         subsectionNo: nextSubsectionNo - 1,
         verticalMaxSteps: verticalMaxSteps,
-        horizontalMaxSteps: horizontalMaxSteps
+        horizontalMaxSteps: horizontalMaxSteps,
+        active: this.activeMeasurement
       };
 
       if (
-        this.hStepper == horizontalMaxSteps &&
-        (index + 1) == verticalMaxSteps && this.activeMeasurement == 1
+        this.hStepper[this.activeMeasurement] == horizontalMaxSteps &&
+        index + 1 == verticalMaxSteps &&
+        this.activeMeasurement == 1
       ) {
         answerData["complete"] = currentTime;
       }
@@ -419,27 +462,34 @@ export default {
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
       this.isLoading = true;
       let steps = this.$vuetify.theme.step;
-      let nextSectionNo = this.hStepper;
-      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+      let nextSectionNo = this.hStepper[this.activeMeasurement];
+      let index = steps.indexOf(
+        this.vStepper[this.activeMeasurement][
+          this.hStepper[this.activeMeasurement] - 1
+        ]
+      );
       let nextSubsectionNo = index + 1;
       if (nextSubsectionNo < verticalMaxSteps) {
         // nextSubsectionNo++;
       } else {
-        if (this.hStepper < horizontalMaxSteps) {
+        if (this.hStepper[this.activeMeasurement] < horizontalMaxSteps) {
           nextSectionNo++;
         }
         nextSubsectionNo = 0;
       }
 
       let answers = this.answers.filter(
-        v => v.section == this.hStepper && v.subsection == (index + 1)
+        v =>
+          v.section == this.hStepper[this.activeMeasurement] &&
+          v.subsection == index + 1
       );
 
       let answerData = {
         answers: answers,
         article: "Diagnostic",
-        nextSectionNo: this.hStepper - 1,
-        nextSubsectionNo: index
+        nextSectionNo: this.hStepper[this.activeMeasurement] - 1,
+        nextSubsectionNo: index,
+        active: this.activeMeasurement
       };
       if (!this.stressRecoveryReruned && this.stressRecoveryCompleted) {
         this.goToNextStep();
@@ -469,90 +519,126 @@ export default {
     prevVerticalStep() {
       let lastAnswered;
       let steps = this.$vuetify.theme.step;
-      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
+      let index = steps.indexOf(
+        this.vStepper[this.activeMeasurement][
+          this.hStepper[this.activeMeasurement] - 1
+        ]
+      );
       if (index > 0) {
-        let tmp = Object.assign([], this.vStepper);
-        tmp[this.hStepper-1] = steps.charAt(index - 1);
-        this.vStepper = Object.assign([], tmp);
+        let tmp = Object.assign([], this.vStepper[this.activeMeasurement]);
+        tmp[this.hStepper[this.activeMeasurement] - 1] = steps.charAt(index - 1);
+        this.vStepper[this.activeMeasurement] = Object.assign([], tmp);
       } else {
-        this.vStepper[this.hStepper-2] = steps.charAt(this.getFilteredQuestionData[
-          this.hStepper - 2
-        ].vertical.length - 1);
-        this.hStepper--;
+        this.vStepper[this.activeMeasurement][
+          this.hStepper[this.activeMeasurement] - 2
+        ] = steps.charAt(
+          this.getFilteredQuestionData[this.activeMeasurement][
+            this.hStepper[this.activeMeasurement] - 2
+          ].vertical.length - 1
+        );
+        this.hStepper[this.activeMeasurement]--;
       }
       this.answers = [];
       this.disableContinue = true;
     },
 
     goToNextStep() {
-      let horizontalMaxSteps = this.questions.horizontal.length;
-      let verticalMaxSteps = this.questions.horizontal[this.hStepper-1].vertical.length;
+      let horizontalMaxSteps = this.getFilteredQuestionData[
+        this.activeMeasurement
+      ].length;
+      let verticalMaxSteps = this.getFilteredQuestionData[
+        this.activeMeasurement
+      ][this.hStepper[this.activeMeasurement] - 1].vertical.length;
       let steps = this.$vuetify.theme.step;
-      let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
-      if ((index + 1) < verticalMaxSteps) {
+      let index = steps.indexOf(
+        this.vStepper[this.activeMeasurement][
+          this.hStepper[this.activeMeasurement] - 1
+        ]
+      );
+      if (index + 1 < verticalMaxSteps) {
         let tmp = Object.assign([], this.vStepper);
-        tmp[this.hStepper-1] = steps.charAt(index + 1);
+        tmp[this.activeMeasurement][
+          this.hStepper[this.activeMeasurement] - 1
+        ] = steps.charAt(index + 1);
         this.vStepper = Object.assign([], tmp);
       } else {
-        // if (this.hStepper < horizontalMaxSteps) {
-        //   this.hStepper++;
-        // }
-        if (this.hStepper == horizontalMaxSteps) {
+        if (this.hStepper[this.activeMeasurement] == horizontalMaxSteps) {
           if (this.activeMeasurement == 0) {
-            // this.activeMeasurement = 1;
-            this.loadSubheading(1);
+            this.activeMeasurement = 1;
           } else {
-            // this.activeMeasurement = 0;
-            this.loadSubheading(0);
+            this.activeMeasurement = 0;
           }
-        }
-        else if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper++;
-          this.vStepper[this.hStepper - 1] = "A";
+        } else if (this.hStepper[this.activeMeasurement] < horizontalMaxSteps) {
+          this.hStepper[this.activeMeasurement]++;
+          this.vStepper[this.activeMeasurement][
+            this.hStepper[this.activeMeasurement] - 1
+          ] = "A";
         }
       }
       this.answers = [];
       this.disableContinue = true;
     },
 
-    loadSubheading(activeMeasurement) {
+    loadData() {
       this.isLoading = true;
+      return this.loadSubheading(0).then(_ => {
+        return this.loadSubheading(1).then(_ => {
+          let lastAnswered = this.getAnswersData[this.activeMeasurement]
+            .lastAnswered;
+          if (lastAnswered.sectionNo != null) {
+            // go to last answered section
+            this.hStepper[this.activeMeasurement] = lastAnswered.sectionNo + 1;
+            this.vStepper[this.activeMeasurement][
+              this.hStepper[this.activeMeasurement] - 1
+            ] = this.$vuetify.theme.step.charAt(lastAnswered.subsectionNo);
+            // go to new section
+            this.goToNextStep();
+          }
+          if (this.getAnswersData[0].lastAnswered.sectionNo == undefined || this.getAnswersData[0].lastAnswered.sectionNo == null) {
+            this.notification = true;
+          } else {
+            this.notification = false;
+          }
+          this.isLoading = false;
+        });
+      });
+    },
+
+    loadSubheading(activeMeasurement) {
       let params = {
         params: `?Article=Diagnostic&ArticleSubheading=${activeMeasurement}`,
-        article: "Diagnostic"
+        article: "Diagnostic",
+        active: activeMeasurement
       };
-      this._getQuestionsAnswers(params).then(data => {
+      return this._getQuestionsAnswers(params).then(data => {
         this.questions = Object.assign([], data);
-        this.vStepper = [];
-        this.hStepper = 1;
+        this.vStepper[activeMeasurement] = [];
+        this.hStepper[activeMeasurement] = 1;
         for (let i = 0; i < this.questions.horizontal.length; i++) {
-          this.vStepper.push('A');
+          this.vStepper[activeMeasurement].push("A");
         }
 
-        if (this.questions.lastAnswered.sectionNo != null) {
+        let lastAnswered = this.questions.lastAnswered;
+
+        if (lastAnswered.sectionNo != null) {
           // go to last answered section
-          this.hStepper = this.questions.lastAnswered.sectionNo + 1;
-          this.vStepper[this.hStepper-1] = this.$vuetify.theme.step.charAt(this.questions.lastAnswered.subsectionNo);
-          // go to new section
-          this.goToNextStep();
+          this.hStepper[activeMeasurement] = lastAnswered.sectionNo + 1;
+          this.vStepper[activeMeasurement][
+            this.hStepper[activeMeasurement] - 1
+          ] = this.$vuetify.theme.step.charAt(lastAnswered.subsectionNo);
         }
 
-        let limit = {
-          article: 'Diagnostic',
-          sectionNo: this.questions.horizontal.length - 1,
-          subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
-        };
+        // set limit to edit // need to do
 
-        if (this.getDataUserProfile.stressRecoveryCompleted) {
-          this._setArticleLimit(limit);
-        }
+        // let limit = {
+        //   article: 'Diagnostic',
+        //   sectionNo: this.questions.horizontal.length - 1,
+        //   subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
+        // };
 
-        if (this.questions.lastAnswered.sectionNo == undefined || this.questions.lastAnswered.sectionNo == null) {
-          this.notification = true;
-        } else {
-          this.notification = false;
-        }
-        this.isLoading = false;
+        // if (this.getDataUserProfile.stressRecoveryCompleted) {
+        //   this._setArticleLimit(limit);
+        // }
       });
     }
   },
@@ -569,21 +655,20 @@ export default {
   mounted() {
     if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
-    this.loadSubheading(0);
+    this.loadData();
     this.selectedSection = this.$router.currentRoute.params;
   }
 };
 </script>
 
 <style lang="stylus">
-
 .v-dialog {
   .v-card__actions {
     padding-top: 0;
   }
 
   .notification .v-card__text {
-    padding-bottom: 0!important;
+    padding-bottom: 0 !important;
   }
 }
 </style>

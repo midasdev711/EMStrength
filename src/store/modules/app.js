@@ -10,7 +10,7 @@ const state = {
   answersData: [],
   recoveryData: [],
   recoveryCheck: true,
-  diagnosticAnswers: [],
+  diagnosticAnswers: [{}, {}],
   decisionAnswers: {
     horizontal: [{
       sectionNo: 0,
@@ -43,10 +43,13 @@ const state = {
     subsectionNo: 0
   },
 
-  diagnosticLimit: {
+  diagnosticLimit: [{
     sectionNo: 0,
     subsectionNo: 0
-  },
+  }, {
+    sectionNo: 0,
+    subsectionNo: 0
+  }],
 
   symptomLimit: {
     sectionNo: 0,
@@ -96,8 +99,7 @@ const initialState = {
 const getters = {
   getNotificationStatus: state => state.showNotification,
   getQuestions: state => state.questions,
-  getDiagnosticAnswersData: state => state.diagnosticAnswers && state.diagnosticAnswers.horizontal ? state.diagnosticAnswers.horizontal : [],
-  getDiagnosticLastAnswered: state => state.diagnosticAnswers && state.diagnosticAnswers.lastAnswered ? state.diagnosticAnswers.lastAnswered : { sectionNo: null, subsectionNo: null },
+  getDiagnosticAnswersData: state => state.diagnosticAnswers,
   getSymptomLastAnswered: state => state.symptomAnswers && state.symptomAnswers.lastAnswered ? state.symptomAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0 },
   getDecisionLastAnswered: state => state.decisionAnswers && state.decisionAnswers.lastAnswered ? state.decisionAnswers.lastAnswered : { sectionNo: 0, subsectionNo: 0 },
 
@@ -202,7 +204,7 @@ const actions = {
       .then(result => {
         switch (data.article) {
           case "Diagnostic":
-            commit("setDiagnosticAnswers", result['data']);
+            commit("setDiagnosticAnswers", { active: data.active, data: result['data']});
             break;
           case "Symptom":
             commit("setSymptomAnswers", result['data']);
@@ -250,9 +252,9 @@ const actions = {
           subsectionNo: null
         };
       }
-      commit("setArticleAnswer", { article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data });
+      commit("setArticleAnswer", { active: data.active ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data });
       commit("set" + data.article + "LastAnswered", lastAnswered);
-      commit("setAnswerLimit", { article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo });
+      commit("setAnswerLimit", { active: data.active ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo });
     }).catch(err => {
       throw err;
     });
@@ -451,8 +453,13 @@ const mutations = {
 
   setQuestions: set("questions"),
   setDiagnosticAnswers: (state, data) => {
-    state.diagnosticAnswers = Object.assign({}, data);
-    state.diagnosticLimit = Object.assign({}, data.lastAnswered);
+    let tmp = Object.assign([], state.diagnosticAnswers);
+    tmp[data.active] = Object.assign({}, data.data);
+    state.diagnosticAnswers = Object.assign([], tmp);
+
+    let tmpLimit = Object.assign([], state.diagnosticLimit);
+    tmpLimit[data.active] = Object.assign({}, data.data.lastAnswered);
+    state.diagnosticLimit = Object.assign([], tmpLimit);
   },
 
   setDecisionAnswers: (state, data) => {
@@ -464,12 +471,15 @@ const mutations = {
     state.symptomAnswers = Object.assign({}, data);
     state.symptomLimit = Object.assign({}, data.lastAnswered);
   },
+
   setSummaryAnswers: (state, data) => {
     state.summaryAnswers = Object.assign({}, data);
   },
+
   setRecoveryCheck: (state) => {
     state.recoveryCheck = !state.recoveryCheck;
   },
+
   setRecovery: set('recoveryData'),
   setUserSummaryData: (state, data) => {
     state.userSummaryData = Object.assign({}, data);
@@ -505,12 +515,24 @@ const mutations = {
 
     let answerIndex = data.article.toLowerCase() + 'Answers';
 
-    for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
-      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i];
-      for (let j = 0; j < data.answers.length; j++) {
-        if (tmp.questionId == data.answers[j].questionId) {
-          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value;
-          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text;
+    if (data.article == 'Diagnostic') {
+      for (let i = 0; i < state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
+        let tmp = state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items[i];
+        for (let j = 0; j < data.answers.length; j++) {
+          if (tmp.questionId == data.answers[j].questionId) {
+            state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value;
+            state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text;
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
+        let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i];
+        for (let j = 0; j < data.answers.length; j++) {
+          if (tmp.questionId == data.answers[j].questionId) {
+            state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].value = data.answers[j].value;
+            state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].text = data.answers[j].text;
+          }
         }
       }
     }
@@ -520,11 +542,23 @@ const mutations = {
     let sectionNo = data.sectionNo;
     let subsectionNo = data.subsectionNo;
     let answerIndex = data.article.toLowerCase() + 'Answers';
-    for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
-      let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i];
-      for (let j = 0; j < data.nextSubsection.length; j++) {
-        if (tmp.questionId == data.nextSubsection[j].questionId) {
-          state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].isConditionQuestionMet = data.nextSubsection[j].isConditionQuestionMet;
+    
+    if (data.article == 'Diagnostic') {
+      for (let i = 0; i < state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
+        let tmp = state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items[i];
+        for (let j = 0; j < data.nextSubsection.length; j++) {
+          if (tmp.questionId == data.nextSubsection[j].questionId) {
+            state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items[i].isConditionQuestionMet = data.nextSubsection[j].isConditionQuestionMet;
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
+        let tmp = state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i];
+        for (let j = 0; j < data.nextSubsection.length; j++) {
+          if (tmp.questionId == data.nextSubsection[j].questionId) {
+            state[answerIndex].horizontal[sectionNo].vertical[subsectionNo].items[i].isConditionQuestionMet = data.nextSubsection[j].isConditionQuestionMet;
+          }
         }
       }
     }
@@ -532,11 +566,22 @@ const mutations = {
 
   setAnswerLimit: (state, data) => {
     let index = data.article.toLowerCase() + 'Limit';
-    if (state[index].sectionNo <= data.sectionNo) {
-      if (state[index].subsectionNo < data.subsectionNo) {
-        state[index] = Object.assign({}, data);
-      }
-    } 
+    if (data.article == "Diagnostic") {
+      let tmp = Object.assign([], state[index]);
+      if (tmp[data.active].sectionNo <= data.sectionNo) {
+        if (tmp[data.active].subsectionNo < data.subsectionNo) {
+          tmp[data.active] = Object.assign({}, data);
+        }
+      } 
+      state[index] = Object.assign([], tmp);
+    } else {
+      if (state[index].sectionNo <= data.sectionNo) {
+        if (state[index].subsectionNo < data.subsectionNo) {
+          state[index] = Object.assign({}, data);
+        }
+      } 
+    }
+    
   },
 
   enableNotification: (state) => {
