@@ -119,7 +119,7 @@
                       </v-card>
                       <v-card
                         class="mb-5"
-                        v-if="vStepper[activeMeasurement][stepp.sectionNo] == $vuetify.theme.step.charAt(stepl.subsectionNo)"
+                        v-if="vStepper[activeMeasurement][hStepper[activeMeasurement] - 1] == vStepper[activeMeasurement][stepp.sectionNo]"
                       >
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
