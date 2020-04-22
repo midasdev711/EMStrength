@@ -54,6 +54,15 @@ export default {
     margin-top 5em
   }
 
+h2
+  color #1c4698
+  @media (max-width 600px) {
+    font-size 22px
+  }
+
 p 
   font-size 18px
+  @media (max-width 600px) {
+    font-size 17px
+  }
 </style>

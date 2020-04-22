@@ -70,9 +70,21 @@ export default {
 h2, h3
   color #1c4698
 
+h2
+  color #1c4698
+  @media (max-width 600px) {
+    font-size 22px
+  }
+
 p 
   font-size 18px
+  @media (max-width 600px) {
+    font-size 17px
+  }
 
 h3 
   font-size 21px
+  @media (max-width 600px) {
+    font-size 19px
+  }
 </style>
