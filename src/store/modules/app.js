@@ -252,9 +252,9 @@ const actions = {
           subsectionNo: null
         };
       }
-      commit("setArticleAnswer", { active: data.active ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data });
+      commit("setArticleAnswer", { active: data.active != null ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data });
       commit("set" + data.article + "LastAnswered", lastAnswered);
-      commit("setAnswerLimit", { active: data.active ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo });
+      commit("setAnswerLimit", { active: data.active != null ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo });
     }).catch(err => {
       throw err;
     });
@@ -544,6 +544,7 @@ const mutations = {
     let answerIndex = data.article.toLowerCase() + 'Answers';
     
     if (data.article == 'Diagnostic') {
+      debugger
       for (let i = 0; i < state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
         let tmp = state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items[i];
         for (let j = 0; j < data.nextSubsection.length; j++) {

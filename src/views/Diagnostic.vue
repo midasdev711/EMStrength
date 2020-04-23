@@ -119,7 +119,6 @@
                       </v-card>
                       <v-card
                         class="mb-5"
-                        v-if="vStepper[activeMeasurement][hStepper[activeMeasurement] - 1] == vStepper[activeMeasurement][stepp.sectionNo]"
                       >
                         <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
@@ -433,6 +432,7 @@ export default {
         horizontalMaxSteps: horizontalMaxSteps,
         active: this.activeMeasurement
       };
+      
 
       if (
         this.hStepper[this.activeMeasurement] == horizontalMaxSteps &&
@@ -628,17 +628,16 @@ export default {
           ] = this.$vuetify.theme.step.charAt(lastAnswered.subsectionNo);
         }
 
-        // set limit to edit // need to do
+        let limit = {
+          article: 'Diagnostic',
+          sectionNo: this.questions.horizontal.length - 1,
+          subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1,
+          active: activeMeasurement
+        };
 
-        // let limit = {
-        //   article: 'Diagnostic',
-        //   sectionNo: this.questions.horizontal.length - 1,
-        //   subsectionNo: this.questions.horizontal[this.questions.horizontal.length - 1].vertical.length - 1
-        // };
-
-        // if (this.getDataUserProfile.stressRecoveryCompleted) {
-        //   this._setArticleLimit(limit);
-        // }
+        if (this.getDataUserProfile.stressRecoveryCompleted) {
+          this._setArticleLimit(limit);
+        }
       });
     }
   },
