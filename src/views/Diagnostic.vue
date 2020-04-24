@@ -567,6 +567,8 @@ export default {
             this.activeMeasurement = 1;
           } else {
             this.activeMeasurement = 0;
+            this.hStepper[0] = 1;
+            this.vStepper[0][0] = 'A';
           }
         } else if (this.hStepper[this.activeMeasurement] < horizontalMaxSteps) {
           this.hStepper[this.activeMeasurement]++;
