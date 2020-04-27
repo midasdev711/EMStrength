@@ -23,6 +23,9 @@
         Submitted {{getDataUserProfile.symptomCompleted | formatDate}}
         <v-btn flat round outline @click="reRun">Re-Run</v-btn>
       </v-alert>
+      <v-alert :value="showNotifcationBox" color="warning" outline>
+        Re-run the Diagnostic by reviewing your previous answers and making any necessary changes through to completion.
+      </v-alert>
       <v-layout justify-center ma-0>
         <v-dialog sm6 xs12 v-model="getNotification">
           <v-card color class="black--text mt-2 col-sm-6 notification">
@@ -189,7 +192,8 @@ export default {
       answers: [],
       isLoading: true,
       fill: { gradient: ["#48cba2", "#47bbe9"] },
-      disableContinue: true
+      disableContinue: true,
+      showNotifcationBox: false
     };
   },
   watch: {
@@ -417,7 +421,6 @@ export default {
           horizontalMaxSteps
         )
           .then(res => {
-            
             this.goToNextStep();
             this.isLoading = false;
             this.$forceUpdate();
@@ -501,13 +504,18 @@ export default {
   mounted() {
     if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
+
+    console.log(this.$route.params.rerun)
+    if (this.$route.params.rerun) {
+      this.showNotifcationBox = true;
+    }
+
     let params = {
       params: "?Article=Symptom",
       article: "Symptom"
     };
 
     this._getQuestionsAnswers(params).then(data => {
-      
       this.questions = data;
       this.vStepper = [];
       this.hStepper = 1;

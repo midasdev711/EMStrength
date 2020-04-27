@@ -332,7 +332,7 @@ export default {
       };
       return this._reRunArticle(data).then(res => {
         this.dialog = false;
-        this.$router.push({name: "Symptom Checklist"})
+        this.$router.push({name: "Symptom Checklist", params: {rerun: true}})
       });
     },
 
