@@ -111,7 +111,7 @@
                     <v-stepper-content :step="$vuetify.theme.step.charAt(stepl.subsectionNo)">
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
                         <h3>
-                          {{$vuetify.theme.step.charAt(stepl.subsectionNo)}}
+                          <span class="v-stepper__step__step" style="background-color: rgb(0, 163, 138); border-color: rgb(0, 163, 138);">{{$vuetify.theme.step.charAt(stepl.subsectionNo)}}</span>
                           <span
                             class="right"
                           >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>

@@ -58,26 +58,26 @@
         </v-card>
       </template>
       <template v-else>
-        <!-- <v-dialog v-model="getFullNotification" class="notification-dialog">
+        <v-dialog v-model="getFullNotification" class="notification-dialog">
           <v-card>
             <v-card-title class="headline">Building your Energy Health through Recovery</v-card-title>
             <v-card-text>
               <p>
-                These are Recovery Activity Lists for
+                These are Recovery Activity Checklist for
                 <br><br>
                 (1) Mental/Emotional Recovery<br>
                 (2) Physical Recovery<br><br>
 
-                The lists are 30 items long, presented 6 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance. 
+                The lists are 30 items long, presented 5 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance. 
                 <br><br>
-                Adopt 1-3 activities at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance.
+                Adopt 1-2 activities at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance. If, at any time, your symptoms become concerning or are experienced as unmanageable, consult a physician and other relevant health care providers (e.g. psychologist).
               </p>
             </v-card-text>
             <v-card-actions>
               <v-btn color="green darken-1" flat="flat" @click="fullNotification = false; _disableNotification();">OK</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog> -->
+        </v-dialog>
         <v-card
           color
           class="black--text mt-2"
@@ -89,9 +89,9 @@
               <br>
               (1) Mental/Emotional Recovery<br>
               (2) Physical Recovery<br><br>
-              The lists are presented five items at a time, in order of positive impact on your energy health, stress-recovery balance.
+              The lists are presented 5 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance.
               <br><br>
-              You can view full list of recovery items by clicking the tick-box in the top-right hand corner of the header on this page.
+              You can review the full list of recovery items by clicking the tick-box in the top-right hand corner of the header on this page.
               <br><br>
               Adopt 1-2 items at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance.
             </p>
@@ -256,7 +256,7 @@ export default {
     },
     getFullNotification: {
       get() {
-        return this.fullNotification | this.getNotificationStatus
+        return (this.fullNotification | this.getNotificationStatus) & this.getDataUserProfile.recoveryChecked;
       },
       set(val) {
         if (!val) {
@@ -321,6 +321,8 @@ export default {
 
     visitRecovery() {
       this.topNotification = false
+      this.fullNotification = false; 
+      this._disableNotification();
       this._visitRecovery()
     },
 
