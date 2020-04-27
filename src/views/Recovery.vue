@@ -96,11 +96,6 @@
               Adopt 1-2 items at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance.
             </p>
           </v-card-text>
-          <!-- <v-card-title primary-title>
-            <div>
-              <p v-html="tipText"></p>
-            </div>
-          </v-card-title> -->
           <v-card-actions>
             <!-- <v-btn flat v-if="!moreTips" @click="moreText">More</v-btn> -->
             <v-btn color="green darken-1" flat @click="visitRecovery">Got it!</v-btn>
@@ -211,7 +206,8 @@ export default {
       getDataUserProfile: "getDataUserProfile",
       getSymptomUpdated: "getSymptomUpdated",
       getRecoveryUpdated: "getRecoveryUpdated",
-      getSymptomCompleted: "getSymptomCompleted"
+      getSymptomCompleted: "getSymptomCompleted",
+      getSymptomLastCompleted: "getSymptomLastCompleted"
     }),
     ...mapGetters("app", {
       getRecoveryCheck: "getRecoveryCheck",
@@ -341,7 +337,7 @@ export default {
       this.dialogData.rating = questions.rating;
       this.dialogData.userScore = questions.userScore;
       // this.dialogData.lastCompleted = questions.lastCompleted;
-      this.dialogData.lastCompleted = this.getSymptomCompleted;
+      this.dialogData.lastCompleted = this.getSymptomLastCompleted;
       if (questions.category == 'Physical' && questions.rating == 'CouldBeImproved') {
         this.dialogData.content = `From last assessment, your Energy Health Symptoms look OK. Keep up your current Recovery Activities. 
         <br><br>
