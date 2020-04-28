@@ -342,6 +342,7 @@ export default {
       section,
       subsection
     ) {
+      console.log("answer called")
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
           if (useText) {
@@ -505,7 +506,6 @@ export default {
     if (window.innerWidth < 768 && window.innerWidth > 0) this.isMobile = true;
     else this.isMobile = false;
 
-    console.log(this.$route.params.rerun)
     if (this.$route.params.rerun) {
       this.showNotifcationBox = true;
     }

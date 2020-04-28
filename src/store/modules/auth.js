@@ -29,7 +29,7 @@ const getters = {
   getStressRecoveryCompleted: state => state.userProfile.stressRecoveryCompleted,
   getDecisionReruned: state => state.userProfile.decisionReruned,
   getDecisionCompleted: state => state.userProfile.decisionCompleted,
-  getSymptomLastCompleted: state => state.userProfile.lastCompletedArticleDate
+  getSymptomLastCompleted: state => state.userProfile.lastSymptomCompleted
 }
 
 // actions

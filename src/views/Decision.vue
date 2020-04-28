@@ -60,6 +60,7 @@
               <v-stepper-step
                 :key="`${step.sectionNo}-step`"
                 :complete="hStepper > (step.sectionNo + 1)"
+                :editable="step.sectionNo <= getAnswerLimit.sectionNo"
                 :step="step.sectionNo + 1"
                 :color="$vuetify.theme.subheading1"
               >{{step.section}}</v-stepper-step>
@@ -83,34 +84,33 @@
               <v-card>
                 <v-stepper vertical v-model="vStepper[stepp.sectionNo]">
                   <div
-                    v-for="vStepNum in stepp.vertical.length"
-                    :key="`${stepp.sectionNo}-${vStepNum}`"
+                    v-for="stepl in stepp.vertical"
+                    :key="`${stepp.sectionNo}-${stepl.subsectionNo}`"
                   >
                     <v-stepper-step
-                      v-bind:step="$vuetify.theme.step.charAt(vStepNum - 1)"
-                      :key="vStepNum + '-sub-step'"
+                      v-bind:step="$vuetify.theme.step.charAt(stepl.subsectionNo)"
+                      :key="stepl.subsectionNo + '-sub-step'"
                       :color="$vuetify.theme.subheading2"
-                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && vStepNum <= (getAnswerLimit.subsectionNo))"
+                      :editable="stepp.sectionNo < getAnswerLimit.sectionNo || (stepp.sectionNo == getAnswerLimit.sectionNo && stepl.subsectionNo <= (getAnswerLimit.subsectionNo))"
                     >
-                      <SectionPartStepper :data="stepp.vertical[vStepNum-1].items" />
+                      <SectionPartStepper :data="stepp.vertical[stepl.subsectionNo].items" />
                     </v-stepper-step>
 
-                    <v-stepper-content :step="$vuetify.theme.step.charAt(vStepNum - 1)" :key="vStepNum + '-sub-content'">
+                    <v-stepper-content :step="$vuetify.theme.step.charAt(stepl.subsectionNo)" :key="stepl.subsectionNo + '-sub-content'">
                       <v-card v-if="isMobile && stepp.vertical.length > 1">
                         <h3>
-                          <span class="v-stepper__step__step" style="background-color: rgb(0, 163, 138); border-color: rgb(0, 163, 138);">{{$vuetify.theme.step.charAt(vStepNum-1)}}</span>
-                          <span style="margin-left: 5px;">{{stepp.section}}</span>
+                          <span class="v-stepper__step__step" style="background-color: rgb(0, 163, 138); border-color: rgb(0, 163, 138);">{{$vuetify.theme.step.charAt(stepl.subsectionNo)}}</span>
                           <span
                             class="right"
-                          >{{vStepNum}} of {{stepp.vertical.length}}</span>
+                          >{{stepl.subsectionNo + 1}} of {{stepp.vertical.length}}</span>
                         </h3>
                       </v-card>
-                      <v-card class="mb-5" v-if="vStepper[stepp.sectionNo] == $vuetify.theme.step.charAt(vStepNum - 1)">
-                        <span class="dev-hint">P {{vStepNum-1}} (SS No)</span>
+                      <v-card class="mb-5" v-if="stepp.sectionNo == hStepper - 1">
+                        <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div
                             class="row"
-                            v-for="a in stepp.vertical[vStepNum-1].items"
+                            v-for="a in stepp.vertical[stepl.subsectionNo].items"
                             :key="a.id"
                           >
                             <components
@@ -125,7 +125,7 @@
                               :items="a.question.items"
                               :text="a.text"
                               :section="stepp.sectionNo + 1"
-                              :subsection="vStepNum"
+                              :subsection="stepl.subsectionNo"
                               :disabled="!decisionReruned && decisionCompleted"
                               @update-value="updateComponentValue"
                             />
@@ -141,7 +141,7 @@
                               :items="a.question.items"
                               :value="a.value"
                               :section="stepp.sectionNo + 1"
-                              :subsection="vStepNum"
+                              :subsection="stepl.subsectionNo"
                               :disabled="!decisionReruned && decisionCompleted"
                               @update-value="updateComponentValue"
                             />
@@ -319,7 +319,8 @@ export default {
       _setDecisionLastAnswered: "setDecisionLastAnswered",
       _disableNotification: "disableNotification",
       _setAnswer: "setAnswerData",
-      _reRunArticle: 'reRunArticle'
+      _reRunArticle: 'reRunArticle',
+      _setArticleLimit: "setArticleLimit"
     }),
     reRun() {
       let data = {
@@ -501,7 +502,7 @@ export default {
     };
 
     this._getQuestionsAnswers(params).then(data => {
-      this.isLoading = false;
+      
       this.questions = data;
       this.vStepper = [];
       this.hStepper = 1;
@@ -532,6 +533,7 @@ export default {
       if (this.getDataUserProfile.decisionCompleted) {
         this._setArticleLimit(limit);
       }
+      this.isLoading = false;
     });
   }
 };
