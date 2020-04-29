@@ -166,6 +166,18 @@ export default {
   mounted() {
     this.menus = menu;
     this.updateBadgeValues();
+
+    var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+    this.$nextTick(() => {
+      if (iOS) {
+        for (let i = 0; i < this.$el.getElementsByClassName('v-list__tile').length ; i ++) {
+          let element = this.$el.getElementsByClassName('v-list__tile')[i];
+          element.addEventListener("mouseenter", function( event ) {   
+            element.click();
+          }, false);
+        }
+      }
+    })
   }
 }
 </script>

@@ -292,6 +292,18 @@ export default {
       this.getGroupList();
     }
 
+    var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+    this.$nextTick(() => {
+      if (iOS) {
+        for (let i = 0; i < this.$el.getElementsByClassName('v-list__tile').length ; i ++) {
+          let element = this.$el.getElementsByClassName('v-list__tile')[i];
+          element.addEventListener("mouseenter", function( event ) {   
+            element.click();
+          }, false);
+        }
+      }
+    })
+
     if (this.getSubmissionList.length == 0) {
       this.getSubmissionFilter().then(res => {
         if (this.getSubmissionList.length > 0) {
