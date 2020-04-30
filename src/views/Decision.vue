@@ -125,7 +125,7 @@
                               :items="a.question.items"
                               :text="a.text"
                               :section="stepp.sectionNo + 1"
-                              :subsection="stepl.subsectionNo"
+                              :subsection="stepl.subsectionNo + 1"
                               :disabled="!decisionReruned && decisionCompleted"
                               @update-value="updateComponentValue"
                             />
@@ -141,7 +141,7 @@
                               :items="a.question.items"
                               :value="a.value"
                               :section="stepp.sectionNo + 1"
-                              :subsection="stepl.subsectionNo"
+                              :subsection="stepl.subsectionNo + 1"
                               :disabled="!decisionReruned && decisionCompleted"
                               @update-value="updateComponentValue"
                             />
