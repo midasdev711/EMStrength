@@ -28,7 +28,6 @@
       </v-form>
     </v-card-text>
     <v-btn block color="primary" @click="login" :loading="loading">Login</v-btn>
-    <p class="text-xs-center mt-5">Don't have an account?<br>Call 1800 123 123 to get started today!</p>
   </v-card>
 </template>
 

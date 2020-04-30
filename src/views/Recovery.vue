@@ -63,7 +63,7 @@
             <v-card-title class="headline">Building your Energy Health through Recovery</v-card-title>
             <v-card-text>
               <p>
-                These are Recovery Activity Checklist for
+                These are Recovery Activity Checklist for:
                 <br><br>
                 (1) Mental/Emotional Recovery<br>
                 (2) Physical Recovery<br><br>
@@ -85,8 +85,8 @@
         >
           <v-card-text>
             <p>
-              Below is a Recovery Activities Checklist for
-              <br>
+              Below is a Recovery Activities Checklist for:
+              <br><br>
               (1) Mental/Emotional Recovery<br>
               (2) Physical Recovery<br><br>
               The lists are presented 5 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance.
