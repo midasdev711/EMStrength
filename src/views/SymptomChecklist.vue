@@ -266,7 +266,22 @@ export default {
         }
       },
       deep: true,
-    }
+    },
+    vStepper: {
+      handler(val) {
+        let steps = this.$vuetify.theme.step;
+        let index = steps.indexOf(val[this.hStepper - 1]);
+        let currentSection = this.getFilteredQuestionData[this.hStepper].vertical[index].items;
+        console.log(this.getFilteredQuestionData[this.hStepper]);
+      },
+      deep: true,
+    },
+    // hStepper: {
+    //   handler(val) {
+        
+    //   },
+    //   deep: true,
+    // }
   },
   computed: {
     ...mapGetters("app", {

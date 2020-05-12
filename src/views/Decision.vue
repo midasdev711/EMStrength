@@ -127,6 +127,7 @@
                               :section="stepp.sectionNo + 1"
                               :subsection="stepl.subsectionNo + 1"
                               :disabled="!decisionReruned && decisionCompleted"
+                              :showBorder="showBorder"
                               @update-value="updateComponentValue"
                             />
                             <components
@@ -143,13 +144,13 @@
                               :section="stepp.sectionNo + 1"
                               :subsection="stepl.subsectionNo + 1"
                               :disabled="!decisionReruned && decisionCompleted"
+                              :showBorder="showBorder"
                               @update-value="updateComponentValue"
                             />
                           </div>
                         </v-form>
                         <v-btn
                           color="primary"
-                          :disabled="disableContinue"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
@@ -165,6 +166,17 @@
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
+        <v-dialog v-model="popup" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">Nothing to answer, skip this section?</v-card-title>
+            <v-card-text></v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" flat @click="continueAnswer">Cancel</v-btn>
+              <v-btn color="green darken-1" flat @click="skipSection">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-layout>
     </template>
   </v-container>
@@ -185,6 +197,7 @@ export default {
   },
   data() {
     return {
+      popup: false,
       notification: true,
       isMobile: false,
       hStepper: 1,
@@ -194,7 +207,8 @@ export default {
       answers: [],
       isLoading: true,
       fill: { gradient: ["#48cba2", "#47bbe9"] },
-      disableContinue: true
+      disableContinue: true,
+      showBorder: false,
     };
   },
   computed: {
@@ -256,61 +270,80 @@ export default {
 
         let yesCount = 0;
 
-        for (let i = 0; i < currentQuestions.length ; i ++) {
-          const element = currentQuestions[i];
-          let answered = currentAnswered.filter(
-            v => v.questionId == element.questionId
-          );
-          if (element.question.type == "Bool") {
-            if (answered.length == 0 && element.value == null) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length == 0 && element.value == 1) {
-              yesCount ++;
-            } else if (answered.length > 0 && answered[0].value == 1) {
-              yesCount ++;
-            }
-          } else if (element.question.type == "Scale") {
-            if (answered.length == 0 && element.value == null) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length == 0 && element.value > 0) {
-              yesCount ++;
-            } else if (answered.length == 0 && element.value == 0) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length > 0 && answered[0].value > 0) {
-              yesCount ++;
-            } else if (answered.length > 0 && answered[0].value == 0) {
-              this.disableContinue = true;
-              return;
-            }
-          } else if (element.question.type == "Selection") {
-            if (answered.length == 0 && element.value == null) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length == 0 && element.value > 0) {
-              yesCount ++;
-            } else if (answered.length == 0 && element.value == 0) {
-              this.disableContinue = true;
-              return;
-            } else if (answered.length > 0 && answered[0].value > 0) {
-              yesCount ++;
-            } else if (answered.length > 0 && answered[0].value == 0) {
-              this.disableContinue = true;
-              return;
-            }
-          }
-        }
+        // for (let i = 0; i < currentQuestions.length ; i ++) {
+        //   const element = currentQuestions[i];
+        //   let answered = currentAnswered.filter(
+        //     v => v.questionId == element.questionId
+        //   );
+        //   if (element.question.type == "Bool") {
+        //     if (answered.length == 0 && element.value == null) {
+        //       this.disableContinue = true;
+        //       return;
+        //     } else if (answered.length == 0 && element.value == 1) {
+        //       yesCount ++;
+        //     } else if (answered.length > 0 && answered[0].value == 1) {
+        //       yesCount ++;
+        //     }
+        //   } else if (element.question.type == "Scale") {
+        //     if (answered.length == 0 && element.value == null) {
+        //       this.disableContinue = true;
+        //       return;
+        //     } else if (answered.length == 0 && element.value > 0) {
+        //       yesCount ++;
+        //     } else if (answered.length == 0 && element.value == 0) {
+        //       this.disableContinue = true;
+        //       return;
+        //     } else if (answered.length > 0 && answered[0].value > 0) {
+        //       yesCount ++;
+        //     } else if (answered.length > 0 && answered[0].value == 0) {
+        //       this.disableContinue = true;
+        //       return;
+        //     }
+        //   } else if (element.question.type == "Selection") {
+        //     if (answered.length == 0 && element.value == null) {
+        //       this.disableContinue = true;
+        //       return;
+        //     } else if (answered.length == 0 && element.value > 0) {
+        //       yesCount ++;
+        //     } else if (answered.length == 0 && element.value == 0) {
+        //       this.disableContinue = true;
+        //       return;
+        //     } else if (answered.length > 0 && answered[0].value > 0) {
+        //       yesCount ++;
+        //     } else if (answered.length > 0 && answered[0].value == 0) {
+        //       this.disableContinue = true;
+        //       return;
+        //     }
+        //   }
+        // }
 
-        if (currentQuestions.length > 0 && yesCount == 0) {
-          this.disableContinue = true;
-        } else {
-          this.disableContinue = false;
+        // if (currentQuestions.length > 0 && yesCount == 0) {
+        //   this.disableContinue = true;
+        // } else {
+        //   this.disableContinue = false;
+        // }
+      },
+      deep: true,
+    },
+    vStepper: {
+      handler(val) {
+        let steps = this.$vuetify.theme.step;
+        let index = steps.indexOf(val[this.hStepper - 1]);
+        let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
+        let questions = [];
+        currentSection.map(question => {
+          if (question.question.type == 'SectionHeading' || question.question.type == 'SectionPart' || question.question.type == 'SectionInstruction') {
+            return;
+          } else {
+            questions.push(question);
+          }
+        });
+        if (questions.length == 0) {
+          this.popup = true;
         }
       },
       deep: true,
-    }
+    },
   },
   methods: {
     ...mapActions("app", {
@@ -322,6 +355,15 @@ export default {
       _reRunArticle: 'reRunArticle',
       _setArticleLimit: "setArticleLimit"
     }),
+    skipSection() {
+      this.popup = false;
+      this.save();
+      
+    },
+    continueAnswer() {
+      this.showBorder = true;
+      this.popup = false;
+    },
     reRun() {
       let data = {
         article: 'Decision'
@@ -374,13 +416,24 @@ export default {
       }
       this.answers = [];
       this.disableContinue = true;
+      this.showBorder = false;
     },
 
     nextVerticalStep(verticalMaxSteps, horizontalMaxSteps) {
-      this.isLoading = true;
       let steps = this.$vuetify.theme.step;
-      let nextSectionNo = this.hStepper;
       let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+
+      let currentSection = this.getFilteredQuestionData[this.hStepper - 1].vertical[index].items;
+      let questions = [];
+      currentSection.map(question => {
+        if (question.question.type == 'SectionHeading' || question.question.type == 'SectionPart' || question.question.type == 'SectionInstruction') {
+          return;
+        } else {
+          questions.push(question);
+        }
+      });
+
+      let nextSectionNo = this.hStepper;
       let nextSubsectionNo = index + 1;
       if (nextSubsectionNo < verticalMaxSteps) {
         // nextSubsectionNo++;
@@ -394,6 +447,41 @@ export default {
       let answers = this.answers.filter(
         v => v.section == this.hStepper && v.subsection == (index + 1)
       );
+
+      if (answers.length < questions.length) {
+        this.popup = true;
+        return;
+      }
+
+      let tmpitems = answers.filter( v => v.value == 0);
+      if (tmpitems.length > 0) {
+        this.popup = true;
+        return;
+      }
+
+      this.save();
+    },
+
+    save() {
+      let verticalMaxSteps = this.getFilteredQuestionData[this.hStepper - 1].vertical.length;
+      let horizontalMaxSteps = this.getFilteredQuestionData.length;
+      let steps = this.$vuetify.theme.step;
+      let index = steps.indexOf(this.vStepper[this.hStepper-1]);
+      let nextSectionNo = this.hStepper;
+      let nextSubsectionNo = index + 1;
+      if (nextSubsectionNo < verticalMaxSteps) {
+        // nextSubsectionNo++;
+      } else {
+        if (this.hStepper < horizontalMaxSteps) {
+          nextSectionNo++;
+        }
+        nextSubsectionNo = 0;
+      }
+
+      let answers = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == (index + 1)
+      );
+      this.isLoading = true;
 
       let answerData = {
         answers: answers,
@@ -540,6 +628,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 >>>.v-stepper__content {
   padding: 0;
   margin-right: 0;

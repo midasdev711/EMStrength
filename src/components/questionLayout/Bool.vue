@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12 sm10>
+  <v-flex xs12 sm10 v-bind:class="{unAnswered: (valueStatus == null) && showBorder}">
     <span>{{title}}</span>
     <v-radio-group v-model="valueStatus" :readonly="disabled ? true : false" row>
       <v-radio :label="'Yes'" :value="true"></v-radio>
@@ -20,7 +20,8 @@ export default {
     answerId: String,
     useText: Boolean,
     section: Number,
-    subsection: Number
+    subsection: Number,
+    showBorder: Boolean
   },
   data() {
     return {
@@ -44,3 +45,8 @@ export default {
   }
 };
 </script>
+
+<style lang="stylus">
+.unAnswered
+  box-shadow: -1px 4px 26px -9px #666;
+</style>
