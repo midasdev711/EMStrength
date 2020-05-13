@@ -19,7 +19,7 @@
                   <v-text-field
                     append-icon="person"
                     name="login"
-                    label="Login"
+                    label="Email"
                     type="text"
                     v-model="model.UserName"
                   ></v-text-field>
@@ -36,15 +36,6 @@
                 </v-form>
               </v-card-text>
               <div class="login-btn">
-                <!--v-btn icon>
-                  <v-icon color="blue">fa fa-facebook-square fa-lg</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon color="red">fa fa-google fa-lg</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon color="light-blue">fa fa-twitter fa-lg</v-icon>
-                </v-btn-->
                 <v-spacer></v-spacer>
                 <v-btn block color="primary" @click="login" :loading="loading">Login</v-btn>
               </div>
@@ -99,19 +90,7 @@ export default {
         });
     }
   },
-  mounted: function() {
-    //for api test
-    // const formData = new FormData();
-    // formData.append("Username", "user06@nus.app");
-    // formData.append("Password", "N123456");
-    // this.signin(formData)
-    //   .then(res => {
-    //     //this.$router.push("/");
-    //     this.mockTestAPI();
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
+  mounted() {
   }
 };
 </script>

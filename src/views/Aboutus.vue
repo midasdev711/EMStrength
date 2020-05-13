@@ -14,7 +14,7 @@
         <v-flex xs12 sm9>
           <h2>Dr Sean Richardson</h2>
           <p>
-            Sean’s unique experience working with leaders to the best out of their teams in high pressure environments positions him at the forefront of behavioural high performance. A PhD in performance psychology, examining burnout and energy management in elite performers, Sean intuitively understands what starts and stops people from succeeding. 
+            Sean’s unique experience working with leaders to get the best out of their teams in high pressure environments positions him at the forefront of behavioural high performance. A PhD in performance psychology, examining burnout and energy management in elite performers, Sean intuitively understands what starts and stops people from succeeding. 
             <br><br>
             Combining an understanding of brain science and function, with a track record of delivering successful behavioural change strategies, and culture development programs to small and large organisations, and experience in mentoring professional sports and corporate teams to achieve excellence, Sean facilitates high performance development to get teams to optimum energy health and wellbeing, communicating and collaborating effectively, adhering to the highest standards of compliance, executing with maximum accountability, and achieving both individual and organisational goals. 
             <br><br>
@@ -31,7 +31,7 @@
           <p>
             Having started working life as a Business Analyst and Strategic marketer, Kate made a significant practical and mindset shift to pursue her career in Health &amp; Fitness. Combining her passion for health, fitness and nutrition, with a strong business orientation, and a keen interest in personal development, Kate has developed a unique skillset for helping people achieve transformational changes in their mental and physical wellbeing.
             <br><br>
-            Kate has further pursued studies as a certified Health and Nutrition Coach, adding a thorough understanding of psychology, habit formation, and mindset &amp; behaviour change to her repertoire, providing for a deeper, therapeutic interaction with clients.
+            Kate has further pursued studies as a certified Health and Wellness Coach, adding a thorough understanding of psychology, habit formation, and mindset &amp; behaviour change to her repertoire, providing for a deeper, therapeutic interaction with clients.
             <br><br>
             Kate is passionate about helping people create permanent positive change in their health, fitness &amp; wellbeing!
           </p>

@@ -15,7 +15,7 @@
       :items="items"
       :item-text="'title'"
       :item-value="'value'"
-      :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection)"
+      :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection, 'Selection')"
       :readonly="disabled ? true : false"
     >
       

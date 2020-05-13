@@ -38,7 +38,8 @@ export default {
           this.answerId,
           this.useText,
           this.section,
-          this.subsection
+          this.subsection,
+          'Bool'
         );
       }
     }

@@ -12,7 +12,7 @@
       step="1"
       ticks="always"
       tick-size="7"
-      :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection)"
+      :change="$emit('update-value', sliderValue, questionId, answerId, useText, section, subsection, 'Scale')"
       :readonly="disabled ? true : false"
     >
       <template v-slot:thumb-label="props">
@@ -99,5 +99,6 @@ export default {
 
 .scale {
   margin: 0 auto;
+  padding-left 50px!important
 }
 </style>

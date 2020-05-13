@@ -168,7 +168,7 @@
         </v-stepper>
         <v-dialog v-model="popup" persistent max-width="290">
           <v-card>
-            <v-card-title class="headline">Nothing to answer, skip this section?</v-card-title>
+            <v-card-title class="headline">Nothing to answer? Skip this section?</v-card-title>
             <v-card-text></v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -375,7 +375,7 @@ export default {
     compId(type, id) {
       return "comp" + type + id;
     },
-    updateComponentValue(value, questionId, answerId, useText, section, subsection) {
+    updateComponentValue(value, questionId, answerId, useText, section, subsection, questionType=null) {
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
           if (useText) {
@@ -393,7 +393,8 @@ export default {
         value: useText ? null : value == true ? 1 : value == false ? 0 : value,
         text: useText ? value : "",
         section: section,
-        subsection: subsection
+        subsection: subsection,
+        questionType: questionType
       };
 
       this.answers.push(tmp);
@@ -429,7 +430,12 @@ export default {
         if (question.question.type == 'SectionHeading' || question.question.type == 'SectionPart' || question.question.type == 'SectionInstruction') {
           return;
         } else {
-          questions.push(question);
+          if (question.question.type == 'Bool' && question.value == null) {
+            questions.push(question);
+          }
+          if (question.question.type == 'Scale' && (question.value == 0 || question.value == null)) {
+            questions.push(question);
+          }
         }
       });
 
@@ -448,15 +454,17 @@ export default {
         v => v.section == this.hStepper && v.subsection == (index + 1)
       );
 
-      if (answers.length < questions.length) {
-        this.popup = true;
-        return;
-      }
+      if (!this.getDataUserProfile.decisionCompleted) {
+        if (answers.length < questions.length) {
+          this.popup = true;
+          return;
+        }
 
-      let tmpitems = answers.filter( v => v.value == 0);
-      if (tmpitems.length > 0) {
-        this.popup = true;
-        return;
+        let tmpitems = answers.filter( v => (v.questionType =='Scale' && v.value == 0));
+        if (tmpitems.length > 0) {
+          this.popup = true;
+          return;
+        }
       }
 
       this.save();

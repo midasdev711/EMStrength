@@ -18,7 +18,7 @@
 
       <v-text-field v-model="user.age" :rules="ageRules" label="Age" required></v-text-field>
 
-      <v-switch v-model="user.gender" :label="user.gender ? 'Male' : 'Male'"></v-switch>
+      <v-switch v-model="user.gender" :label="user.gender ? 'Female' : 'Male'"></v-switch>
 
       <v-text-field v-model="user.postCode" :rules="postCodeRules" label="Post code" required></v-text-field>
 
