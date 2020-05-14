@@ -276,12 +276,6 @@ export default {
       },
       deep: true,
     },
-    // hStepper: {
-    //   handler(val) {
-        
-    //   },
-    //   deep: true,
-    // }
   },
   computed: {
     ...mapGetters("app", {
@@ -357,7 +351,6 @@ export default {
       section,
       subsection
     ) {
-      console.log("answer called")
       for (let i = 0; i < this.answers.length; i++) {
         if (this.answers[i].questionId == questionId) {
           if (useText) {

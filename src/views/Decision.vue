@@ -158,6 +158,7 @@
                           v-if="!(vStepper[0] == 'A' && hStepper == 1)"
                           @click="prevVerticalStep"
                         >Back</v-btn>
+                        <p v-if="showBorder" class="pink--text headline">You have missed a required question on this page. Please answer all questions.</p>
                       </v-card>
                     </v-stepper-content>
                   </div>

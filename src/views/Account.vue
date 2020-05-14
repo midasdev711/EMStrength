@@ -16,7 +16,7 @@
 
       <v-text-field v-model="user.email" :rules="emailRules" label="Email" required></v-text-field>
 
-      <v-text-field v-model="user.phone" :rules="phoneRules" label="Mobile phone number" mask="###############" required></v-text-field>
+      <v-text-field v-model="user.phoneNumber" :rules="phoneRules" label="Mobile phone number" mask="###############" required></v-text-field>
 
       <v-text-field v-model="user.age" :rules="ageRules" label="Age" required></v-text-field>
 
@@ -82,7 +82,7 @@ export default {
         lastName: "",
         email: "",
         age: "",
-        phone: "",
+        phoneNumber: "",
         gender: false,
         postCode: "",
         occupation: "",
@@ -142,6 +142,7 @@ export default {
           age: this.user.age,
           gender: this.user.gender ? "Male" : "Female",
           email: this.user.email,
+          phoneNumber: this.user.phoneNumber,
           password: this.user.password,
           userType: this.user.userType,
           groupId: this.user.groupId,

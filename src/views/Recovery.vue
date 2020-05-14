@@ -63,14 +63,16 @@
             <v-card-title class="headline">Building your Energy Health through Recovery</v-card-title>
             <v-card-text>
               <p>
-                These are Recovery Activity Checklist for:
+                These are Recovery Activity Checklists for:
                 <br><br>
                 (1) Mental/Emotional Recovery<br>
                 (2) Physical Recovery<br><br>
 
                 The lists are 30 items long, presented 5 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance. 
                 <br><br>
-                Adopt 1-2 activities at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance. If, at any time, your symptoms become concerning or are experienced as unmanageable, consult a physician and other relevant health care providers (e.g. psychologist).
+                Adopt 1-2 activities at a time to improve your energy levels - check the tick-box to indicate when you have adopted that activity. When you check a box, the item will disappear from the main screen, but you can view the entire list of checked items again by clicking the tick-box in the right-hand corner of the header on this page.
+                <br><br>
+                Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance. If, at any time, your symptoms become concerning or are experienced as unmanageable, consult a physician and other relevant health care providers (e.g. psychologist).
               </p>
             </v-card-text>
             <v-card-actions>
@@ -78,7 +80,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-card
+        <!-- <v-card
           color
           class="black--text mt-2"
           v-if="!getDataUserProfile.recoveryChecked & getRecoveryData.length > 0"
@@ -97,10 +99,9 @@
             </p>
           </v-card-text>
           <v-card-actions>
-            <!-- <v-btn flat v-if="!moreTips" @click="moreText">More</v-btn> -->
             <v-btn color="green darken-1" flat @click="visitRecovery">Got it!</v-btn>
           </v-card-actions>
-        </v-card>
+        </v-card> -->
         <template v-if="getQuestionData.length > 0">
           <v-card
             dark
@@ -252,7 +253,8 @@ export default {
     },
     getFullNotification: {
       get() {
-        return (this.fullNotification | this.getNotificationStatus) & this.getDataUserProfile.recoveryChecked;
+        return (this.fullNotification | this.getNotificationStatus);
+        //  & this.getDataUserProfile.recoveryChecked;
       },
       set(val) {
         if (!val) {
