@@ -16,9 +16,20 @@
 
       <v-text-field v-model="user.email" :rules="emailRules" label="Email" required></v-text-field>
 
+      <v-text-field v-model="user.phone" :rules="phoneRules" label="Mobile phone number" mask="###############" required></v-text-field>
+
       <v-text-field v-model="user.age" :rules="ageRules" label="Age" required></v-text-field>
 
-      <v-switch v-model="user.gender" :label="user.gender ? 'Female' : 'Male'"></v-switch>
+      <v-radio-group v-model="user.gender" row>
+        <v-radio
+          :label="'Male'"
+          :value="false"
+        ></v-radio>
+        <v-radio
+          :label="'Female'"
+          :value="true"
+        ></v-radio>
+      </v-radio-group>
 
       <v-text-field v-model="user.postCode" :rules="postCodeRules" label="Post code" required></v-text-field>
 
@@ -71,6 +82,7 @@ export default {
         lastName: "",
         email: "",
         age: "",
+        phone: "",
         gender: false,
         postCode: "",
         occupation: "",
@@ -79,9 +91,14 @@ export default {
       },
       firstNameRules: [v => !!v || "First name is required"],
       lastNameRules: [v => !!v || "Last name is required"],
+      lastNameRules: [v => !!v || "Last name is required"],
       emailRules: [
         v => !!v || "E-mail is required",
         v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
+      phoneRules: [
+        v => !!v || "Phone number is required",
+        v => /^[0-9]+$/.test(v) || "Phone number must be numbers"
       ],
       ageRules: [
         v => !!v || "Age is required",
