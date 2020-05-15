@@ -532,10 +532,14 @@ export default {
           .then(res => {
             if (answerData.complete) {
               this.$toast.success(`Completed`);
+              this.isLoading = false;
+              this.completeDialog = true;
+            } else {
+              this.goToNextStep();
+              this.isLoading = false;
+              this.$forceUpdate();
             }
-            this.goToNextStep();
-            this.isLoading = false;
-            this.$forceUpdate();
+            
           })
           .catch(err => {
             console.log(err);
