@@ -54,6 +54,25 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog sm6 xs12 persistent v-model="completeDialog">
+          <v-card color class="black--text mt-2 col-sm-6 notification">
+            <v-card-title class="headline">Decision Profile complete</v-card-title>
+            <v-card-text>
+              <p>
+                Thank you. You have completed the Decision Profile. We now have a better understanding to help you develop the key mindsets and decision-making processes to get your Energy Health and Performance to an optimum!
+                <br />
+                <br />Make sure you contact us to discuss your results, and keep going with your Recovery To-DO List!
+              </p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                flat="flat"
+                color="green darken-1"
+                @click="completeDialog = false; $router.push({name: 'Recovery'});"
+              >Got it</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-stepper v-model="hStepper">
           <v-stepper-header>
             <template v-for="step in getFilteredQuestionData">
@@ -198,6 +217,7 @@ export default {
   },
   data() {
     return {
+      completeDialog: false,
       popup: false,
       notification: true,
       isMobile: false,

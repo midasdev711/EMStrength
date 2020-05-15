@@ -62,6 +62,28 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog sm6 xs12 persistent v-model="completeDialog">
+          <v-card color class="black--text mt-2 col-sm-6 notification">
+            <v-card-title class="headline">Stress-Recovery Analysis Complete</v-card-title>
+            <v-card-text>
+              <p>
+                Thank you. You have completed the Stress-Recovery Analysis. We now have the data to help you pinpoint where you need to focus Recovery in order to get your Energy Health and Performance to where you want them!
+                <br />
+                <br />
+                Make sure you contact us to discuss your results, and keep going with your Recovery To-DO List!
+                <br />
+                <br />The next step, if you haven't already done so, is to complete the Decision Profile to gather information about the factors that influence your decision making around Energy Health and Performance.
+              </p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                flat="flat"
+                color="green darken-1"
+                @click="completeDialog = false; $router.push({name: 'Recovery'});"
+              >Got it</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-stepper v-model="hStepper[activeMeasurement]">
           <v-stepper-header>
             <template v-for="step in getFilteredQuestionData[activeMeasurement]">
@@ -193,6 +215,7 @@ export default {
     VueCircle
   },
   data: () => ({
+    completeDialog: false,
     notification: true,
     activeMeasurement: 0,
     hStepper: [1, 1],

@@ -255,6 +255,7 @@ const actions = {
       commit("setArticleAnswer", { active: data.active != null ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo, ...result.data });
       commit("set" + data.article + "LastAnswered", lastAnswered);
       commit("setAnswerLimit", { active: data.active != null ? data.active : null, article: data.article, sectionNo: data.sectionNo, subsectionNo: data.subsectionNo });
+      return result.data;
     }).catch(err => {
       throw err;
     });
