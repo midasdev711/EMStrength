@@ -1,5 +1,5 @@
 <template>
- <v-flex xs12>
+ <v-flex xs12 v-if="!popup">
   <p>
     <span class="caption"><strong>{{title}}</strong></span><span class="dev-hint">(SECTION Instr.)</span>
   </p>
@@ -13,6 +13,7 @@ export default {
     title: String,
     id: String,
     disabled: [String, Boolean],
+    popup: Boolean
     //items:
     //length: ,
   }
