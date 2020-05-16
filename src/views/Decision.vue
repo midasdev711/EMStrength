@@ -355,6 +355,38 @@ export default {
         }
       },
       deep: true
+    },
+    hStepper: {
+      handler(val) {
+        let steps = this.$vuetify.theme.step;
+        let index = steps.indexOf(this.vStepper[val - 1]);
+        let currentSection = this.getFilteredQuestionData[val - 1]
+          .vertical[index].items;
+        let questions = [];
+        currentSection.map(question => {
+          if (
+            question.question.type == "SectionHeading" ||
+            question.question.type == "SectionPart" ||
+            question.question.type == "SectionInstruction"
+          ) {
+            return;
+          } else {
+            questions.push(question);
+          }
+        });
+
+        let boolquestions = questions.filter(
+          question => question.question.type == "Bool"
+        );
+        this.isCurrentBoolSection = boolquestions.length > 0 ? true : false;
+
+        if (questions.length == 0) {
+          this.hasNoQuestion = true;
+        } else {
+          this.hasNoQuestion = false;
+        }
+      },
+      deep: true
     }
   },
   methods: {
@@ -609,6 +641,9 @@ export default {
 
       return this._saveAnswers(answerData)
         .then(res => {
+          this.showBorder = false;
+          this.hasNoQuestion = false;
+          this.popup = false;
           return answerData;
         })
         .catch(err => {
