@@ -545,7 +545,6 @@ const mutations = {
     let answerIndex = data.article.toLowerCase() + 'Answers';
     
     if (data.article == 'Diagnostic') {
-      debugger
       for (let i = 0; i < state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items.length; i++) {
         let tmp = state[answerIndex][data.active].horizontal[sectionNo].vertical[subsectionNo].items[i];
         for (let j = 0; j < data.nextSubsection.length; j++) {

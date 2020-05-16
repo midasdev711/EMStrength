@@ -137,7 +137,7 @@
                             <components
                               v-if="a.question.useText"
                               :is="a.question.type"
-                              :id="compId(a.question.type, a.question.id)"
+                              :id="a.question.id"
                               :title="a.question.title"
                               :useText="a.question.useText"
                               :questionId="a.question.id"
@@ -149,13 +149,13 @@
                               :subsection="stepl.subsectionNo + 1"
                               :disabled="!decisionReruned && decisionCompleted"
                               :showBorder="showBorder"
-                              :popup="popup"
+                              :popup="hasNoQuestion"
                               @update-value="updateComponentValue"
                             />
                             <components
                               v-else
                               :is="a.question.type"
-                              :id="compId(a.question.type, a.question.id)"
+                              :id="a.question.id"
                               :title="a.question.title"
                               :useText="a.question.useText"
                               :questionId="a.question.id"
@@ -167,7 +167,7 @@
                               :subsection="stepl.subsectionNo + 1"
                               :disabled="!decisionReruned && decisionCompleted"
                               :showBorder="showBorder"
-                              :popup="popup"
+                              :popup="hasNoQuestion"
                               @update-value="updateComponentValue"
                             />
                           </div>
@@ -305,8 +305,6 @@ export default {
           v => v.question.type == "Bool"
         );
 
-        let unAnswered = 0;
-
         for (let i = 0; i < currentQuestions.length; i++) {
           const element = currentQuestions[i];
           let answered = currentAnswered.filter(
@@ -318,6 +316,15 @@ export default {
               return;
             }
           }
+        }
+
+        let unAnswered = 0;
+        let unAnsweredQuestions = currentAnswered.filter(
+          v => (v.questionType == "Scale" && v.value == 0)
+        );
+        unAnswered = unAnsweredQuestions.length;
+        if (unAnswered == 0) {
+          this.showBorder = false;
         }
 
         this.disableContinue = false;
@@ -348,10 +355,12 @@ export default {
         );
         this.isCurrentBoolSection = boolquestions.length > 0 ? true : false;
 
-        if (questions.length == 0) {
-          this.hasNoQuestion = true;
-        } else {
-          this.hasNoQuestion = false;
+        if (!this.getDataUserProfile.decisionCompleted) {
+          if (questions.length == 0) {
+            this.hasNoQuestion = true;
+          } else {
+            this.hasNoQuestion = false;
+          }
         }
       },
       deep: true
@@ -380,10 +389,12 @@ export default {
         );
         this.isCurrentBoolSection = boolquestions.length > 0 ? true : false;
 
-        if (questions.length == 0) {
-          this.hasNoQuestion = true;
-        } else {
-          this.hasNoQuestion = false;
+        if (!this.getDataUserProfile.decisionCompleted) {
+          if (questions.length == 0) {
+            this.hasNoQuestion = true;
+          } else {
+            this.hasNoQuestion = false;
+          }
         }
       },
       deep: true
@@ -414,9 +425,6 @@ export default {
       return this._reRunArticle(data).then(res => {
         console.log(res);
       });
-    },
-    compId(type, id) {
-      return "comp" + type + id;
     },
     updateComponentValue(
       value,

@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12 sm10>
+  <v-flex xs12 sm10 v-bind:class="{unAnswered: (sliderValue == 0) && showBorder}">
     <span class="caption">{{title}}</span>
 
     <v-select
@@ -44,7 +44,8 @@ export default {
     answerId: String,
     useText: Boolean,
     section: Number,
-    subsection: Number
+    subsection: Number,
+    showBorder: Boolean
   },
   data () {
     return {

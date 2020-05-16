@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs10 sm11 class="scale" v-bind:class="{unAnswered: (sliderValue == 0) && showBorder}">
+  <v-flex xs10 sm11 v-bind:class="[{unAnswered: (sliderValue == 0) && showBorder}, 'scale']">
     <span class="caption">{{title}}</span>
 
     <v-slider
@@ -98,7 +98,6 @@ export default {
 }
 
 .scale {
-  margin: 0 auto;
   padding-left 50px!important
 }
 </style>
