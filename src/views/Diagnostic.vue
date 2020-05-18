@@ -673,14 +673,37 @@ export default {
           this.hStepper[this.activeMeasurement] - 1
         ]
       );
+      
       if (index + 1 < verticalMaxSteps) {
-        let tmp = Object.assign([], this.vStepper);
-        tmp[this.activeMeasurement][
-          this.hStepper[this.activeMeasurement] - 1
-        ] = steps.charAt(index + 1);
-        this.vStepper = Object.assign([], tmp);
+        if (this.isCurrentBoolSection && index == 0 && this.hStepper[this.activeMeasurement] == horizontalMaxSteps) {
+          let currentBoolAnswered = this.answers.filter(
+            v => v.section == this.hStepper[this.activeMeasurement] && v.subsection == 1 && v.questionType == 'Bool' && v.value == 1
+          );
+          
+          if (currentBoolAnswered.length == 0) {
+            if (this.activeMeasurement == 1) {
+              let tmp = Object.assign([], this.vStepper);
+              tmp[1][this.hStepper[1] - 1] = steps.charAt(verticalMaxSteps - 1);
+              this.vStepper = Object.assign([], tmp);
+            } else {
+              this.activeMeasurement = 1;
+              let tmp = Object.assign([], this.vStepper);
+              tmp[1][0] = 'A';
+              this.vStepper = Object.assign([], tmp);
+              this.hStepper[1] = 1;
+            }
+          }
+          
+        } else {
+          let tmp = Object.assign([], this.vStepper);
+          tmp[this.activeMeasurement][
+            this.hStepper[this.activeMeasurement] - 1
+          ] = steps.charAt(index + 1);
+          this.vStepper = Object.assign([], tmp);
+        }
       } else {
         if (this.hStepper[this.activeMeasurement] == horizontalMaxSteps) {
+          
           if (this.activeMeasurement == 0) {
             this.activeMeasurement = 1;
           } else {
