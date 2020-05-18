@@ -480,6 +480,10 @@ export default {
         
         if (currentBoolAnswered.length == 0) {
           this.vStepper[this.hStepper - 1] = steps.charAt(verticalMaxSteps - 1);
+        } else {
+          let tmp = Object.assign([], this.vStepper);
+          tmp[this.hStepper - 1] = steps.charAt(index + 1);
+          this.vStepper = Object.assign([], tmp);
         }
       } else {
         if (index + 1 < verticalMaxSteps) {
