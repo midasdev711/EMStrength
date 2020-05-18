@@ -472,11 +472,13 @@ export default {
         .vertical.length;
       let steps = this.$vuetify.theme.step;
       let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
-      if (this.hStepper == horizontalMaxSteps && index == 0) {
-        let currentAnswered = this.answers.filter(
-          v => v.section == this.hStepper && v.subsection == index + 1 && v.value == 1
+
+      if (this.isCurrentBoolSection && index == 0) {
+        let currentBoolAnswered = this.answers.filter(
+          v => v.section == this.hStepper && v.subsection == index + 1 && v.questionType == 'Bool' && v.value == 1
         );
-        if (currentAnswered.length == 0) {
+        
+        if (currentBoolAnswered.length == 0) {
           this.vStepper[this.hStepper - 1] = steps.charAt(verticalMaxSteps - 1);
         }
       } else {
