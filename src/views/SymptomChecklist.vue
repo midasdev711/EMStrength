@@ -329,6 +329,40 @@ export default {
         }
       },
       deep: true
+    },
+    hStepper: {
+      handler(val) {
+        let steps = this.$vuetify.theme.step;
+        let index = steps.indexOf(this.vStepper[val - 1]);
+        let currentSection = this.getFilteredQuestionData[val - 1]
+          .vertical[index].items;
+        let questions = [];
+        currentSection.map(question => {
+          if (
+            question.question.type == "SectionHeading" ||
+            question.question.type == "SectionPart" ||
+            question.question.type == "SectionInstruction"
+          ) {
+            return;
+          } else {
+            questions.push(question);
+          }
+        });
+
+        let boolquestions = questions.filter(
+          question => question.question.type == "Bool"
+        );
+        this.isCurrentBoolSection = boolquestions.length > 0 ? true : false;
+
+        if (!this.getDataUserProfile.symptomCompleted) {
+          if (questions.length == 0) {
+            this.hasNoQuestion = true;
+          } else {
+            this.hasNoQuestion = false;
+          }
+        }
+      },
+      deep: true
     }
   },
   computed: {
@@ -438,15 +472,24 @@ export default {
         .vertical.length;
       let steps = this.$vuetify.theme.step;
       let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
-      if (index + 1 < verticalMaxSteps) {
-        let tmp = Object.assign([], this.vStepper);
-        tmp[this.hStepper - 1] = steps.charAt(index + 1);
-        this.vStepper = Object.assign([], tmp);
-      } else {
-        if (this.hStepper < horizontalMaxSteps) {
-          this.hStepper++;
+      if (this.hStepper == horizontalMaxSteps && index == 0) {
+        let currentAnswered = this.answers.filter(
+          v => v.section == this.hStepper && v.subsection == index + 1 && v.value == 1
+        );
+        if (currentAnswered.length == 0) {
+          this.vStepper[this.hStepper - 1] = steps.charAt(verticalMaxSteps - 1);
         }
-        this.vStepper[this.hStepper - 1] = "A";
+      } else {
+        if (index + 1 < verticalMaxSteps) {
+          let tmp = Object.assign([], this.vStepper);
+          tmp[this.hStepper - 1] = steps.charAt(index + 1);
+          this.vStepper = Object.assign([], tmp);
+        } else {
+          if (this.hStepper < horizontalMaxSteps) {
+            this.hStepper++;
+            this.vStepper[this.hStepper - 1] = "A";
+          }
+        }
       }
       this.answers = [];
       this.disableContinue = true;

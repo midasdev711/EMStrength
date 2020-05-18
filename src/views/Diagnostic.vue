@@ -261,7 +261,6 @@ export default {
   computed: {
     ...mapGetters("app", {
       getAnswersData: "getDiagnosticAnswersData",
-      // getDiagnosticLastAnswered: "getDiagnosticLastAnswered",
       getNotificationStatus: "getNotificationStatus",
       getAnswerLimit: "getStressRecoveryLimit"
     }),
