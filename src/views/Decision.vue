@@ -52,7 +52,7 @@
         </v-dialog>
         <v-dialog sm6 xs12 persistent v-model="completeDialog">
           <v-card color class="black--text mt-2 col-sm-6 notification">
-            <v-card-title class="headline">Decision Profile complete</v-card-title>
+            <v-card-title class="headline">Decision Profile Complete</v-card-title>
             <v-card-text>
               <p>
                 Thank you. You have completed the Decision Profile. We now have a better understanding to help you develop the key mindsets and decision-making processes to get your Energy Health and Performance to an optimum!

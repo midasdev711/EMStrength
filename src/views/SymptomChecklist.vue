@@ -56,7 +56,7 @@
         </v-dialog>
         <v-dialog sm6 xs12 persistent v-model="completeDialog">
           <v-card color class="black--text mt-2 col-sm-6 notification">
-            <v-card-title class="headline">Symptom Checklist complete</v-card-title>
+            <v-card-title class="headline">Symptom Checklist Complete</v-card-title>
             <v-card-text>
               <p>
                 Thank you. You have completed the Symptom Checklist. Make sure you are working on your Recovery To-Do List to get your Energy Health and Performace to where you want them!
