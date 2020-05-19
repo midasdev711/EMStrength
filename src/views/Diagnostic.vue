@@ -187,11 +187,10 @@
                         <div v-if="hasNoQuestion">
                           <p
                             class="pink--text headline"
-                          >Due to previous answers, there is nothing to answer in this section</p>
+                          >INSTRUCTIONS: Due to previous answers, there is nothing to answer in this section.</p>
                         </div>
                         <v-btn
                           color="primary"
-                          :disabled="disableContinue"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData[activeMeasurement].length)"
                         >{{vStepper[activeMeasurement][hStepper[activeMeasurement]-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper[activeMeasurement] == getFilteredQuestionData[activeMeasurement].length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
@@ -487,14 +486,6 @@ export default {
 
       return this._saveAnswers(answerData)
         .then(res => {
-          // if (
-          //   this.hStepper == horizontalMaxSteps &&
-          //   (index + 1) == verticalMaxSteps && this.activeMeasurement == 0
-          // ) {
-          //   this.answers = [];
-          //   this.activeMeasurement = 1;
-          //   this.loadSubheading(1);
-          // }
           return answerData;
         })
         .catch(err => {
@@ -531,6 +522,29 @@ export default {
           }
         }
       });
+
+      let currentAnswered = this.answers.filter(
+        v => v.section == this.hStepper[this.activeMeasurement] && v.subsection == index + 1
+      );
+
+      let currentQuestions = currentSection.filter(
+        v => v.question.type == "Bool"
+      );
+
+      for (let i = 0; i < currentQuestions.length; i++) {
+        const element = currentQuestions[i];
+        let answered = currentAnswered.filter(
+          v => v.questionId == element.questionId
+        );
+        if (element.question.type == "Bool") {
+          if (answered.length == 0 && element.value == null) {
+            this.showBorder = true;
+            return;
+          }
+        }
+      }
+
+      this.showBorder = false;
 
       let nextSectionNo = this.hStepper[this.activeMeasurement];
       let nextSubsectionNo = index + 1;
@@ -689,6 +703,7 @@ export default {
               this.activeMeasurement = 1;
               let tmp = Object.assign([], this.vStepper);
               tmp[1][0] = 'A';
+              tmp[0][this.hStepper[0] - 1] = steps.charAt(verticalMaxSteps - 1);
               this.vStepper = Object.assign([], tmp);
               this.hStepper[1] = 1;
             }

@@ -183,11 +183,10 @@
                         <div v-if="hasNoQuestion">
                           <p
                             class="pink--text headline"
-                          >Due to previous answers, there is nothing to answer in this section</p>
+                          >INSTRUCTIONS: Due to previous answers, there is nothing to answer in this section.</p>
                         </div>
                         <v-btn
                           color="primary"
-                          :disabled="disableContinue"
                           @click="nextVerticalStep(stepp.vertical.length, getFilteredQuestionData.length)"
                         >{{vStepper[hStepper-1] == $vuetify.theme.step.charAt(stepp.vertical.length-1) && hStepper == getFilteredQuestionData.length ? 'Complete' : 'Continue'}}</v-btn>
                         <v-btn
@@ -527,6 +526,28 @@ export default {
           }
         }
       });
+
+      let currentAnswered = this.answers.filter(
+        v => v.section == this.hStepper && v.subsection == index + 1
+      );
+
+      let currentQuestions = currentSection.filter(
+        v => v.question.type == "Bool"
+      );
+      for (let i = 0; i < currentQuestions.length; i++) {
+        const element = currentQuestions[i];
+        let answered = currentAnswered.filter(
+          v => v.questionId == element.questionId
+        );
+        if (element.question.type == "Bool") {
+          if (answered.length == 0 && element.value == null) {
+            this.showBorder = true;
+            return;
+          }
+        }
+      }
+
+      this.showBorder = false;
 
       let nextSectionNo = this.hStepper;
       let nextSubsectionNo = index + 1;
