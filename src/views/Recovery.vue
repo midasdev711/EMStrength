@@ -80,28 +80,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <!-- <v-card
-          color
-          class="black--text mt-2"
-          v-if="!getDataUserProfile.recoveryChecked & getRecoveryData.length > 0"
-        >
-          <v-card-text>
-            <p>
-              Below is a Recovery Activities Checklist for:
-              <br><br>
-              (1) Mental/Emotional Recovery<br>
-              (2) Physical Recovery<br><br>
-              The lists are presented 5 items at a time, in order of positive impact on your Energy Health, Stress-Recovery balance.
-              <br><br>
-              You can review the full list of recovery items by clicking the tick-box in the top-right hand corner of the header on this page.
-              <br><br>
-              Adopt 1-2 items at a time to improve your energy levels. Maintain as many recovery activities as possible to sustain energy health and to reach for higher performance.
-            </p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="green darken-1" flat @click="visitRecovery">Got it!</v-btn>
-          </v-card-actions>
-        </v-card> -->
         <template v-if="getQuestionData.length > 0">
           <v-card
             dark
@@ -170,7 +148,7 @@ export default {
   data() {
     return {
       notificationDialog: true,
-      fullNotification: false,
+      fullNotification: true,
       moreTips: false,
       tipText: "",
       firstTime: true,
@@ -216,11 +194,11 @@ export default {
       getNotificationStatus: "getNotificationStatus"
     }),
     getQuestionData() {
-      if (this.getRecoveryUpdated == null) {
-        this.fullNotification = true
-      } else {
-        this.fullNotification = false
-      }
+      // if (this.getRecoveryUpdated == null) {
+      //   this.fullNotification = true
+      // } else {
+      //   this.fullNotification = false
+      // }
       let newRecoveryData = []
       for (let i = 0; i < this.getRecoveryData.length; i ++) {
         let questions = this.getRecoveryData[i]
