@@ -1,7 +1,7 @@
 <template>
  <v-flex xs12 v-if="!popup">
   <p>
-    <span class="caption"><strong>{{title}}</strong></span><span class="dev-hint">(SECTION Instr.)</span>
+    <span class="caption"><strong>{{title}}</strong></span>
   </p>
 </v-flex>
 </template>
