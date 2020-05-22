@@ -532,7 +532,7 @@ export default {
       );
 
       let currentQuestions = currentSection.filter(
-        v => v.question.type == "Bool"
+        v => v.question.type == "Bool" || v.question.type == "Scale"
       );
       for (let i = 0; i < currentQuestions.length; i++) {
         const element = currentQuestions[i];
@@ -541,6 +541,17 @@ export default {
         );
         if (element.question.type == "Bool") {
           if (answered.length == 0 && element.value == null) {
+            this.showBorder = true;
+            return;
+          }
+        }
+
+        if (element.question.type == "Scale") {
+          if (answered.length == 0 && element.value == null) {
+            this.showBorder = true;
+            return;
+          }
+          if (answered.length > 0 && answered[0].value == 0) {
             this.showBorder = true;
             return;
           }
@@ -563,23 +574,6 @@ export default {
       let answers = this.answers.filter(
         v => v.section == this.hStepper && v.subsection == index + 1
       );
-
-      if (!this.isCurrentBoolSection) {
-        if (!this.getDataUserProfile.symptomCompleted) {
-          if (answers.length < questions.length) {
-            this.popup = true;
-            return;
-          }
-
-          let tmpitems = answers.filter(
-            v => v.questionType == "Scale" && v.value == 0
-          );
-          if (tmpitems.length > 0) {
-            this.popup = true;
-            return;
-          }
-        }
-      }
 
       this.save();
     },
