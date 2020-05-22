@@ -175,7 +175,7 @@
                         <div v-if="hasNoQuestion">
                           <p
                             class="black--text headline"
-                          >INSTRUCTIONS: Due to previous answers, there is nothing to answer in this section.</p>
+                          >Due to your previous replies there is nothing to answer in this section.</p>
                         </div>
                         <v-btn
                           color="primary"
