@@ -174,7 +174,7 @@
                         </v-form>
                         <div v-if="hasNoQuestion">
                           <p
-                            class="pink--text headline"
+                            class="black--text headline"
                           >INSTRUCTIONS: Due to previous answers, there is nothing to answer in this section.</p>
                         </div>
                         <v-btn
