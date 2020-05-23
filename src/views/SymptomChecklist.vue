@@ -472,19 +472,19 @@ export default {
       let steps = this.$vuetify.theme.step;
       let index = steps.indexOf(this.vStepper[this.hStepper - 1]);
 
-      if (this.isCurrentBoolSection && index == 0) {
-        let currentBoolAnswered = this.answers.filter(
-          v => v.section == this.hStepper && v.subsection == index + 1 && v.questionType == 'Bool' && v.value == 1
-        );
+      // if (this.isCurrentBoolSection && index == 0) {
+      //   let currentBoolAnswered = this.answers.filter(
+      //     v => v.section == this.hStepper && v.subsection == index + 1 && v.questionType == 'Bool' && v.value == 1
+      //   );
         
-        if (currentBoolAnswered.length == 0) {
-          this.vStepper[this.hStepper - 1] = steps.charAt(verticalMaxSteps - 1);
-        } else {
-          let tmp = Object.assign([], this.vStepper);
-          tmp[this.hStepper - 1] = steps.charAt(index + 1);
-          this.vStepper = Object.assign([], tmp);
-        }
-      } else {
+      //   if (currentBoolAnswered.length == 0) {
+      //     this.vStepper[this.hStepper - 1] = steps.charAt(verticalMaxSteps - 1);
+      //   } else {
+      //     let tmp = Object.assign([], this.vStepper);
+      //     tmp[this.hStepper - 1] = steps.charAt(index + 1);
+      //     this.vStepper = Object.assign([], tmp);
+      //   }
+      // } else {
         if (index + 1 < verticalMaxSteps) {
           let tmp = Object.assign([], this.vStepper);
           tmp[this.hStepper - 1] = steps.charAt(index + 1);
@@ -495,7 +495,7 @@ export default {
             this.vStepper[this.hStepper - 1] = "A";
           }
         }
-      }
+      // }
       this.answers = [];
       this.disableContinue = true;
     },

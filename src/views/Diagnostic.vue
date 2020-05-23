@@ -542,7 +542,7 @@ export default {
             return;
           }
         }
-        
+
         if (element.question.type == "Scale") {
           if (answered.length == 0 && element.value == null) {
             this.showBorder = true;
@@ -650,6 +650,7 @@ export default {
           this.hStepper[this.activeMeasurement] - 1
         ]
       );
+      console.log(index);
       if (index > 0) {
         let tmp = Object.assign([], this.vStepper[this.activeMeasurement]);
         tmp[this.hStepper[this.activeMeasurement] - 1] = steps.charAt(index - 1);
@@ -683,33 +684,33 @@ export default {
       );
       
       if (index + 1 < verticalMaxSteps) {
-        if (this.isCurrentBoolSection && index == 0 && this.hStepper[this.activeMeasurement] == horizontalMaxSteps) {
-          let currentBoolAnswered = this.answers.filter(
-            v => v.section == this.hStepper[this.activeMeasurement] && v.subsection == 1 && v.questionType == 'Bool' && v.value == 1
-          );
+        // if (this.isCurrentBoolSection && index == 0 && this.hStepper[this.activeMeasurement] == horizontalMaxSteps) {
+        //   let currentBoolAnswered = this.answers.filter(
+        //     v => v.section == this.hStepper[this.activeMeasurement] && v.subsection == 1 && v.questionType == 'Bool' && v.value == 1
+        //   );
           
-          if (currentBoolAnswered.length == 0) {
-            if (this.activeMeasurement == 1) {
-              let tmp = Object.assign([], this.vStepper);
-              tmp[1][this.hStepper[1] - 1] = steps.charAt(verticalMaxSteps - 1);
-              this.vStepper = Object.assign([], tmp);
-            } else {
-              this.activeMeasurement = 1;
-              let tmp = Object.assign([], this.vStepper);
-              tmp[1][0] = 'A';
-              tmp[0][this.hStepper[0] - 1] = steps.charAt(verticalMaxSteps - 1);
-              this.vStepper = Object.assign([], tmp);
-              this.hStepper[1] = 1;
-            }
-          }
+        //   if (currentBoolAnswered.length == 0) {
+        //     if (this.activeMeasurement == 1) {
+        //       let tmp = Object.assign([], this.vStepper);
+        //       tmp[1][this.hStepper[1] - 1] = steps.charAt(verticalMaxSteps - 1);
+        //       this.vStepper = Object.assign([], tmp);
+        //     } else {
+        //       this.activeMeasurement = 1;
+        //       let tmp = Object.assign([], this.vStepper);
+        //       tmp[1][0] = 'A';
+        //       tmp[0][this.hStepper[0] - 1] = steps.charAt(verticalMaxSteps - 1);
+        //       this.vStepper = Object.assign([], tmp);
+        //       this.hStepper[1] = 1;
+        //     }
+        //   }
           
-        } else {
+        // } else {
           let tmp = Object.assign([], this.vStepper);
           tmp[this.activeMeasurement][
             this.hStepper[this.activeMeasurement] - 1
           ] = steps.charAt(index + 1);
           this.vStepper = Object.assign([], tmp);
-        }
+        // }
       } else {
         if (this.hStepper[this.activeMeasurement] == horizontalMaxSteps) {
           
