@@ -334,10 +334,10 @@ export default {
   }),
   filters: {
     formatDate(date) {
-      return moment(date).format("YYYY-MM-DD hh:mm:ss");
+      return moment(date).format("DD/MM/YYYY hh:mm");
     },
     formatDateOnly(date) {
-      return moment(date).format("YYYY-MM-DD");
+      return moment(date).format("DD/MM/YYYY");
     }
   },
   computed: {
