@@ -652,17 +652,19 @@ export default {
       );
       console.log(index);
       if (index > 0) {
-        let tmp = Object.assign([], this.vStepper[this.activeMeasurement]);
-        tmp[this.hStepper[this.activeMeasurement] - 1] = steps.charAt(index - 1);
-        this.vStepper[this.activeMeasurement] = Object.assign([], tmp);
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.activeMeasurement][this.hStepper[this.activeMeasurement] - 1] = steps.charAt(index - 1);
+        this.vStepper = Object.assign([], tmp);
       } else {
-        this.vStepper[this.activeMeasurement][
+        let tmp = Object.assign([], this.vStepper);
+        tmp[this.activeMeasurement][
           this.hStepper[this.activeMeasurement] - 2
         ] = steps.charAt(
           this.getFilteredQuestionData[this.activeMeasurement][
             this.hStepper[this.activeMeasurement] - 2
           ].vertical.length - 1
         );
+        this.vStepper = Object.assign([], tmp);
         this.hStepper[this.activeMeasurement]--;
       }
       this.answers = [];
