@@ -61,12 +61,7 @@ export default {
     return {
       showToggleIcon: true,
       items: [
-        {
-          icon: "account_circle",
-          href: "/users/account",
-          title: "Profile",
-          click: this.handleProfile
-        },
+        
         {
           icon: "fullscreen_exit",
           href: "/admin/auth/login",

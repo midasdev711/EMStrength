@@ -524,8 +524,11 @@ export default {
       );
 
       let currentQuestions = currentSection.filter(
-        v => v.question.type == "Bool" || v.question.type == "Scale"
+        v => v.question.type == "Bool" || v.question.type == "Scale" || v.question.type == "Selection"
       );
+
+      console.log(currentAnswered);
+      console.log(currentQuestions);
 
       for (let i = 0; i < currentQuestions.length; i++) {
         const element = currentQuestions[i];
@@ -540,6 +543,17 @@ export default {
         }
 
         if (element.question.type == "Scale") {
+          if (answered.length == 0 && element.value == null) {
+            this.showBorder = true;
+            return;
+          }
+          if (answered.length > 0 && answered[0].value == 0) {
+            this.showBorder = true;
+            return;
+          }
+        }
+
+        if (element.question.type == "Selection") {
           if (answered.length == 0 && element.value == null) {
             this.showBorder = true;
             return;

@@ -417,7 +417,7 @@ export default {
       for (let i = 0; i < results[0].userResults.length; i++) {
         const element = results[0].userResults[i];
         header.push({
-          text: moment(element.created).format("YYYY-MM-DD hh:mm:ss"),
+          text: moment(element.created).format("DD/MM/YYYY hh:mm"),
           align: "center",
           value: "value",
           sortable: false
