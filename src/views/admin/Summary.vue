@@ -190,7 +190,6 @@
                 >
                   <span :style="{ color: $vuetify.theme.subheading1 }">
                     {{step.section}}
-                    <span class="dev-hint"></span>
                   </span>
                 </v-stepper-step>
               </template>
@@ -235,7 +234,6 @@
                           </h3>
                         </v-card>
                         <v-card class="mb-5">
-                          <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                           <v-form v-model="form1Valid">
                             <div
                               class="row"

@@ -96,7 +96,6 @@
               >
                 <span :style="{ color: $vuetify.theme.subheading1 }">
                   {{step.section}}
-                  <!--span class="dev-hint"></span-->
                 </span>
               </v-stepper-step>
             </template>
@@ -125,8 +124,6 @@
                       :color="$vuetify.theme.subheading2"
                       :editable="stepp.sectionNo < getAnswerLimit[activeMeasurement].sectionNo || (stepp.sectionNo == getAnswerLimit[activeMeasurement].sectionNo && stepl.subsectionNo <= (getAnswerLimit[activeMeasurement].subsectionNo))"
                     >
-                      <!--span class="dev-hint"> Part {{stepl.subsectionNo}}  (SS No {{stepl.subsectionNo}})</span-->
-
                       <SectionPartStepper :data="stepl.items" />
                     </v-stepper-step>
 
@@ -143,7 +140,6 @@
                         class="mb-5"
                         v-if="hStepper[activeMeasurement] == stepp.sectionNo + 1"
                       >
-                        <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div class="row" v-for="a in stepl.items" :key="a.id">
                             <components

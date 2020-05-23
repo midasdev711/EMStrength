@@ -86,7 +86,6 @@
               >
                 <span :style="{ color: $vuetify.theme.subheading1 }">
                   {{step.section}}
-                  <span class="dev-hint"></span>
                 </span>
               </v-stepper-step>
             </template>
@@ -138,7 +137,6 @@
                         class="mb-5"
                         v-if="vStepper[stepp.sectionNo] == $vuetify.theme.step.charAt(stepl.subsectionNo)"
                       >
-                        <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div class="row" v-for="a in stepl.items" :key="a.id">
                             <!--{{a.question.type}}-->

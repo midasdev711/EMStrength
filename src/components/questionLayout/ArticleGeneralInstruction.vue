@@ -1,7 +1,7 @@
 <template>
  <v-flex xs12 sm10>
   <p>
-    {{title}} <span class="dev-hint">(ArtGenInstr)</span>
+    {{title}}
   </p>
 </v-flex>
 </template>

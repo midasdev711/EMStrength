@@ -127,7 +127,6 @@
                         </h3>
                       </v-card>
                       <v-card class="mb-5" v-if="stepp.sectionNo == hStepper - 1">
-                        <span class="dev-hint">P {{stepl.subsectionNo}} (SS No)</span>
                         <v-form v-model="form1Valid">
                           <div
                             class="row"
