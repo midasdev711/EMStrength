@@ -43,12 +43,12 @@
         >
           <template v-slot:items="props">
             <td class="pr-1" @click="switchUser(props.item)">
-              {{ props.item.Completed | fromNow }}
+              {{ props.item.Completed  | fromNow }} 
               <br />
               @ {{ props.item.Completed | hour }}
             </td>
             <td class="pr-1 pl-1" @click="switchUser(props.item)">
-              {{ props.item.ForUserName }} {{ props.item.ForUserAge }}
+              {{ props.item.ForUserName }} {{ props.item.ForUserAge }}yo
               <br />
               {{ props.item.ForUserOccupation }} ({{ props.item.ForUserGroupName }})
             </td>

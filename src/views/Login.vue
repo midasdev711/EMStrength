@@ -54,8 +54,8 @@ export default {
   data: () => ({
     loading: false,
     model: {
-      UserName: "oldtest1@gmail.com",
-      Password: "N123456"
+      UserName: "", //"oldtest1@gmail.com",
+      Password: "", //"N123456"
     }
   }),
 

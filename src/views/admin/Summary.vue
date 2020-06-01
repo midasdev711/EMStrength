@@ -87,11 +87,18 @@
                             :rows-per-page-items="pagination.rowsPerPageItems"
                             :items="dateItem.results"
                             hide-actions
+                            :hide-default-footer="true"
+                            disable-pagination
                             class="elevation-1"
                             light
                           >
                             <template v-slot:items="props">
-                              <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                              <td v-if="props.item.subsectionNo!=undefined" class="text-xs-center pointer-cursor">  
+                                {{ props.item.title }}
+                              </td>
+                              <td v-else class="text-xs-center pointer-cursor"> 
+                                <strong>{{ props.item.title }}</strong>
+                              </td>
                             </template>
                           </v-data-table>
                           <v-data-table
@@ -99,6 +106,9 @@
                             :items="dateItem.results"
                             :pagination.sync="pagination"
                             :rows-per-page-items="pagination.rowsPerPageItems"
+                            :hide-default-footer="true"
+                            hide-actions
+                            disable-pagination
                             class="elevation-1"
                             light
                           >
@@ -108,7 +118,20 @@
                                 v-for="user in props.item.userResults"
                                 :key="user.id"
                                 @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
-                              >{{ user.value == null ? 'N/A' : user.value }}</td>
+                              >       
+                                <span
+                                  v-if="props.item.subsectionNo!=undefined"
+                                >
+                                  {{ user.value == null ? 'N/A' : user.value }}
+                                </span>                    
+                                <v-chip
+                                  v-else
+                                  v-bind:color="user.categoryRating | shadeBackgroundColor" 
+                                  v-bind:text-color="user.categoryRating | shadeTextColor">
+                                  {{ user.value == null ? 'N/A' : user.value }} 
+                                </v-chip>
+ 
+                              </td>
                             </template>
                           </v-data-table>
                         </v-card>
@@ -125,6 +148,8 @@
                             :rows-per-page-items="pagination.rowsPerPageItems"
                             :items="section.results"
                             hide-actions
+                            :hide-default-footer="true"
+                            disable-pagination
                             class="elevation-1"
                             light
                           >
@@ -137,16 +162,34 @@
                             :items="section.results"
                             :pagination.sync="pagination"
                             :rows-per-page-items="pagination.rowsPerPageItems"
+                            :hide-default-footer="true"
+                            hide-actions
+                            disable-pagination
                             class="elevation-1"
                             light
                           >
                             <template v-slot:items="props">
                               <td
+                                
                                 class="text-xs-center pointer-cursor"
                                 v-for="user in props.item.userResults"
                                 :key="user.id"
                                 @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
-                              >{{ user.value == null ? 'N/A' : user.value }}</td>
+                                
+                              >
+                                <span
+                                  v-if="props.item.subsectionNo!=undefined"
+                                >
+                                  {{ user.value == null ? 'N/A' : user.value }}  
+                                </span>                    
+                                <v-chip
+                                  v-else
+                                  v-bind:color="user.categoryRating | shadeBackgroundColor" 
+                                  v-bind:text-color="user.categoryRating | shadeTextColor">
+                                  {{ user.value == null ? 'N/A' : user.value }} 
+                                </v-chip>
+
+                              </td>
                             </template>
                           </v-data-table>
                         </div>
@@ -318,7 +361,7 @@ export default {
     isGroupView: false,
     pagination: {
       page: 1,
-      rowsPerPage: 5,
+      rowsPerPage: 500,
       rowsPerPageItems: [1, 5, 10, 15],
       totalItems: 0
     },
@@ -338,7 +381,28 @@ export default {
     },
     formatDateOnly(date) {
       return moment(date).format("DD/MM/YYYY");
-    }
+    },
+    shadeBackgroundColor(rating) {
+      let colors = {
+        Default: "",
+        Poor: "#f94e83",
+        NeedsImproving: "#ff9d00",
+        CouldBeImproved: "#8fcb64",
+        Excellent: ""
+      };
+      return colors[rating];
+    },
+
+    shadeTextColor(rating) {
+      let colors = {
+        Default: "black",
+        Poor: "white",
+        NeedsImproving: "white",
+        CouldBeImproved: "white",
+        Excellent: "black"
+      };
+      return colors[rating];
+    },
   },
   computed: {
     ...mapGetters("app", {
@@ -392,6 +456,8 @@ export default {
     getUserSummaryData(newProps, oldProps) {
       if (newProps != oldProps && this.isGroupView) {
         let users = {};
+        console.log('USER SUMMARY');
+        console.log(newProps);
         for (let i = 0; i < newProps[0].users.length; i++) {
           const user = newProps[0].users[i];
           users[user.id] = user;

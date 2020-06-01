@@ -26,7 +26,7 @@
           <v-avatar v-else class="messages__list__avatar messages__list__avatar--left" size="35px">
             <img :src="getAvatarPath(message.senderUser)" alt />
           </v-avatar>
-          <time class="ml-4">{{ message.time | fromNow }} <span v-if="!message.me"><small>{{getUserName(message.senderUser)}}</small></span></time>
+          <p class="ml-4">{{ message.time | fromNow }} <span v-if="!message.me"><small>{{getUserName(message.senderUser)}}</small></span></p>
           <div
             class="messages__list__message"
           >{{ message.content }}</div>

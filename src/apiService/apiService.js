@@ -21,6 +21,7 @@ export default class APIService {
     let token = localStorage.getItem("token");
 
     let url = `${API_URL}` + sub_url;
+    console.log(url);
     return axios.get(url, {
       headers: {
         ...headers,
