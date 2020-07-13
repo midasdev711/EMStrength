@@ -80,7 +80,79 @@
                         :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date'"
                         :value="iiindex + '-' + '-date'"
                       >
-                        <v-card flat>
+                        <!-- not group view, stress recovery -->
+                        <v-card v-if="article.articleNo == 1">
+                          <v-tabs v-model="diagnosticTab[index + '-' + iindex + '-' + iiindex]" color="#eeeeee" grow>
+                            <v-tabs-slider color="red"></v-tabs-slider>
+                            <v-tab
+                              v-for="(diagnosticIndex, iiiindex) in [false, true]"
+                              :key="`${article.articleNo}_${section.sectionNo}-${iiindex}-${dateItem.date}-date-${diagnosticIndex}`"
+                              :href="`#${iiindex}-date-${diagnosticIndex}`"
+                            >{{diagnosticHeader[iiiindex]}}</v-tab>
+                          </v-tabs>
+                          <v-tabs-items v-model="diagnosticTab[index + '-' + iindex + '-' + iiindex]">
+                            <v-tab-item
+                              v-for="(diagnosticIndex, iiiindex) in [false, true]"
+                              :key="article.articleNo + '_' + section.sectionNo + '-' + iiindex + '-' + dateItem.date + '-date' + diagnosticIndex"
+                              :value="`${iiindex}-date-${diagnosticIndex}`"
+                            >
+                              <v-data-table
+                                :headers="titleHeader"
+                                :pagination.sync="pagination"
+                                :rows-per-page-items="pagination.rowsPerPageItems"
+                                :items="diagnosticItems(dateItem.results, diagnosticIndex)"
+                                hide-actions
+                                :hide-default-footer="true"
+                                disable-pagination
+                                class="elevation-1"
+                                light
+                              >
+                                <template v-slot:items="props">
+                                  <td v-if="props.item.subsectionNo!=undefined" class="text-xs-center pointer-cursor">  
+                                    {{ props.item.title }}
+                                  </td>
+                                  <td v-else class="text-xs-center pointer-cursor"> 
+                                    <strong>{{ props.item.title }}</strong>
+                                  </td>
+                                </template>
+                              </v-data-table>
+                              <v-data-table
+                                :headers="generateUserHeader(dateItem.results)"
+                                :items="diagnosticItems(dateItem.results, diagnosticIndex)"
+                                :pagination.sync="pagination"
+                                :rows-per-page-items="pagination.rowsPerPageItems"
+                                :hide-default-footer="true"
+                                hide-actions
+                                disable-pagination
+                                class="elevation-1"
+                                light
+                              >
+                                <template v-slot:items="props">
+                                  <td
+                                    class="text-xs-center pointer-cursor"
+                                    v-for="user in props.item.userResults"
+                                    :key="user.id"
+                                    @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
+                                  >       
+                                    <span
+                                      v-if="props.item.subsectionNo!=undefined"
+                                    >
+                                      {{ user.value == null ? 'N/A' : user.value }}
+                                    </span>                    
+                                    <v-chip
+                                      v-else
+                                      v-bind:color="user.categoryRating | shadeBackgroundColor" 
+                                      v-bind:text-color="user.categoryRating | shadeTextColor">
+                                      {{ user.value == null ? 'N/A' : user.value }} 
+                                    </v-chip>
+                                  </td>
+                                </template>
+                              </v-data-table>
+                            </v-tab-item>
+                          </v-tabs-items>
+                        </v-card>
+                        <!-- not group view, not stress recovery -->
+                        <v-card v-else flat>
                           <v-data-table
                             :headers="titleHeader"
                             :pagination.sync="pagination"
@@ -138,10 +210,80 @@
                       </v-tab-item>
                     </v-tabs-items>
                   </v-card>
-                  <v-card flat v-else>
+                  <v-card flat v-if="isGroupView">
                     <v-flex class="groupview-card" row layout>
                       <v-flex xs12 class="groupview">
-                        <div class="result-group">
+                        <!-- group view, stress recovery -->
+                        <v-card v-if="article.articleNo == 1">
+                          <v-tabs v-model="diagnosticTab[index + '-' + iindex]" color="#eeeeee" grow>
+                            <v-tabs-slider color="red"></v-tabs-slider>
+                            <v-tab
+                              v-for="(diagnosticIndex, iiiindex) in [false, true]"
+                              :key="`${article.articleNo}_${section.sectionNo}-${diagnosticIndex}`"
+                              :href="`#${section.sectionNo}-date-${diagnosticIndex}`"
+                            >{{diagnosticHeader[iiiindex]}}</v-tab>
+                          </v-tabs>
+                          <v-tabs-items v-model="diagnosticTab[index + '-' + iindex]">
+                            <v-tab-item
+                              v-for="(diagnosticIndex, iiiindex) in [false, true]"
+                              :key="article.articleNo + '_' + section.sectionNo + '-' + diagnosticIndex"
+                              :value="`${section.sectionNo}-date-${diagnosticIndex}`"
+                            >
+                              <v-data-table
+                                :headers="titleHeader"
+                                :pagination.sync="pagination"
+                                :rows-per-page-items="pagination.rowsPerPageItems"
+                                :items="diagnosticItems(section.results)"
+                                hide-actions
+                                :hide-default-footer="true"
+                                disable-pagination
+                                class="elevation-1"
+                                light
+                              >
+                                <template v-slot:items="props">
+                                  <td class="text-xs-center pointer-cursor">{{ props.item.title }}</td>
+                                </template>
+                              </v-data-table>
+                              <v-data-table
+                                :headers="generateHeader(section.results)"
+                                :items="diagnosticItems(section.results)"
+                                :pagination.sync="pagination"
+                                :rows-per-page-items="pagination.rowsPerPageItems"
+                                :hide-default-footer="true"
+                                hide-actions
+                                disable-pagination
+                                class="elevation-1"
+                                light
+                              >
+                                <template v-slot:items="props">
+                                  <td
+                                    
+                                    class="text-xs-center pointer-cursor"
+                                    v-for="user in props.item.userResults"
+                                    :key="user.id"
+                                    @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
+                                    
+                                  >
+                                    <span
+                                      v-if="props.item.subsectionNo!=undefined"
+                                    >
+                                      {{ user.value == null ? 'N/A' : user.value }}  
+                                    </span>                    
+                                    <v-chip
+                                      v-else
+                                      v-bind:color="user.categoryRating | shadeBackgroundColor" 
+                                      v-bind:text-color="user.categoryRating | shadeTextColor">
+                                      {{ user.value == null ? 'N/A' : user.value }} 
+                                    </v-chip>
+
+                                  </td>
+                                </template>
+                              </v-data-table>
+                            </v-tab-item>
+                          </v-tabs-items>
+                        </v-card>
+                        <!-- group view, not stress recovery -->
+                        <div class="result-group" v-else>
                           <v-data-table
                             :headers="titleHeader"
                             :pagination.sync="pagination"
@@ -358,6 +500,7 @@ export default {
     articleTab: null,
     sectionTab: [],
     dateTab: [],
+    diagnosticTab: [],
     isGroupView: false,
     pagination: {
       page: 1,
@@ -365,6 +508,7 @@ export default {
       rowsPerPageItems: [1, 5, 10, 15],
       totalItems: 0
     },
+    diagnosticHeader: ['Stress Measurement', 'Recovery Measurement'],
     titleHeader: [
       {
         text: "Title",
@@ -475,6 +619,10 @@ export default {
     ...mapActions("admin", {
       _getSummaryData: "getAnswersData"
     }),
+
+    diagnosticItems(items, recoveryMeasurement) {
+      return items.filter(item => item.recoveryMeasurement == recoveryMeasurement);
+    },
 
     updateComponentValue() {},
 
