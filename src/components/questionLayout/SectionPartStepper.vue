@@ -3,7 +3,7 @@
     <!--v-chip :color="$vuetify.theme.subheading3">
       <span class="white--text subheading">{{prefix(title)}}</span>
     </v-chip-->
-    <span :color="$vuetify.theme.subheading2">{{heading(title)}}</span>
+    <span :color="$vuetify.theme.subheading2" :id="id">{{heading(title)}}</span>
 </v-flex>
 </template>
 <script>

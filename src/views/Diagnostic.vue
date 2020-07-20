@@ -124,7 +124,7 @@
                       :color="$vuetify.theme.subheading2"
                       :editable="stepp.sectionNo < getAnswerLimit[activeMeasurement].sectionNo || (stepp.sectionNo == getAnswerLimit[activeMeasurement].sectionNo && stepl.subsectionNo <= (getAnswerLimit[activeMeasurement].subsectionNo))"
                     >
-                      <SectionPartStepper :data="stepl.items" />
+                      <SectionPartStepper :key="activeMeasurement" :data="stepl.items" />
                     </v-stepper-step>
 
                     <v-stepper-content :step="$vuetify.theme.step.charAt(stepl.subsectionNo)">
