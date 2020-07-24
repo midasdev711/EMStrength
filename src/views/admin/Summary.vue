@@ -132,7 +132,7 @@
                                     class="text-xs-center pointer-cursor"
                                     v-for="user in props.item.userResults"
                                     :key="user.id"
-                                    @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
+                                    @click="showAnswerLayout(user.forUserId, user.id, props.item.article, iiiindex);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
                                   >       
                                     <span
                                       v-if="props.item.subsectionNo!=undefined"
@@ -261,7 +261,7 @@
                                     class="text-xs-center pointer-cursor"
                                     v-for="user in props.item.userResults"
                                     :key="user.id"
-                                    @click="showAnswerLayout(user.forUserId, user.id, props.item.article);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
+                                    @click="showAnswerLayout(user.forUserId, user.id, props.item.article, iiiindex);hStepper=props.item.sectionNo + 1;vStepper=props.item.subsectionNo + 1"
                                     
                                   >
                                     <span
@@ -654,11 +654,14 @@ export default {
       return header;
     },
 
-    showAnswerLayout(userId, summaryId, article = "Symptom") {
+    showAnswerLayout(userId, summaryId, article = "Symptom", tab = 0) {
       let data = {
         params: `?UserId=${userId}&article=${article}&AnswerSummaryId=${summaryId}`,
         article: "Summary"
       };
+      if (article == 'Diagnostic') {
+        data.params += `&ArticleSubheading=${tab}`
+      }
       this.isAnswerLoading = true;
       return this._getSummaryData(data).then(res => {
         this.isAnswerLoading = false;
